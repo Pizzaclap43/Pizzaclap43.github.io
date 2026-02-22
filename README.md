@@ -1,4 +1,4 @@
-# PRÓXIMAMENTE :3
+# PRÓXIMAMENTE :D
 # ¿Quién es Pizzaclap43?
 # <a href="https://youtube.com/@pizzaclap43">📺YouTube</a>
 # <a href="https://twitch.tv/pizzaclap43">📹Twitch</a>
