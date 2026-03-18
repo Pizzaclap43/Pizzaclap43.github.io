@@ -84,40 +84,56 @@ h1 {
     gap: 15px;
 }
 
-.link-card {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 18px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-decoration: none;
-    color: white;
-    border-radius: 50px;
-    transition: all 0.3s ease;
 
-    /* --- EL BORDE NEGRO --- */
-    border: 3px solid #000000; 
-    box-shadow: 4px 4px 0px #000000; /* Sombra sólida tipo sticker */
+/* --- COLORES OFICIALES DE LAS REDES --- */
+
+/* Instagram (Gradiente oficial) */
+.instagram-btn {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%) !important;
 }
 
-/* Para que al pasar el mouse el borde resalte más o cambie la sombra */
-.link-card:hover {
-    transform: translate(-2px, -2px); /* Se mueve un poco hacia arriba */
-    box-shadow: 6px 6px 0px #000000; /* La sombra se hace más grande */
-    filter: brightness(1.1);
+/* TikTok (Negro con efecto de marca) */
+.tiktok-btn {
+    background-color: #000000 !important;
 }
 
-/* Botón de E-mail (Contacto) diferenciado */
+/* YouTube (Rojo oficial) */
+.youtube-btn {
+    background-color: #FF0000 !important;
+}
+
+/* Twitch (Morado oficial) */
+.twitch-btn {
+    background-color: #9146FF !important;
+}
+
+/* Kick (Verde Neón oficial) */
+.kick-btn {
+    background-color: #53FC18 !important;
+    color: #000000 !important; /* Texto negro para que se lea mejor en el verde neón */
+}
+
+/* Discord (Azul Blurple) */
+.discord-btn {
+    background-color: #5865F2 !important;
+}
+
+/* Twitter / X (Negro o Azul clásico, aquí el negro moderno) */
+.twitter-btn {
+    background-color: #000000 !important;
+}
+
+/* Facebook (Azul oficial) */
+.facebook-btn {
+    background-color: #1877F2 !important;
+}
+
+/* Spotify (Verde oficial) */
+.spotify-btn {
+    background-color: #1DB954 !important;
+}
+
+/* E-mail / Contacto (Gris elegante) */
 .contact-btn {
-    background: #444 !important; /* Gris oscuro */
-    border: 3px solid #000000 !important;
-    box-shadow: 4px 4px 0px #000000 !important;
-}
-
-.contact-btn:hover {
-    background: #222 !important;
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0px #000000 !important;
+    background-color: #444444 !important;
 }
