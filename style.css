@@ -85,22 +85,21 @@ h1 {
 }
 
 .link-card {
-    background: var(--primary-color);
-    color: white;
-    text-decoration: none;
-    padding: 18px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    border-radius: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 12px;
+    padding: 18px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    border-radius: 50px;
     transition: all 0.3s ease;
 
-    /* --- EL BORDE NEGRO QUE PEDISTE --- */
-    border: 3px solid #000000; /* Borde negro sólido de 3 píxeles */
-    box-shadow: 4px 4px 0px #000000; /* Sombra sólida negra para un efecto "sticker" */
+    /* --- EL BORDE NEGRO --- */
+    border: 3px solid #000000; 
+    box-shadow: 4px 4px 0px #000000; /* Sombra sólida tipo sticker */
 }
 
 /* Para que al pasar el mouse el borde resalte más o cambie la sombra */
@@ -112,11 +111,13 @@ h1 {
 
 /* Botón de E-mail (Contacto) diferenciado */
 .contact-btn {
-    background: #444;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    background: #444 !important; /* Gris oscuro */
+    border: 3px solid #000000 !important;
+    box-shadow: 4px 4px 0px #000000 !important;
 }
 
 .contact-btn:hover {
-    background: #222;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    background: #222 !important;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px #000000 !important;
 }
