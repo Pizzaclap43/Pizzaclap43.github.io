@@ -60,22 +60,21 @@ body {
     object-fit: cover; /* Asegura que la imagen no se deforme */
 }
 
-/* --- ESTILOS DE TEXTO --- */
 h1 {
-    font-size: 2rem;
-    color: white; /* Color de texto blanco para que destaque sobre el fondo */
-    margin: 10px 0 5px;
-    text-shadow: 0 2px 5px rgba(0,0,0,0.5); /* Sombra para legibilidad */
+    font-family: 'Press Start 2P', cursive;
+    font-size: 2.2rem; /* Más grande */
+    color: white;
+    margin: 20px 0 10px;
+    text-shadow: 4px 4px 0px #000; /* Sombra sólida pixelada */
+    text-transform: uppercase; /* Todo en mayúsculas para más estilo gamer */
 }
 
 .subtitle {
-    display: inline-block;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-size: 1rem;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.7rem; /* Las fuentes pixeladas se ven mejor pequeñas en subtítulos */
     color: #eee;
-    margin-bottom: 30px;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    margin-bottom: 40px;
+    text-shadow: 2px 2px 0px #000;
 }
 
 /* --- ESTILOS DE BOTONES (Mantenemos la forma redondeada) --- */
