@@ -92,17 +92,21 @@ h1 {
     font-size: 1.2rem;
     font-weight: bold;
     border-radius: 50px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 12px;
     transition: all 0.3s ease;
+
+    /* --- EL BORDE NEGRO QUE PEDISTE --- */
+    border: 3px solid #000000; /* Borde negro sólido de 3 píxeles */
+    box-shadow: 4px 4px 0px #000000; /* Sombra sólida negra para un efecto "sticker" */
 }
 
+/* Para que al pasar el mouse el borde resalte más o cambie la sombra */
 .link-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(155, 77, 255, 0.5);
+    transform: translate(-2px, -2px); /* Se mueve un poco hacia arriba */
+    box-shadow: 6px 6px 0px #000000; /* La sombra se hace más grande */
     filter: brightness(1.1);
 }
 
