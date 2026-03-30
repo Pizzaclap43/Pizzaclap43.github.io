@@ -77,6 +77,23 @@ h1 {
     text-shadow: 2px 2px 0px #000;
 }
 
+.video-container {
+    margin: 20px auto;
+    max-width: 100%;
+    width: 400px; /* Misma anchura que tus botones */
+    border: 3px solid #000000; /* Borde negro estilo sticker */
+    box-shadow: 6px 6px 0px #000000; /* Sombra sólida */
+    border-radius: 15px; /* Bordes un poco redondeados */
+    overflow: hidden; /* Para que el video respete el redondeado del borde */
+    line-height: 0; /* Elimina espacios extra abajo del video */
+}
+
+.video-container iframe {
+    width: 100%;
+    height: 225px; /* Ajuste para que se vea bien en formato 16:9 */
+    border: none;
+}
+
 /* --- ESTILOS DE BOTONES (Mantenemos la forma redondeada) --- */
 .links {
     display: flex;
