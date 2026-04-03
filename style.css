@@ -153,3 +153,19 @@ h1 {
     min-width: 25px;
     text-align: center;
 }
+
+```css
+footer {
+    margin-top: 40px;
+    padding-bottom: 20px;
+}
+
+.copyright {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.55rem; /* Pequeñito para que parezca de créditos de juego */
+    color: white;
+    text-align: center;
+    text-shadow: 2px 2px 0px #000; /* Sombra negra para que sea legible */
+    opacity: 0.8; /* Un poco transparente para que sea elegante */
+    letter-spacing: 1px;
+}
