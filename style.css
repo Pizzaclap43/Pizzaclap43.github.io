@@ -129,12 +129,9 @@ h1 {
 .tiktok-btn { background-color: #000000 !important; }
 .youtube-btn { background-color: #FF0000 !important; }
 .twitch-btn { background-color: #9146FF !important; }
-.kick-btn { 
-    background-color: #53FC18 !important; 
-    color: #000000 !important; /* Texto negro para Kick para que se lea */
-}
+.kick-btn { background-color: #53FC18 !important; color: #000000 !important; }
 .discord-btn { background-color: #5865F2 !important; }
-.twitter-btn { background-color: #1DA1F2 !important; } /* Azul clásico de Twitter */
+.twitter-btn { background-color: #1DA1F2 !important; }
 .facebook-btn { background-color: #1877F2 !important; }
 .spotify-btn { background-color: #1DB954 !important; }
 .github-btn { background-color: #24292e !important; color: #ffffff !important; }
