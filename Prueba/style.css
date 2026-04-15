@@ -1,0 +1,61 @@
+/* --- ESTILOS PARA SUBPÁGINAS --- */
+
+.back-btn {
+    display: inline-block;
+    font-family: 'Press Start 2P', cursive;
+    color: #ff9900 !important;
+    text-decoration: none;
+    font-size: 0.7rem;
+    display: inline-block;
+    margin-bottom: 20px;
+    border: 2px solid #ff9900;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+
+
+/* --- CUADROS DE TEXTO PARA PIZZA SERVER --- */
+
+.info-box, .step-card {
+    background: rgba(0, 0, 0, 0.8) !important; /* Negro más sólido para que el texto resalte */
+    border: 3px solid #000000;
+    box-shadow: 5px 5px 0px #000000;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 15px;
+    max-width: 400px; /* Para que se alinee con los botones */
+    text-align: center; /* Centramos el texto para que combine con el header */
+}
+
+.pixel-text {
+    font-family: 'Segoe UI', sans-serif;
+    color: #ffffff;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 10px 0;
+}
+
+/* El título de las secciones dentro de los cuadros */
+.pixel-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8rem;
+    color: #ff9900; /* Naranja Pizza */
+    margin-bottom: 15px;
+    display: block;
+}
+
+.server-status {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    background-color: #53FC18; /* Verde Neón */
+    border-radius: 50%;
+    box-shadow: 0 0 10px #53FC18;
+}
