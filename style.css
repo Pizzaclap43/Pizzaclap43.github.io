@@ -134,6 +134,7 @@ h1 {
 .twitter-btn { background-color: #1DA1F2 !important; }
 .facebook-btn { background-color: #1877F2 !important; }
 .spotify-btn { background-color: #1DB954 !important; }
+.yt-music-btn { background-color: #f00000 !important; color: #ffffff !important; border: 3px solid #000000 !important; box-shadow: 4px 4px 0px #000000 !important; }
 .github-btn { background-color: #24292e !important; color: #ffffff !important; }
 .downloads-btn { background-color: #00d2ff !important; color: #000000 !important; }
 .pizza-server-btn {background-color: #ff9900 !important; color: #000000 !important; }
