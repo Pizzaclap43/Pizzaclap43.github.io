@@ -2,65 +2,60 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Dash V2 - Aesthetic Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon Dash Mobile</title>
     <style>
+        /* Estilos anteriores + ajustes para móvil */
         body {
             margin: 0;
-            background-color: #0d0221; /* Fondo inicial */
+            background-color: #0d0221;
             color: #ff00ff;
-            font-family: 'Courier New', Courier, monospace;
+            font-family: sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
             overflow: hidden;
-            transition: background-color 1s ease; /* Transición suave de color */
-        }
-
-        h1 {
-            text-shadow: 3px 3px #00ffff;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 5px;
+            transition: background-color 0.5s;
+            touch-action: none; /* Evita que la pantalla se mueva al jugar */
         }
 
         #game-container {
             position: relative;
-            border: 5px solid #fff;
-            box-shadow: 0 0 25px #ff00ff, inset 0 0 15px #00ffff;
+            border: 3px solid #fff;
+            box-shadow: 0 0 15px #ff00ff;
             background: #000;
+            max-width: 95vw; /* Se ajusta al ancho del celular */
         }
 
         canvas {
             display: block;
+            touch-action: none;
         }
 
         .ui-panel {
             display: flex;
             justify-content: space-between;
-            width: 400px;
-            margin-top: 15px;
-            font-size: 1.2rem;
+            width: 90%;
+            max-width: 400px;
+            margin-top: 10px;
+            font-size: 1rem;
             font-weight: bold;
-            text-shadow: 2px 2px #000;
         }
-
-        #lives { color: #ff0055; text-shadow: 0 0 10px #ff0055; }
-        #score-val { color: #00ffff; text-shadow: 0 0 10px #00ffff; }
     </style>
 </head>
 <body>
 
-    <h1>NEON DASH</h1>
+    <h2 style="margin: 5px; text-shadow: 2px 2px #00ffff;">NEON DASH</h2>
+    
     <div id="game-container">
-        <canvas id="gameCanvas" width="400" height="500"></canvas>
+        <canvas id="gameCanvas" width="360" height="500"></canvas>
     </div>
     
     <div class="ui-panel">
-        <div>VIDAS: <span id="lives">❤️❤️❤️</span></div>
-        <div>PUNTOS: <span id="score-val">0</span></div>
+        <div><span id="lives">❤️❤️❤️</span></div>
+        <div>SCORE: <span id="score-val">0</span></div>
     </div>
 
     <script>
@@ -73,21 +68,34 @@
         let lives = 3;
         let gameActive = true;
         let currentLevel = 0;
-
-        // Colores para el fondo según puntaje (estilo saturado)
-        const bgColors = ["#0d0221", "#4b0082", "#1a0033", "#330000", "#002200", "#111111"];
+        const bgColors = ["#0d0221", "#4b0082", "#1a0033", "#330000"];
 
         const player = {
-            x: 180,
-            y: 440,
+            x: 165,
+            y: 420,
             size: 30,
-            color: "#ff00ff",
-            speed: 8
+            color: "#ff00ff"
         };
 
         let items = [];
-        let keys = {};
 
+        // --- CONTROLES TÁCTILES ---
+        canvas.addEventListener("touchmove", (e) => {
+            e.preventDefault(); // Evita scroll
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const touchX = touch.clientX - rect.left;
+            
+            // El jugador sigue el dedo en el eje X
+            player.x = touchX - player.size / 2;
+
+            // Límites para que no se salga
+            if (player.x < 0) player.x = 0;
+            if (player.x > canvas.width - player.size) player.x = canvas.width - player.size;
+        }, { passive: false });
+
+        // --- CONTROLES TECLADO (Para PC) ---
+        let keys = {};
         document.addEventListener("keydown", (e) => keys[e.code] = true);
         document.addEventListener("keyup", (e) => keys[e.code] = false);
 
@@ -99,20 +107,20 @@
                 size: 20,
                 type: isPoint ? "point" : "enemy",
                 color: isPoint ? "#ffff00" : "#00ffff",
-                speed: 4 + (score / 150)
+                speed: 3 + (score / 150)
             });
         }
 
         function update() {
             if (!gameActive) return;
 
-            if (keys["ArrowLeft"] && player.x > 0) player.x -= player.speed;
-            if (keys["ArrowRight"] && player.x < canvas.width - player.size) player.x += player.speed;
+            // Movimiento por teclado
+            if (keys["ArrowLeft"] && player.x > 0) player.x -= 7;
+            if (keys["ArrowRight"] && player.x < canvas.width - player.size) player.x += 7;
 
             items.forEach((item, index) => {
                 item.y += item.speed;
 
-                // Colisión detectada
                 if (
                     player.x < item.x + item.size &&
                     player.x + player.size > item.x &&
@@ -123,10 +131,8 @@
                         lives--;
                         updateLivesUI();
                         items.splice(index, 1);
-                        
                         if (lives <= 0) {
-                            gameActive = false;
-                            alert("GAME OVER - PUNTUACIÓN FINAL: " + score);
+                            alert("GAME OVER! SCORE: " + score);
                             location.reload();
                         }
                     } else {
@@ -136,16 +142,14 @@
                         checkLevelUp();
                     }
                 }
-
                 if (item.y > canvas.height) items.splice(index, 1);
             });
 
-            if (Math.random() < 0.06) spawnItem();
+            if (Math.random() < 0.05) spawnItem();
         }
 
         function updateLivesUI() {
             livesElement.innerText = "❤️".repeat(lives);
-            // Efecto visual de flash al perder vida
             document.body.style.backgroundColor = "#ff0000";
             setTimeout(() => {
                 document.body.style.backgroundColor = bgColors[currentLevel % bgColors.length];
@@ -153,7 +157,6 @@
         }
 
         function checkLevelUp() {
-            // Cada 100 puntos cambia el nivel y el fondo
             let newLevel = Math.floor(score / 100);
             if (newLevel > currentLevel) {
                 currentLevel = newLevel;
@@ -163,33 +166,25 @@
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Estilo del jugador (Neón saturado)
-            ctx.shadowBlur = 20;
+            
+            // Jugador
+            ctx.shadowBlur = 15;
             ctx.shadowColor = player.color;
             ctx.fillStyle = player.color;
             ctx.fillRect(player.x, player.y, player.size, player.size);
 
-            // Dibujar Items
+            // Items
             items.forEach(item => {
-                ctx.shadowBlur = 15;
+                ctx.shadowBlur = 10;
                 ctx.shadowColor = item.color;
                 ctx.fillStyle = item.color;
-                
-                if (item.type === "point") {
-                    // Los puntos son triángulos para variar
-                    ctx.beginPath();
-                    ctx.moveTo(item.x + 10, item.y);
-                    ctx.lineTo(item.x + 20, item.y + 20);
-                    ctx.lineTo(item.x, item.y + 20);
-                    ctx.closePath();
-                    ctx.fill();
+                ctx.beginPath();
+                if(item.type === "point") {
+                    ctx.arc(item.x+10, item.y+10, 10, 0, Math.PI*2);
                 } else {
-                    // Los enemigos son círculos cian
-                    ctx.beginPath();
-                    ctx.arc(item.x + 10, item.y + 10, 10, 0, Math.PI * 2);
-                    ctx.fill();
+                    ctx.fillRect(item.x, item.y, 20, 20);
                 }
+                ctx.fill();
             });
 
             requestAnimationFrame(() => {
