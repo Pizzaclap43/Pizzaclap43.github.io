@@ -87,6 +87,25 @@
         const coinSound = new Audio('./coin.wav');
         const hitSound = new Audio('./hit.wav');
 
+        // Función para desbloquear audio en móviles al primer toque
+        function unlockAudio() {
+            coinSound.play().then(() => {
+                coinSound.pause();
+                coinSound.currentTime = 0;
+            }).catch(() => {});
+            
+            hitSound.play().then(() => {
+                hitSound.pause();
+                hitSound.currentTime = 0;
+            }).catch(() => {});
+
+            window.removeEventListener('touchstart', unlockAudio);
+            window.removeEventListener('mousedown', unlockAudio);
+        }
+
+        window.addEventListener('touchstart', unlockAudio);
+        window.addEventListener('mousedown', unlockAudio);
+
         // --- LÓGICA DE LÍMITES ---
         const MARGIN = 15; 
         const playerSize = 30;
@@ -157,9 +176,9 @@
                     player.y + player.size > item.y
                 ) {
                     if (item.type === "enemy") {
-                        // Reproducir sonido de golpe
+                        // Sonido de golpe
                         hitSound.currentTime = 0; 
-                        hitSound.play();
+                        hitSound.play().catch(() => {});
 
                         lives--;
                         updateLivesUI();
@@ -170,9 +189,9 @@
                             location.reload();
                         }
                     } else {
-                        // Reproducir sonido de moneda
+                        // Sonido de moneda
                         coinSound.currentTime = 0; 
-                        coinSound.play();
+                        coinSound.play().catch(() => {});
 
                         score += 10;
                         scoreElement.innerText = score;
