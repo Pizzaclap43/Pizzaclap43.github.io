@@ -87,7 +87,7 @@
         const coinSound = new Audio('./coin.wav');
         const hitSound = new Audio('./hit.wav');
 
-        // Función para desbloquear audio en móviles al primer toque
+        // Función para desbloquear audio en móviles y PC
         function unlockAudio() {
             coinSound.play().then(() => {
                 coinSound.pause();
@@ -99,12 +99,16 @@
                 hitSound.currentTime = 0;
             }).catch(() => {});
 
+            // Quitamos todos los escuchadores una vez activado
             window.removeEventListener('touchstart', unlockAudio);
             window.removeEventListener('mousedown', unlockAudio);
+            window.removeEventListener('keydown', unlockAudio);
         }
 
+        // Se activa con el primer toque, click o tecla presionada
         window.addEventListener('touchstart', unlockAudio);
         window.addEventListener('mousedown', unlockAudio);
+        window.addEventListener('keydown', unlockAudio);
 
         // --- LÓGICA DE LÍMITES ---
         const MARGIN = 15; 
