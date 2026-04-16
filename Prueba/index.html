@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Dash - Aesthetic Game</title>
+    <title>Neon Dash V2 - Aesthetic Edition</title>
     <style>
         body {
             margin: 0;
-            background-color: #0d0221;
+            background-color: #0d0221; /* Fondo inicial */
             color: #ff00ff;
             font-family: 'Courier New', Courier, monospace;
             display: flex;
@@ -16,18 +16,20 @@
             justify-content: center;
             height: 100vh;
             overflow: hidden;
+            transition: background-color 1s ease; /* Transición suave de color */
         }
 
         h1 {
             text-shadow: 3px 3px #00ffff;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             text-transform: uppercase;
+            letter-spacing: 5px;
         }
 
         #game-container {
             position: relative;
-            border: 4px solid #00ffff;
-            box-shadow: 0 0 20px #ff00ff, inset 0 0 10px #00ffff;
+            border: 5px solid #fff;
+            box-shadow: 0 0 25px #ff00ff, inset 0 0 15px #00ffff;
             background: #000;
         }
 
@@ -35,74 +37,82 @@
             display: block;
         }
 
-        .stats {
+        .ui-panel {
+            display: flex;
+            justify-content: space-between;
+            width: 400px;
             margin-top: 15px;
             font-size: 1.2rem;
             font-weight: bold;
-            text-shadow: 2px 2px #4b0082;
+            text-shadow: 2px 2px #000;
         }
+
+        #lives { color: #ff0055; text-shadow: 0 0 10px #ff0055; }
+        #score-val { color: #00ffff; text-shadow: 0 0 10px #00ffff; }
     </style>
 </head>
 <body>
 
-    <h1>Neon Dash</h1>
+    <h1>NEON DASH</h1>
     <div id="game-container">
         <canvas id="gameCanvas" width="400" height="500"></canvas>
     </div>
-    <div class="stats">PUNTOS: <span id="score">0</span></div>
+    
+    <div class="ui-panel">
+        <div>VIDAS: <span id="lives">❤️❤️❤️</span></div>
+        <div>PUNTOS: <span id="score-val">0</span></div>
+    </div>
 
     <script>
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
-        const scoreElement = document.getElementById("score");
+        const scoreElement = document.getElementById("score-val");
+        const livesElement = document.getElementById("lives");
 
         let score = 0;
+        let lives = 3;
         let gameActive = true;
+        let currentLevel = 0;
 
-        // Jugador (un cuadrado aesthetic)
+        // Colores para el fondo según puntaje (estilo saturado)
+        const bgColors = ["#0d0221", "#4b0082", "#1a0033", "#330000", "#002200", "#111111"];
+
         const player = {
             x: 180,
             y: 440,
             size: 30,
             color: "#ff00ff",
-            speed: 7
+            speed: 8
         };
 
-        // Enemigos y Puntos
         let items = [];
-        const itemTypes = [
-            { type: "enemy", color: "#00ffff", points: 0 }, // Obstáculo
-            { type: "point", color: "#ffff00", points: 10 } // Punto
-        ];
-
-        // Controles
         let keys = {};
+
         document.addEventListener("keydown", (e) => keys[e.code] = true);
         document.addEventListener("keyup", (e) => keys[e.code] = false);
 
         function spawnItem() {
-            const type = Math.random() > 0.3 ? itemTypes[0] : itemTypes[1];
+            const isPoint = Math.random() > 0.4;
             items.push({
-                x: Math.random() * (canvas.width - 20),
-                y: -20,
+                x: Math.random() * (canvas.width - 25),
+                y: -30,
                 size: 20,
-                ...type,
-                speed: 3 + (score / 100) // Aumenta dificultad
+                type: isPoint ? "point" : "enemy",
+                color: isPoint ? "#ffff00" : "#00ffff",
+                speed: 4 + (score / 150)
             });
         }
 
         function update() {
             if (!gameActive) return;
 
-            // Movimiento jugador
             if (keys["ArrowLeft"] && player.x > 0) player.x -= player.speed;
             if (keys["ArrowRight"] && player.x < canvas.width - player.size) player.x += player.speed;
 
-            // Movimiento items
             items.forEach((item, index) => {
                 item.y += item.speed;
 
-                // Colisión
+                // Colisión detectada
                 if (
                     player.x < item.x + item.size &&
                     player.x + player.size > item.x &&
@@ -110,40 +120,76 @@
                     player.y + player.size > item.y
                 ) {
                     if (item.type === "enemy") {
-                        gameActive = false;
-                        alert("GAME OVER! Puntos: " + score);
-                        location.reload();
+                        lives--;
+                        updateLivesUI();
+                        items.splice(index, 1);
+                        
+                        if (lives <= 0) {
+                            gameActive = false;
+                            alert("GAME OVER - PUNTUACIÓN FINAL: " + score);
+                            location.reload();
+                        }
                     } else {
-                        score += item.points;
+                        score += 10;
                         scoreElement.innerText = score;
                         items.splice(index, 1);
+                        checkLevelUp();
                     }
                 }
 
-                // Limpiar items fuera de pantalla
                 if (item.y > canvas.height) items.splice(index, 1);
             });
 
-            if (Math.random() < 0.05) spawnItem();
+            if (Math.random() < 0.06) spawnItem();
+        }
+
+        function updateLivesUI() {
+            livesElement.innerText = "❤️".repeat(lives);
+            // Efecto visual de flash al perder vida
+            document.body.style.backgroundColor = "#ff0000";
+            setTimeout(() => {
+                document.body.style.backgroundColor = bgColors[currentLevel % bgColors.length];
+            }, 100);
+        }
+
+        function checkLevelUp() {
+            // Cada 100 puntos cambia el nivel y el fondo
+            let newLevel = Math.floor(score / 100);
+            if (newLevel > currentLevel) {
+                currentLevel = newLevel;
+                document.body.style.backgroundColor = bgColors[currentLevel % bgColors.length];
+            }
         }
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Dibujar Jugador con resplandor
-            ctx.shadowBlur = 15;
+            // Estilo del jugador (Neón saturado)
+            ctx.shadowBlur = 20;
             ctx.shadowColor = player.color;
             ctx.fillStyle = player.color;
             ctx.fillRect(player.x, player.y, player.size, player.size);
 
             // Dibujar Items
             items.forEach(item => {
-                ctx.shadowBlur = 10;
+                ctx.shadowBlur = 15;
                 ctx.shadowColor = item.color;
                 ctx.fillStyle = item.color;
-                ctx.beginPath();
-                ctx.arc(item.x + 10, item.y + 10, item.size / 2, 0, Math.PI * 2);
-                ctx.fill();
+                
+                if (item.type === "point") {
+                    // Los puntos son triángulos para variar
+                    ctx.beginPath();
+                    ctx.moveTo(item.x + 10, item.y);
+                    ctx.lineTo(item.x + 20, item.y + 20);
+                    ctx.lineTo(item.x, item.y + 20);
+                    ctx.closePath();
+                    ctx.fill();
+                } else {
+                    // Los enemigos son círculos cian
+                    ctx.beginPath();
+                    ctx.arc(item.x + 10, item.y + 10, 10, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             });
 
             requestAnimationFrame(() => {
