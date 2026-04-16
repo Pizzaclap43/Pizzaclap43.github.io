@@ -4,6 +4,8 @@ const assets = [
   './index.html',
   './manifest.json',
   './favicon.png'
+  './coin.wav'
+  './hit.wav'
 ];
 
 // Instalar el Service Worker y guardar los archivos en caché
