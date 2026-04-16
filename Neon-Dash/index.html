@@ -83,8 +83,12 @@
         const scoreElement = document.getElementById("score-val");
         const livesElement = document.getElementById("lives");
 
-        // --- LÓGICA DE LÍMITES (Mantenemos la corrección) ---
-        const MARGIN = 15; // Margen para que no choquen visualmente con el borde blanco
+        // --- CARGA DE SONIDOS ---
+        const coinSound = new Audio('coin.wav');
+        const hitSound = new Audio('hit.wav');
+
+        // --- LÓGICA DE LÍMITES ---
+        const MARGIN = 15; 
         const playerSize = 30;
         const leftLimit = MARGIN;
         const rightLimit = canvas.width - MARGIN - playerSize;
@@ -125,7 +129,6 @@
         function spawnItem() {
             const isPoint = Math.random() > 0.4;
             const itemSize = 20;
-            // Spawn dentro de los límites visuales
             const spawnX = leftLimit + Math.random() * (canvas.width - (MARGIN * 2) - itemSize);
 
             items.push({
@@ -154,6 +157,10 @@
                     player.y + player.size > item.y
                 ) {
                     if (item.type === "enemy") {
+                        // Reproducir sonido de golpe
+                        hitSound.currentTime = 0; 
+                        hitSound.play();
+
                         lives--;
                         updateLivesUI();
                         items.splice(index, 1);
@@ -163,6 +170,10 @@
                             location.reload();
                         }
                     } else {
+                        // Reproducir sonido de moneda
+                        coinSound.currentTime = 0; 
+                        coinSound.play();
+
                         score += 10;
                         scoreElement.innerText = score;
                         items.splice(index, 1);
@@ -223,8 +234,8 @@
         draw();
         
         if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js');
-}
+            navigator.serviceWorker.register('sw.js');
+        }
     </script>
 </body>
 </html>
