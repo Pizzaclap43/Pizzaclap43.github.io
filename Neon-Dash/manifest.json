@@ -1,6 +1,7 @@
 {
   "short_name": "Neon Dash",
   "name": "Neon Dash",
+  "version": "2.0.0",
   "icons": [
     {
       "src": "favicon.png",
