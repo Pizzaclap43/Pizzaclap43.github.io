@@ -2,14 +2,22 @@
   "name": "Neon Dash",
   "short_name": "Neon Dash",
   "version": "2.0.0",
+  "description": "Juego arcade neón de esquivar y recolectar puntos.",
   "start_url": "./index.html",
   "display": "standalone",
-  "theme_color": "#0d0221", 
+  "orientation": "portrait",
   "background_color": "#0d0221",
+  "theme_color": "#0d0221",
   "icons": [
     {
       "src": "favicon.png",
       "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }
