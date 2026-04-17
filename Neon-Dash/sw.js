@@ -1,4 +1,4 @@
-const CACHE_NAME = 'neon-dash-v8';
+const CACHE_NAME = 'neon-dash-v9';
 const assets = [
   './',
   './index.html',
