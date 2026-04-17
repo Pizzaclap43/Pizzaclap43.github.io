@@ -1,18 +1,17 @@
 {
-  "short_name": "Neon Dash",
   "name": "Neon Dash",
+  "short_name": "Neon Dash",
   "version": "2.0.0",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#0d0221", 
+  "background_color": "#0d0221",
   "icons": [
     {
       "src": "favicon.png",
-      "sizes": "512x512",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#0d0221",
-  "background_color": "#0d0221",
-  "orientation": "portrait"
+  ]
 }
