@@ -1,4 +1,4 @@
-const CACHE_NAME = 'neon-dash-v5'; // Subimos a v4
+const CACHE_NAME = 'neon-dash-v6'; // Subimos a v4
 const assets = [
   './',
   './index.html',
