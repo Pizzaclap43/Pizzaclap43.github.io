@@ -25,7 +25,6 @@
             touch-action: none;
         }
 
-        /* Estilo de título original */
         .neon-title {
             font-size: 2.5rem;
             text-transform: uppercase;
@@ -39,7 +38,6 @@
             text-align: center;
         }
 
-        /* Pantalla de Menú de Inicio */
         #start-menu {
             position: absolute;
             z-index: 100;
@@ -54,7 +52,6 @@
             left: 0;
         }
 
-        /* Contenedor para el favicon en el menú */
         #menu-icon-container {
             margin: 10px 0 25px 0;
             display: flex;
@@ -63,10 +60,10 @@
         }
 
         #menu-icon {
-            width: 120px; /* Tamaño del icono en el menú */
+            width: 120px;
             height: 120px;
             object-fit: contain;
-            filter: drop-shadow(0 0 15px #ff00ff); /* Brillo neón */
+            filter: drop-shadow(0 0 15px #ff00ff);
         }
 
         .btn-start {
@@ -88,7 +85,6 @@
             box-shadow: 0 0 30px #ff00ff;
         }
 
-        /* Contenedor del juego */
         #game-wrapper {
             display: none; 
             flex-direction: column;
@@ -125,11 +121,9 @@
 
     <div id="start-menu">
         <h1 class="neon-title">NEON DASH</h1>
-        
         <div id="menu-icon-container">
             <img src="favicon.png" alt="Icono" id="menu-icon">
         </div>
-
         <button class="btn-start" onclick="startGame()">JUGAR</button>
     </div>
 
@@ -155,11 +149,12 @@
         // --- CARGA DE SONIDOS ---
         const coinSound = new Audio('./coin.wav');
         const hitSound = new Audio('./hit.wav');
+        const deathSound = new Audio('./death.wav');
 
         function startGame() {
-            // Desbloqueo de audio
             coinSound.play().then(() => { coinSound.pause(); coinSound.currentTime = 0; }).catch(() => {});
             hitSound.play().then(() => { hitSound.pause(); hitSound.currentTime = 0; }).catch(() => {});
+            deathSound.play().then(() => { deathSound.pause(); deathSound.currentTime = 0; }).catch(() => {});
 
             startMenu.style.display = "none";
             gameWrapper.style.display = "flex";
@@ -168,7 +163,6 @@
             draw();
         }
 
-        // --- LÓGICA DEL JUEGO ---
         const MARGIN = 15; 
         const playerSize = 30;
         const leftLimit = MARGIN;
@@ -238,15 +232,20 @@
                     player.y + player.size > item.y
                 ) {
                     if (item.type === "enemy") {
-                        hitSound.currentTime = 0; 
-                        hitSound.play().catch(() => {});
-                        lives--;
-                        updateLivesUI();
                         items.splice(index, 1);
+                        lives--;
+                        
                         if (lives <= 0) {
                             gameActive = false;
-                            alert("GAME OVER! PUNTOS: " + score);
-                            location.reload();
+                            deathSound.play().catch(() => {});
+                            setTimeout(() => {
+                                alert("GAME OVER! PUNTOS: " + score);
+                                location.reload();
+                            }, 100);
+                        } else {
+                            hitSound.currentTime = 0; 
+                            hitSound.play().catch(() => {});
+                            updateLivesUI();
                         }
                     } else {
                         coinSound.currentTime = 0; 
