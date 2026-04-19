@@ -38,18 +38,23 @@
             text-align: center;
         }
 
-        #start-menu {
+        /* Pantallas de Menú (Inicio y Game Over) */
+        #start-menu, #game-over-menu {
             position: absolute;
             z-index: 100;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: #0d0221;
+            background: rgba(13, 2, 33, 0.95);
             width: 100%;
             height: 100%;
             top: 0;
             left: 0;
+        }
+
+        #game-over-menu {
+            display: none; /* Oculto por defecto */
         }
 
         #menu-icon-container {
@@ -66,7 +71,7 @@
             filter: drop-shadow(0 0 15px #ff00ff);
         }
 
-        .btn-start {
+        .btn-neon {
             padding: 15px 40px;
             font-size: 1.5rem;
             font-family: 'Courier New', Courier, monospace;
@@ -78,11 +83,19 @@
             box-shadow: 0 0 15px #ff00ff;
             transition: 0.3s;
             text-transform: uppercase;
+            margin-top: 20px;
         }
 
-        .btn-start:hover {
+        .btn-neon:hover {
             background: #ff00ff;
             box-shadow: 0 0 30px #ff00ff;
+        }
+
+        .final-score {
+            font-size: 1.8rem;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+            margin: 20px 0;
         }
 
         #game-wrapper {
@@ -124,7 +137,13 @@
         <div id="menu-icon-container">
             <img src="favicon.png" alt="Icono" id="menu-icon">
         </div>
-        <button class="btn-start" onclick="startGame()">JUGAR</button>
+        <button class="btn-neon" onclick="startGame()">JUGAR</button>
+    </div>
+
+    <div id="game-over-menu">
+        <h1 class="neon-title" style="text-shadow: 2px 2px #ff0000, -2px -2px #ff00ff;">¡FIN DEL JUEGO!</h1>
+        <p class="final-score">PUNTOS: <span id="final-score-val">0</span></p>
+        <button class="btn-neon" onclick="location.reload()" style="border-color: #00ffff; box-shadow: 0 0 15px #00ffff;">REINTENTAR</button>
     </div>
 
     <div id="game-wrapper">
@@ -144,7 +163,9 @@
         const scoreElement = document.getElementById("score-val");
         const livesElement = document.getElementById("lives");
         const startMenu = document.getElementById("start-menu");
+        const gameOverMenu = document.getElementById("game-over-menu");
         const gameWrapper = document.getElementById("game-wrapper");
+        const finalScoreVal = document.getElementById("final-score-val");
 
         // --- CARGA DE SONIDOS ---
         const coinSound = new Audio('./coin.wav');
@@ -238,10 +259,7 @@
                         if (lives <= 0) {
                             gameActive = false;
                             deathSound.play().catch(() => {});
-                            setTimeout(() => {
-                                alert("GAME OVER! PUNTOS: " + score);
-                                location.reload();
-                            }, 100);
+                            showGameOver();
                         } else {
                             hitSound.currentTime = 0; 
                             hitSound.play().catch(() => {});
@@ -260,6 +278,13 @@
             });
 
             if (Math.random() < 0.05) spawnItem();
+        }
+
+        function showGameOver() {
+            finalScoreVal.innerText = score;
+            gameOverMenu.style.display = "flex";
+            // Ocultamos la UI del juego para que el menú resalte
+            document.getElementById("ui-panel").style.opacity = "0";
         }
 
         function updateLivesUI() {
