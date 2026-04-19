@@ -183,3 +183,13 @@ footer {
     opacity: 0.8;
     letter-spacing: 1px;
 }
+
+/* --- AJUSTES PARA TELÉFONOS (Media Query) --- */
+@media (max-width: 480px) {
+    .container { padding: 20px 15px; }
+    h1 { font-size: 1.5rem; }
+    .video-container { width: 100%; }
+    .video-container iframe { height: 200px; }
+    .link-card { font-size: 0.7rem; padding: 12px 15px; max-width: 100%; }
+    .featured-anim { max-width: 100% !important; padding: 15px !important; }
+}
