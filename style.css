@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 :root {
-    --primary-color: #9b4dff; /* Mantengo el morado, puedes ajustarlo */
-    --bg-color: transparent; /* Fondo transparente para ver la imagen */
+    --primary-color: #9b4dff;
+    --bg-color: transparent;
     --text-color: #ffffff;
 }
 
@@ -21,7 +22,6 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    /* Imagen de fondo integrada */
     background-image: url('fondo.png');
     background-size: cover;
     background-position: center;
@@ -29,7 +29,6 @@ body {
     z-index: -2;
 }
 
-/* Opcional: Capa de color sutil sobre el fondo para leer mejor los textos */
 .background-overlay::before {
     content: '';
     position: absolute;
@@ -37,71 +36,87 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4); /* Capa negra al 40% de opacidad */
+    background-color: rgba(0, 0, 0, 0.4);
     z-index: -1;
 }
 
-/* --- INTEGRACIÓN DE LOGO DE PERFIL --- */
+/* --- CONTENEDOR PRINCIPAL --- */
 .container {
     width: 100%;
     max-width: 450px;
     padding: 40px 20px;
     text-align: center;
-    position: relative; /* Asegura que el contenido esté sobre el fondo */
+    position: relative;
 }
 
 .profile-pic {
     width: 120px;
     height: 120px;
-    border-radius: 50%; /* Esto hará la cabeza cuadrada del skin redonda, un efecto curioso */
+    border-radius: 50%;
     border: 5px solid white;
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     margin-bottom: 15px;
-    object-fit: cover; /* Asegura que la imagen no se deforme */
+    object-fit: cover;
 }
 
 h1 {
     font-family: 'Press Start 2P', cursive;
-    font-size: 2.2rem; /* Más grande */
+    font-size: 2.2rem;
     color: white;
     margin: 20px 0 10px;
-    text-shadow: 4px 4px 0px #000; /* Sombra sólida pixelada */
-    text-transform: uppercase; /* Todo en mayúsculas para más estilo gamer */
+    text-shadow: 4px 4px 0px #000;
+    text-transform: uppercase;
 }
 
 .subtitle {
     font-family: 'Press Start 2P', cursive;
-    font-size: 0.7rem; /* Las fuentes pixeladas se ven mejor pequeñas en subtítulos */
+    font-size: 0.7rem;
     color: #eee;
     margin-bottom: 40px;
     text-shadow: 2px 2px 0px #000;
 }
 
+/* --- VIDEO --- */
 .video-container {
     margin: 20px auto;
     max-width: 100%;
-    width: 400px; /* Misma anchura que tus botones */
-    border: 3px solid #000000; /* Borde negro estilo sticker */
-    box-shadow: 6px 6px 0px #000000; /* Sombra sólida */
-    border-radius: 15px; /* Bordes un poco redondeados */
-    overflow: hidden; /* Para que el video respete el redondeado del borde */
-    line-height: 0; /* Elimina espacios extra abajo del video */
+    width: 400px;
+    border: 3px solid #000000;
+    box-shadow: 6px 6px 0px #000000;
+    border-radius: 15px;
+    overflow: hidden;
+    line-height: 0;
 }
 
 .video-container iframe {
     width: 100%;
-    height: 225px; /* Ajuste para que se vea bien en formato 16:9 */
+    height: 225px;
     border: none;
 }
 
-/* --- ESTILOS DE BOTONES (Mantenemos la forma redondeada) --- */
+/* --- SECCIÓN DESTACADA --- */
+.featured {
+    margin-bottom: 30px;
+}
+
+.featured-anim {
+    max-width: 420px !important;
+    padding: 20px !important;
+    animation: neon-glow 2s infinite alternate;
+}
+
+@keyframes neon-glow {
+    from { box-shadow: 4px 4px 0px #000; }
+    to { box-shadow: 4px 4px 0px #000, 0 0 15px rgba(0, 242, 255, 0.6); }
+}
+
+/* --- CONFIGURACIÓN GENERAL BOTONES --- */
 .links {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-/* --- CONFIGURACIÓN GENERAL --- */
 .link-card {
     font-family: 'Press Start 2P', cursive;
     font-size: 0.8rem;
@@ -112,11 +127,11 @@ h1 {
     padding: 15px 20px;
     margin-bottom: 12px;
     font-weight: bold;
-    text-decoration: none !important; /* Quita el subrayado azul */
-    color: white !important; /* Fuerza el texto a blanco */
-    border-radius: 50px; /* Esto hace la forma de cápsula del video */
-    border: 3px solid #000000; /* Tu borde negro */
-    box-shadow: 4px 4px 0px #000000; /* Sombra sólida tipo sticker */
+    text-decoration: none !important;
+    color: white !important;
+    border-radius: 50px;
+    border: 3px solid #000000;
+    box-shadow: 4px 4px 0px #000000;
     transition: all 0.3s ease;
     width: 100%;
     max-width: 400px;
@@ -124,7 +139,19 @@ h1 {
     margin-right: auto;
 }
 
-/* --- COLORES OFICIALES --- */
+.link-card:hover {
+    transform: scale(1.03) translate(-2px, -2px);
+    box-shadow: 7px 7px 0px #000000;
+    filter: brightness(1.1);
+}
+
+.link-card i {
+    font-size: 1.3rem;
+    min-width: 25px;
+    text-align: center;
+}
+
+/* --- COLORES BOTONES --- */
 .instagram-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important; }
 .tiktok-btn { background-color: #000000 !important; }
 .youtube-btn { background-color: #FF0000 !important; }
@@ -133,29 +160,15 @@ h1 {
 .discord-btn { background-color: #5865F2 !important; }
 .twitter-btn { background-color: #1DA1F2 !important; }
 .facebook-btn { background-color: #1877F2 !important; }
-.telegram-btn { background-color: #0088cc !important; color: #ffffff !important; border: 3px solid #000000 !important; box-shadow: 4px 4px 0px #000000 !important; }
+.telegram-btn { background-color: #0088cc !important; }
 .spotify-btn { background-color: #1DB954 !important; }
-.yt-music-btn { background-color: #f00000 !important; color: #ffffff !important; border: 3px solid #000000 !important; box-shadow: 4px 4px 0px #000000 !important; }
-.github-btn { background-color: #24292e !important; color: #ffffff !important; }
-.neon-dash-btn { background-color: #00f2ff !important; color: #000000 !important; border: 3px solid #000000 !important; box-shadow: 4px 4px 0px #000000 !important; text-transform: uppercase; }
-.pizza-server-btn {background-color: #ff9900 !important; color: #000000 !important; }
+.yt-music-btn { background-color: #f00000 !important; }
+.github-btn { background-color: #24292e !important; }
+.neon-dash-btn { background-color: #00f2ff !important; color: #000000 !important; text-transform: uppercase; }
+.pizza-server-btn { background-color: #ff9900 !important; color: #000000 !important; }
 .contact-btn { background-color: #444444 !important; }
 
-/* --- EFECTO HOVER (Al pasar el mouse) --- */
-.link-card:hover {
-    transform: scale(1.03) translate(-2px, -2px);
-    box-shadow: 7px 7px 0px #000000;
-    filter: brightness(1.1);
-}
-
-/* Ajuste para los iconos */
-.link-card i {
-    font-size: 1.3rem;
-    min-width: 25px;
-    text-align: center;
-}
-
-```css
+/* --- FOOTER --- */
 footer {
     margin-top: 40px;
     padding-bottom: 20px;
@@ -163,10 +176,10 @@ footer {
 
 .copyright {
     font-family: 'Press Start 2P', cursive;
-    font-size: 0.55rem; /* Pequeñito para que parezca de créditos de juego */
+    font-size: 0.55rem;
     color: white;
     text-align: center;
-    text-shadow: 2px 2px 0px #000; /* Sombra negra para que sea legible */
-    opacity: 0.8; /* Un poco transparente para que sea elegante */
+    text-shadow: 2px 2px 0px #000;
+    opacity: 0.8;
     letter-spacing: 1px;
 }
