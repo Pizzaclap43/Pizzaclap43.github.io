@@ -38,7 +38,6 @@
             text-align: center;
         }
 
-        /* Pantallas de Menú (Inicio y Game Over) */
         #start-menu, #game-over-menu {
             position: absolute;
             z-index: 100;
@@ -54,7 +53,7 @@
         }
 
         #game-over-menu {
-            display: none; /* Oculto por defecto */
+            display: none;
         }
 
         #menu-icon-container {
@@ -95,7 +94,14 @@
             font-size: 1.8rem;
             color: #00ffff;
             text-shadow: 0 0 10px #00ffff;
-            margin: 20px 0;
+            margin: 10px 0;
+        }
+
+        .high-score {
+            font-size: 1.2rem;
+            color: #ffff00;
+            text-shadow: 0 0 8px #ffff00;
+            margin-bottom: 10px;
         }
 
         #game-wrapper {
@@ -143,6 +149,7 @@
     <div id="game-over-menu">
         <h1 class="neon-title" style="text-shadow: 2px 2px #ff0000, -2px -2px #ff00ff;">¡FIN DEL JUEGO!</h1>
         <p class="final-score">PUNTOS: <span id="final-score-val">0</span></p>
+        <p class="high-score">RÉCORD: <span id="high-score-val">0</span></p>
         <button class="btn-neon" onclick="location.reload()" style="border-color: #00ffff; box-shadow: 0 0 15px #00ffff;">REINTENTAR</button>
     </div>
 
@@ -166,8 +173,8 @@
         const gameOverMenu = document.getElementById("game-over-menu");
         const gameWrapper = document.getElementById("game-wrapper");
         const finalScoreVal = document.getElementById("final-score-val");
+        const highScoreVal = document.getElementById("high-score-val");
 
-        // --- CARGA DE SONIDOS ---
         const coinSound = new Audio('./coin.wav');
         const hitSound = new Audio('./hit.wav');
         const deathSound = new Audio('./death.wav');
@@ -281,9 +288,16 @@
         }
 
         function showGameOver() {
+            // Lógica de Récord Máximo
+            let savedRecord = localStorage.getItem("neonDashHighScore") || 0;
+            if (score > savedRecord) {
+                localStorage.setItem("neonDashHighScore", score);
+                savedRecord = score;
+            }
+
             finalScoreVal.innerText = score;
+            highScoreVal.innerText = savedRecord;
             gameOverMenu.style.display = "flex";
-            // Ocultamos la UI del juego para que el menú resalte
             document.getElementById("ui-panel").style.opacity = "0";
         }
 
