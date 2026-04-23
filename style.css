@@ -6,6 +6,22 @@
     --text-color: #ffffff;
 }
 
+/* --- BARRA DE SCROLL --- */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #000;
+}
+::-webkit-scrollbar-thumb {
+    background: #9b4dff;
+    border-radius: 10px;
+    border: 2px solid #000;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #53FC18;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -13,9 +29,10 @@ body {
     display: flex;
     justify-content: center;
     min-height: 100vh;
+    background-color: #000;
 }
 
-/* --- INTEGRACIÓN DE IMAGEN DE FONDO --- */
+/* --- FONDO Y EFECTO SCANLINE --- */
 .background-overlay {
     position: fixed;
     top: 0;
@@ -25,7 +42,6 @@ body {
     background-image: url('fondo.png');
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
     z-index: -2;
 }
 
@@ -37,18 +53,37 @@ body {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.4);
-    z-index: -1;
 }
 
-/* --- CONTENEDOR PRINCIPAL --- */
+.scanlines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+    background-size: 100% 4px, 3px 100%;
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* --- ANIMACIONES --- */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .container {
     width: 100%;
     max-width: 450px;
     padding: 40px 20px;
     text-align: center;
     position: relative;
+    animation: fadeInUp 0.8s ease-out;
 }
 
+/* --- PERFIL Y TEXTOS --- */
 .profile-pic {
     width: 120px;
     height: 120px;
@@ -94,23 +129,7 @@ h1 {
     border: none;
 }
 
-/* --- SECCIÓN DESTACADA --- */
-.featured {
-    margin-bottom: 30px;
-}
-
-.featured-anim {
-    max-width: 420px !important;
-    padding: 20px !important;
-    animation: neon-glow 2s infinite alternate;
-}
-
-@keyframes neon-glow {
-    from { box-shadow: 4px 4px 0px #000; }
-    to { box-shadow: 4px 4px 0px #000, 0 0 15px rgba(0, 242, 255, 0.6); }
-}
-
-/* --- CONFIGURACIÓN GENERAL BOTONES --- */
+/* --- BOTONES --- */
 .links {
     display: flex;
     flex-direction: column;
@@ -125,8 +144,6 @@ h1 {
     justify-content: center;
     gap: 12px;
     padding: 15px 20px;
-    margin-bottom: 12px;
-    font-weight: bold;
     text-decoration: none !important;
     color: white !important;
     border-radius: 50px;
@@ -135,9 +152,12 @@ h1 {
     transition: all 0.3s ease;
     width: 100%;
     max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
+    animation: fadeInUp 0.5s ease-out both;
 }
+
+/* Cascada de animación */
+.link-card:nth-child(n) { animation-delay: calc(0.1s * var(--i, 1)); }
 
 .link-card:hover {
     transform: scale(1.03) translate(-2px, -2px);
@@ -145,13 +165,7 @@ h1 {
     filter: brightness(1.1);
 }
 
-.link-card i {
-    font-size: 1.3rem;
-    min-width: 25px;
-    text-align: center;
-}
-
-/* --- COLORES BOTONES --- */
+/* --- COLORES --- */
 .instagram-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important; }
 .tiktok-btn { background-color: #000000 !important; }
 .youtube-btn { background-color: #FF0000 !important; }
@@ -164,32 +178,32 @@ h1 {
 .spotify-btn { background-color: #1DB954 !important; }
 .yt-music-btn { background-color: #f00000 !important; }
 .github-btn { background-color: #24292e !important; }
-.neon-dash-btn { background-color: #00f2ff !important; color: #000000 !important; text-transform: uppercase; }
+.neon-dash-btn { background-color: #00f2ff !important; color: #000000 !important; }
 .pizza-server-btn { background-color: #ff9900 !important; color: #000000 !important; }
 .contact-btn { background-color: #444444 !important; }
 
-/* --- FOOTER --- */
-footer {
-    margin-top: 40px;
-    padding-bottom: 20px;
+/* --- SECCIÓN DESTACADA --- */
+.featured-anim {
+    animation: fadeInUp 0.5s ease-out both, neon-glow 2s infinite alternate;
 }
 
+@keyframes neon-glow {
+    from { box-shadow: 4px 4px 0px #000; }
+    to { box-shadow: 4px 4px 0px #000, 0 0 15px rgba(0, 242, 255, 0.6); }
+}
+
+/* --- FOOTER --- */
 .copyright {
     font-family: 'Press Start 2P', cursive;
     font-size: 0.55rem;
     color: white;
-    text-align: center;
-    text-shadow: 2px 2px 0px #000;
-    opacity: 0.8;
-    letter-spacing: 1px;
+    margin-top: 40px;
 }
 
-/* --- AJUSTES PARA TELÉFONOS (Media Query) --- */
+/* --- MÓVIL --- */
 @media (max-width: 480px) {
     .container { padding: 20px 15px; }
     h1 { font-size: 1.5rem; }
-    .video-container { width: 100%; }
     .video-container iframe { height: 200px; }
-    .link-card { font-size: 0.7rem; padding: 12px 15px; max-width: 100%; }
-    .featured-anim { max-width: 100% !important; padding: 15px !important; }
+    .link-card { font-size: 0.7rem; }
 }
