@@ -21,6 +21,7 @@
             justify-content: center;
             height: 100vh;
             overflow: hidden;
+            /* La transición solo se activa si hay efectos */
             transition: background-color 0.8s ease;
             touch-action: none;
         }
@@ -185,7 +186,6 @@
         const effectsBtn = document.getElementById("effects-toggle");
         const volumeSlider = document.getElementById("volume-control");
 
-        // --- CARGA DE AJUSTES PERSISTENTES ---
         let gameSettings = {
             volume: parseFloat(localStorage.getItem("neonDashVolume")) || 0.5,
             effectsEnabled: localStorage.getItem("neonDashEffects") !== "false" 
@@ -195,7 +195,6 @@
         const hitSound = new Audio('./hit.wav');
         const deathSound = new Audio('./death.wav');
 
-        // Inicializar interfaz con ajustes guardados
         volumeSlider.value = gameSettings.volume;
         updateVolume(gameSettings.volume);
         updateEffectsUI();
@@ -218,6 +217,14 @@
             effectsBtn.innerText = gameSettings.effectsEnabled ? "ACTIVADOS" : "DESACTIVADOS";
             effectsBtn.style.borderColor = gameSettings.effectsEnabled ? "#ff00ff" : "#555";
             effectsBtn.style.boxShadow = gameSettings.effectsEnabled ? "0 0 15px #ff00ff" : "none";
+            
+            // Si se desactivan los efectos, quitamos la transición de color y forzamos el fondo base
+            if (!gameSettings.effectsEnabled) {
+                document.body.style.transition = "none";
+                document.body.style.backgroundColor = "#0d0221";
+            } else {
+                document.body.style.transition = "background-color 0.8s ease";
+            }
         }
 
         function toggleSettings(show) {
@@ -331,15 +338,23 @@
 
         function updateLivesUI() {
             livesElement.innerText = "❤️".repeat(lives);
-            document.body.style.backgroundColor = "#660000";
-            setTimeout(() => { document.body.style.backgroundColor = bgColors[currentLevel % bgColors.length]; }, 150);
+            // Solo flashear el fondo si los efectos están ACTIVADOS
+            if (gameSettings.effectsEnabled) {
+                document.body.style.backgroundColor = "#660000";
+                setTimeout(() => { 
+                    document.body.style.backgroundColor = bgColors[currentLevel % bgColors.length]; 
+                }, 150);
+            }
         }
 
         function checkLevelUp() {
             let newLevel = Math.floor(score / 100);
             if (newLevel > currentLevel) {
                 currentLevel = newLevel;
-                document.body.style.backgroundColor = bgColors[currentLevel % bgColors.length];
+                // Solo cambiar el fondo si los efectos están ACTIVADOS
+                if (gameSettings.effectsEnabled) {
+                    document.body.style.backgroundColor = bgColors[currentLevel % bgColors.length];
+                }
             }
         }
 
