@@ -89,8 +89,26 @@ h1 {
 }
 .video-container iframe { width: 100%; height: 225px; border: none; }
 
+/* --- SECCIÓN DESTACADA --- */
+.featured {
+    margin-bottom: 45px; /* Más espacio abajo del Neon Dash */
+}
+
+.featured-anim { 
+    animation: fadeInUp 0.5s ease-out both, neon-glow 2s infinite alternate; 
+}
+
+@keyframes neon-glow {
+    from { box-shadow: 4px 4px 0px #000; }
+    to { box-shadow: 4px 4px 0px #000, 0 0 15px rgba(0, 242, 255, 0.6); }
+}
+
 /* --- BOTONES --- */
-.links { display: flex; flex-direction: column; gap: 15px; }
+.links { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; /* Aumentado de 15px a 20px para separar más los botones */
+}
 
 .link-card {
     font-family: 'Press Start 2P', cursive;
@@ -102,7 +120,7 @@ h1 {
     box-shadow: 4px 4px 0px #000000; transition: all 0.3s ease;
     width: 100%; max-width: 400px; margin: 0 auto;
     animation: fadeInUp 0.5s ease-out both;
-    animation-delay: calc(0.1s * var(--i)); /* Aquí funciona la cascada */
+    animation-delay: calc(0.1s * var(--i));
 }
 
 .link-card:hover {
@@ -126,13 +144,6 @@ h1 {
 .neon-dash-btn { background-color: #00f2ff !important; color: #000000 !important; }
 .pizza-server-btn { background-color: #ff9900 !important; color: #000000 !important; }
 .contact-btn { background-color: #444444 !important; }
-
-/* --- SECCIÓN DESTACADA --- */
-.featured-anim { animation: fadeInUp 0.5s ease-out both, neon-glow 2s infinite alternate; }
-@keyframes neon-glow {
-    from { box-shadow: 4px 4px 0px #000; }
-    to { box-shadow: 4px 4px 0px #000, 0 0 15px rgba(0, 242, 255, 0.6); }
-}
 
 /* --- FOOTER --- */
 footer { margin-top: 40px; padding-bottom: 20px; }
