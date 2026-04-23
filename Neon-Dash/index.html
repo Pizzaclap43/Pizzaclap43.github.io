@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#0d0221">
-    <title>Neon Dash</title>
+    <title>Neon Dash - New Game</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="manifest" href="manifest.json">
     <style>
@@ -30,15 +30,14 @@
             text-transform: uppercase;
             position: relative;
             color: #fff;
-            text-shadow: 
-                2px 2px #ff00ff, 
-                -2px -2px #00ffff;
+            text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff;
             margin-bottom: 15px;
             letter-spacing: 4px;
             text-align: center;
         }
 
-        #start-menu, #game-over-menu {
+        /* Pantallas de Menú */
+        #start-menu, #game-over-menu, #settings-menu {
             position: absolute;
             z-index: 100;
             display: flex;
@@ -52,7 +51,7 @@
             left: 0;
         }
 
-        #game-over-menu {
+        #game-over-menu, #settings-menu {
             display: none;
         }
 
@@ -82,7 +81,8 @@
             box-shadow: 0 0 15px #ff00ff;
             transition: 0.3s;
             text-transform: uppercase;
-            margin-top: 20px;
+            margin-top: 15px;
+            width: 250px;
         }
 
         .btn-neon:hover {
@@ -102,6 +102,25 @@
             color: #ffff00;
             text-shadow: 0 0 8px #ffff00;
             margin-bottom: 10px;
+        }
+
+        /* Estilos de Configuración */
+        .setting-item {
+            margin: 20px 0;
+            width: 280px;
+            text-align: center;
+        }
+
+        .setting-label {
+            font-size: 1.2rem;
+            color: #fff;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type=range] {
+            width: 100%;
+            cursor: pointer;
         }
 
         #game-wrapper {
@@ -144,6 +163,23 @@
             <img src="favicon.png" alt="Icono" id="menu-icon">
         </div>
         <button class="btn-neon" onclick="startGame()">JUGAR</button>
+        <button class="btn-neon" onclick="toggleSettings(true)" style="border-color: #00ffff; box-shadow: 0 0 15px #00ffff; font-size: 1.1rem;">AJUSTES</button>
+    </div>
+
+    <div id="settings-menu">
+        <h1 class="neon-title">AJUSTES</h1>
+        
+        <div class="setting-item">
+            <span class="setting-label">VOLUMEN</span>
+            <input type="range" id="volume-control" min="0" max="1" step="0.1" value="0.5" onchange="updateVolume(this.value)">
+        </div>
+
+        <div class="setting-item">
+            <span class="setting-label">EFECTOS VISUALES</span>
+            <button id="effects-toggle" class="btn-neon" onclick="toggleEffects()" style="font-size: 1rem; padding: 10px; width: 100%;">ACTIVADOS</button>
+        </div>
+
+        <button class="btn-neon" onclick="toggleSettings(false)" style="border-color: #ffff00; box-shadow: 0 0 15px #ffff00; font-size: 1.1rem;">VOLVER</button>
     </div>
 
     <div id="game-over-menu">
@@ -170,16 +206,44 @@
         const scoreElement = document.getElementById("score-val");
         const livesElement = document.getElementById("lives");
         const startMenu = document.getElementById("start-menu");
+        const settingsMenu = document.getElementById("settings-menu");
         const gameOverMenu = document.getElementById("game-over-menu");
         const gameWrapper = document.getElementById("game-wrapper");
         const finalScoreVal = document.getElementById("final-score-val");
         const highScoreVal = document.getElementById("high-score-val");
+        const effectsBtn = document.getElementById("effects-toggle");
+
+        // --- AJUSTES DE USUARIO ---
+        let gameSettings = {
+            volume: 0.5,
+            effectsEnabled: true
+        };
 
         const coinSound = new Audio('./coin.wav');
         const hitSound = new Audio('./hit.wav');
         const deathSound = new Audio('./death.wav');
 
+        function updateVolume(val) {
+            gameSettings.volume = val;
+            coinSound.volume = val;
+            hitSound.volume = val;
+            deathSound.volume = val;
+        }
+
+        function toggleEffects() {
+            gameSettings.effectsEnabled = !gameSettings.effectsEnabled;
+            effectsBtn.innerText = gameSettings.effectsEnabled ? "ACTIVADOS" : "DESACTIVADOS";
+            effectsBtn.style.borderColor = gameSettings.effectsEnabled ? "#ff00ff" : "#555";
+            effectsBtn.style.boxShadow = gameSettings.effectsEnabled ? "0 0 15px #ff00ff" : "none";
+        }
+
+        function toggleSettings(show) {
+            startMenu.style.display = show ? "none" : "flex";
+            settingsMenu.style.display = show ? "flex" : "none";
+        }
+
         function startGame() {
+            updateVolume(gameSettings.volume);
             coinSound.play().then(() => { coinSound.pause(); coinSound.currentTime = 0; }).catch(() => {});
             hitSound.play().then(() => { hitSound.pause(); hitSound.currentTime = 0; }).catch(() => {});
             deathSound.play().then(() => { deathSound.pause(); deathSound.currentTime = 0; }).catch(() => {});
@@ -288,7 +352,6 @@
         }
 
         function showGameOver() {
-            // Lógica de Récord Máximo
             let savedRecord = localStorage.getItem("neonDashHighScore") || 0;
             if (score > savedRecord) {
                 localStorage.setItem("neonDashHighScore", score);
@@ -321,14 +384,23 @@
             if (!gameActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = player.color;
+            // Respetar ajuste de efectos visuales para el jugador
+            if (gameSettings.effectsEnabled) {
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = player.color;
+            } else {
+                ctx.shadowBlur = 0;
+            }
             ctx.fillStyle = player.color;
             ctx.fillRect(player.x, player.y, player.size, player.size);
 
             items.forEach(item => {
-                ctx.shadowBlur = 12;
-                ctx.shadowColor = item.color;
+                if (gameSettings.effectsEnabled) {
+                    ctx.shadowBlur = 12;
+                    ctx.shadowColor = item.color;
+                } else {
+                    ctx.shadowBlur = 0;
+                }
                 ctx.fillStyle = item.color;
                 ctx.beginPath();
                 if(item.type === "point") {
