@@ -36,7 +36,6 @@
             text-align: center;
         }
 
-        /* Pantallas de Menú */
         #start-menu, #game-over-menu, #settings-menu {
             position: absolute;
             z-index: 100;
@@ -51,9 +50,7 @@
             left: 0;
         }
 
-        #game-over-menu, #settings-menu {
-            display: none;
-        }
+        #game-over-menu, #settings-menu { display: none; }
 
         #menu-icon-container {
             margin: 10px 0 25px 0;
@@ -104,31 +101,11 @@
             margin-bottom: 10px;
         }
 
-        /* Estilos de Configuración */
-        .setting-item {
-            margin: 20px 0;
-            width: 280px;
-            text-align: center;
-        }
+        .setting-item { margin: 20px 0; width: 280px; text-align: center; }
+        .setting-label { font-size: 1.2rem; color: #fff; display: block; margin-bottom: 10px; }
+        input[type=range] { width: 100%; cursor: pointer; }
 
-        .setting-label {
-            font-size: 1.2rem;
-            color: #fff;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        input[type=range] {
-            width: 100%;
-            cursor: pointer;
-        }
-
-        #game-wrapper {
-            display: none; 
-            flex-direction: column;
-            align-items: center;
-        }
-
+        #game-wrapper { display: none; flex-direction: column; align-items: center; }
         #game-container {
             position: relative;
             border: 4px solid #fff;
@@ -137,10 +114,7 @@
             line-height: 0;
         }
 
-        canvas {
-            display: block;
-        }
-
+        canvas { display: block; }
         .ui-panel {
             display: flex;
             justify-content: space-between;
@@ -168,17 +142,14 @@
 
     <div id="settings-menu">
         <h1 class="neon-title">AJUSTES</h1>
-        
         <div class="setting-item">
             <span class="setting-label">VOLUMEN</span>
-            <input type="range" id="volume-control" min="0" max="1" step="0.1" value="0.5" onchange="updateVolume(this.value)">
+            <input type="range" id="volume-control" min="0" max="1" step="0.1" value="0.5" oninput="updateVolume(this.value)">
         </div>
-
         <div class="setting-item">
             <span class="setting-label">EFECTOS VISUALES</span>
             <button id="effects-toggle" class="btn-neon" onclick="toggleEffects()" style="font-size: 1rem; padding: 10px; width: 100%;">ACTIVADOS</button>
         </div>
-
         <button class="btn-neon" onclick="toggleSettings(false)" style="border-color: #ffff00; box-shadow: 0 0 15px #ffff00; font-size: 1.1rem;">VOLVER</button>
     </div>
 
@@ -212,26 +183,38 @@
         const finalScoreVal = document.getElementById("final-score-val");
         const highScoreVal = document.getElementById("high-score-val");
         const effectsBtn = document.getElementById("effects-toggle");
+        const volumeSlider = document.getElementById("volume-control");
 
-        // --- AJUSTES DE USUARIO ---
+        // --- CARGA DE AJUSTES PERSISTENTES ---
         let gameSettings = {
-            volume: 0.5,
-            effectsEnabled: true
+            volume: parseFloat(localStorage.getItem("neonDashVolume")) || 0.5,
+            effectsEnabled: localStorage.getItem("neonDashEffects") !== "false" 
         };
 
         const coinSound = new Audio('./coin.wav');
         const hitSound = new Audio('./hit.wav');
         const deathSound = new Audio('./death.wav');
 
+        // Inicializar interfaz con ajustes guardados
+        volumeSlider.value = gameSettings.volume;
+        updateVolume(gameSettings.volume);
+        updateEffectsUI();
+
         function updateVolume(val) {
             gameSettings.volume = val;
             coinSound.volume = val;
             hitSound.volume = val;
             deathSound.volume = val;
+            localStorage.setItem("neonDashVolume", val);
         }
 
         function toggleEffects() {
             gameSettings.effectsEnabled = !gameSettings.effectsEnabled;
+            localStorage.setItem("neonDashEffects", gameSettings.effectsEnabled);
+            updateEffectsUI();
+        }
+
+        function updateEffectsUI() {
             effectsBtn.innerText = gameSettings.effectsEnabled ? "ACTIVADOS" : "DESACTIVADOS";
             effectsBtn.style.borderColor = gameSettings.effectsEnabled ? "#ff00ff" : "#555";
             effectsBtn.style.boxShadow = gameSettings.effectsEnabled ? "0 0 15px #ff00ff" : "none";
@@ -243,14 +226,8 @@
         }
 
         function startGame() {
-            updateVolume(gameSettings.volume);
-            coinSound.play().then(() => { coinSound.pause(); coinSound.currentTime = 0; }).catch(() => {});
-            hitSound.play().then(() => { hitSound.pause(); hitSound.currentTime = 0; }).catch(() => {});
-            deathSound.play().then(() => { deathSound.pause(); deathSound.currentTime = 0; }).catch(() => {});
-
             startMenu.style.display = "none";
             gameWrapper.style.display = "flex";
-
             gameActive = true;
             draw();
         }
@@ -310,35 +287,25 @@
 
         function update() {
             if (!gameActive) return;
-
             if (keys["ArrowLeft"] && player.x > leftLimit) player.x -= player.speed;
             if (keys["ArrowRight"] && player.x < rightLimit) player.x += player.speed;
 
             items.forEach((item, index) => {
                 item.y += item.speed;
-
-                if (
-                    player.x < item.x + item.size &&
-                    player.x + player.size > item.x &&
-                    player.y < item.y + item.size &&
-                    player.y + player.size > item.y
-                ) {
+                if (player.x < item.x + item.size && player.x + player.size > item.x && player.y < item.y + item.size && player.y + player.size > item.y) {
                     if (item.type === "enemy") {
                         items.splice(index, 1);
                         lives--;
-                        
                         if (lives <= 0) {
                             gameActive = false;
                             deathSound.play().catch(() => {});
                             showGameOver();
                         } else {
-                            hitSound.currentTime = 0; 
-                            hitSound.play().catch(() => {});
+                            hitSound.currentTime = 0; hitSound.play().catch(() => {});
                             updateLivesUI();
                         }
                     } else {
-                        coinSound.currentTime = 0; 
-                        coinSound.play().catch(() => {});
+                        coinSound.currentTime = 0; coinSound.play().catch(() => {});
                         score += 10;
                         scoreElement.innerText = score;
                         items.splice(index, 1);
@@ -347,7 +314,6 @@
                 }
                 if (item.y > canvas.height) items.splice(index, 1);
             });
-
             if (Math.random() < 0.05) spawnItem();
         }
 
@@ -357,7 +323,6 @@
                 localStorage.setItem("neonDashHighScore", score);
                 savedRecord = score;
             }
-
             finalScoreVal.innerText = score;
             highScoreVal.innerText = savedRecord;
             gameOverMenu.style.display = "flex";
@@ -367,9 +332,7 @@
         function updateLivesUI() {
             livesElement.innerText = "❤️".repeat(lives);
             document.body.style.backgroundColor = "#660000";
-            setTimeout(() => {
-                document.body.style.backgroundColor = bgColors[currentLevel % bgColors.length];
-            }, 150);
+            setTimeout(() => { document.body.style.backgroundColor = bgColors[currentLevel % bgColors.length]; }, 150);
         }
 
         function checkLevelUp() {
@@ -383,43 +346,21 @@
         function draw() {
             if (!gameActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Respetar ajuste de efectos visuales para el jugador
-            if (gameSettings.effectsEnabled) {
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = player.color;
-            } else {
-                ctx.shadowBlur = 0;
-            }
+            if (gameSettings.effectsEnabled) { ctx.shadowBlur = 15; ctx.shadowColor = player.color; } else { ctx.shadowBlur = 0; }
             ctx.fillStyle = player.color;
             ctx.fillRect(player.x, player.y, player.size, player.size);
 
             items.forEach(item => {
-                if (gameSettings.effectsEnabled) {
-                    ctx.shadowBlur = 12;
-                    ctx.shadowColor = item.color;
-                } else {
-                    ctx.shadowBlur = 0;
-                }
+                if (gameSettings.effectsEnabled) { ctx.shadowBlur = 12; ctx.shadowColor = item.color; } else { ctx.shadowBlur = 0; }
                 ctx.fillStyle = item.color;
                 ctx.beginPath();
-                if(item.type === "point") {
-                    ctx.arc(item.x + 10, item.y + 10, 10, 0, Math.PI * 2);
-                } else {
-                    ctx.fillRect(item.x, item.y, 20, 20);
-                }
+                if(item.type === "point") { ctx.arc(item.x + 10, item.y + 10, 10, 0, Math.PI * 2); } else { ctx.fillRect(item.x, item.y, 20, 20); }
                 ctx.fill();
             });
-
-            requestAnimationFrame(() => {
-                update();
-                draw();
-            });
+            requestAnimationFrame(() => { update(); draw(); });
         }
 
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
     </script>
 </body>
 </html>
