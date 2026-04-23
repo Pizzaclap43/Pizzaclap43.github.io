@@ -5,43 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pizza Server | ClassiCube</title>
     <link rel="icon" type="image/png" href="../avatarHead.png">
-    <link rel="stylesheet" href="../style.css"><link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="background-overlay"></div>
     
     <div class="container">
         <header>
-            <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i> Volver</a>
+            <a href="https://pizzaclap43.github.io" class="back-btn"><i class="fas fa-arrow-left"></i> Volver</a>
             <h1>PIZZA SERVER</h1>
             <p class="subtitle">Servidor de ClassiCube de Pizzaclap43</p>
         </header>
 
+        <div class="status-box" id="server-monitor">
+            <h2 class="pixel-title">ESTADO DEL SERVIDOR</h2>
+            <div class="status-content">
+                <span id="status-indicator" class="status-dot dot-off"></span>
+                <span id="status-text" class="pixel-text">Cargando estado...</span>
+            </div>
+            <div id="player-count" class="pixel-text" style="font-size: 0.8rem; margin-top: 5px;"></div>
+        </div>
+
         <div class="info-box">
             <h2 class="pixel-title"><i class="fas fa-info-circle"></i> SOBRE EL SERVIDOR</h2>
-            
             <p class="pixel-text">Pizza Server es un servidor Venezolano creado el 27 de Diciembre de 2025 por Pizzaclap43 para construir y pasar el rato con la comunidad de ClassiCube.</p>
-            <p class="pixel-text">Actualmente es operado por Pizzaclap43, AndresDMC, ElmichiYT, jose_120 y CatMeow98.</p>
-            
+            <p class="pixel-text">Operado por: <strong>Pizzaclap43, AndresDMC, ElmichiYT, jose_120 y CatMeow98.</strong></p>
         </div>
 
         <main class="links">
             <h2 class="pixel-title"><i class="fas fa-gamepad"></i> ¿CÓMO UNIRSE?</h2>
-            
+            <div class="step-card"><p class="pixel-text">1. Abre tu cliente de <strong>ClassiCube</strong>.</p></div>
+            <div class="step-card"><p class="pixel-text">2. Busca en la lista: <strong>"[ESP] Pizza Server"</strong>.</p></div>
+            <div class="step-card"><p class="pixel-text">3. ¡Únete y diviértete!</p></div>
             <div class="step-card">
-                <p class="pixel-text">1. Abre tu cliente de <strong>ClassiCube</strong>.</p>
-            </div>
-            
-            <div class="step-card">
-                <p class="pixel-text">2. Busca en la lista de servidores: <strong>"[ESP] Pizza Server"</strong>.</p>
-            </div>
-
-            <div class="step-card">
-                <p class="pixel-text">3. Unete y diviertete con todo lo que te trae <strong>Pizza Server</strong>.</p>
-                </div>
-
-            <div class="step-card">
-                <p class="pixel-text"><strong>Nota:</strong> El servidor solo esta online de Lunes a Sabado desde las 3:00 P.M. y los Domingos desde la 1:00 P.M. <strong>Hora Venezolana 🇻🇪</strong>.</p>
+                <p class="pixel-text" style="font-size: 0.8rem;"><strong>Nota:</strong> Online Lunes a Sábado desde las 3:00 PM y Domingos desde la 1:00 PM 🇻🇪.</p>
             </div>
             
             <a href="http://www.classicube.net/server/play/73a30f1191366a1ac56bc4432bbb0225/" target="_blank" class="link-card pizza-server-btn">
@@ -53,9 +53,38 @@
             </a>
         </main>
 
-        <footer>
-            <p class="copyright">©PIZZA SERVER - CLASSICUBE 2026</p>
-        </footer>
+        <footer><p class="copyright">©PIZZA SERVER - CLASSICUBE 2026</p></footer>
     </div>
+
+    <script>
+        async function updateStatus() {
+            try {
+                const response = await fetch('https://www.classicube.net/api/servers');
+                const data = await response.json();
+                // Buscamos tu servidor por su Hash único
+                const myServer = data.servers.find(s => s.hash === '73a30f1191366a1ac56bc4432bbb0225');
+                
+                const dot = document.getElementById('status-indicator');
+                const text = document.getElementById('status-text');
+                const players = document.getElementById('player-count');
+
+                if (myServer) {
+                    dot.className = 'status-dot dot-on';
+                    text.innerHTML = 'ONLINE';
+                    text.style.color = '#53FC18';
+                    players.innerHTML = `Jugadores: ${myServer.players}/${myServer.maxplayers}`;
+                } else {
+                    dot.className = 'status-dot dot-off';
+                    text.innerHTML = 'OFFLINE';
+                    text.style.color = '#ff4444';
+                    players.innerHTML = 'El servidor está descansando';
+                }
+            } catch (error) {
+                console.error('Error al obtener datos:', error);
+            }
+        }
+        updateStatus();
+        setInterval(updateStatus, 30000); // Se actualiza cada 30 segundos
+    </script>
 </body>
 </html>
