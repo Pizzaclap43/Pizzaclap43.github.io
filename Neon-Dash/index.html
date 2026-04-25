@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#0d0221">
-    <title>Neon Dash - New Game</title>
+    <title>Neon Dash - Global Edition</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="manifest" href="manifest.json">
     <style>
@@ -63,25 +63,30 @@
             pointer-events: auto;
         }
 
+        .menu-layer.active {
+            display: flex !important;
+            z-index: 200;
+        }
+
         #start-menu { display: flex; }
 
         #menu-icon-container {
-            margin: 10px 0 25px 0;
+            margin: 10px 0 20px 0;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         #menu-icon {
-            width: 120px;
-            height: 120px;
+            width: 110px;
+            height: 110px;
             object-fit: contain;
             filter: drop-shadow(0 0 15px #ff00ff);
         }
 
         .btn-neon {
-            padding: 15px 40px;
-            font-size: 1.5rem;
+            padding: 12px 30px;
+            font-size: 1.2rem;
             font-family: 'Courier New', Courier, monospace;
             font-weight: bold;
             color: #fff;
@@ -91,21 +96,19 @@
             box-shadow: 0 0 15px #ff00ff;
             transition: 0.2s;
             text-transform: uppercase;
-            margin-top: 15px;
+            margin-top: 12px;
             width: 250px;
-            z-index: 110;
+            z-index: 210;
+            pointer-events: auto;
         }
 
-        .btn-neon:active {
-            transform: scale(0.95);
-            background: rgba(255, 0, 255, 0.3);
-        }
+        .btn-neon:active { transform: scale(0.95); background: rgba(255, 0, 255, 0.3); }
 
-        .final-score { font-size: 1.8rem; color: #00ffff; margin: 10px 0; }
-        .high-score { font-size: 1.2rem; color: #ffff00; margin-bottom: 10px; }
+        .final-score { font-size: 1.8rem; color: #00ffff; margin: 5px 0; }
+        .high-score { font-size: 1rem; color: #ffff00; margin-bottom: 10px; }
 
-        .setting-item { margin: 20px 0; width: 280px; text-align: center; }
-        .setting-label { font-size: 1.2rem; color: #fff; display: block; margin-bottom: 10px; }
+        .setting-item { margin: 15px 0; width: 280px; text-align: center; }
+        .setting-label { font-size: 1.1rem; color: #fff; display: block; margin-bottom: 8px; }
         input[type=range] { width: 100%; cursor: pointer; }
 
         #game-wrapper { display: none; flex-direction: column; align-items: center; }
@@ -124,7 +127,28 @@
             margin-top: 20px;
             font-size: 1.2rem;
             font-weight: bold;
-            transition: all 0.5s ease;
+            /* El text-shadow se aplicará dinámicamente */
+        }
+
+        #player-name-input {
+            padding: 10px;
+            margin: 10px 0;
+            font-family: 'Courier New';
+            background: #000;
+            border: 2px solid #00ffff;
+            color: #fff;
+            text-align: center;
+            width: 200px;
+            outline: none;
+        }
+
+        .leaderboard-row {
+            display: flex;
+            justify-content: space-between;
+            width: 280px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 1.1rem;
         }
     </style>
 </head>
@@ -150,21 +174,34 @@
         <button class="btn-neon" onclick="toggleMenu('themes-menu', false)" style="border-color: #ffff00; box-shadow: 0 0 15px #ffff00; margin-top: 30px;">VOLVER</button>
     </div>
 
+    <div id="ranking-menu" class="menu-layer">
+        <h1 class="neon-title">TOP GLOBAL</h1>
+        <div id="leaderboard-content" style="margin-bottom: 20px; color: #fff;">Cargando...</div>
+        <button class="btn-neon" onclick="toggleMenu('ranking-menu', false)" style="border-color: #ffff00; box-shadow: 0 0 15px #ffff00;">VOLVER</button>
+    </div>
+
     <div id="game-over-menu" class="menu-layer">
         <h1 class="neon-title" style="text-shadow: 2px 2px #ff0000;">¡FIN DEL JUEGO!</h1>
         <p class="final-score">PUNTOS: <span id="final-score-val">0</span></p>
-        <p class="high-score">RÉCORD: <span id="high-score-val">0</span></p>
-        <button class="btn-neon" onclick="location.reload()" style="border-color: #00ffff; box-shadow: 0 0 15px #00ffff;">REINTENTAR</button>
+        <p class="high-score">RECORD LOCAL: <span id="high-score-val">0</span></p>
+        
+        <div id="save-section" style="display: none; flex-direction: column; align-items: center;">
+            <input type="text" id="player-name-input" placeholder="TU NOMBRE" maxlength="12">
+            <button class="btn-neon" id="save-btn" onclick="saveScore()" style="border-color: #7cfc00; box-shadow: 0 0 15px #7cfc00; font-size: 1rem;">SUBIR PUNTAJE</button>
+        </div>
+        
+        <button class="btn-neon" onclick="location.reload()" style="border-color: #00ffff; box-shadow: 0 0 15px #00ffff; margin-top: 10px;">REINTENTAR</button>
     </div>
 
-    <div id="start-menu" class="menu-layer">
+    <div id="start-menu" class="menu-layer active">
         <h1 class="neon-title" id="main-title">NEON DASH</h1>
         <div id="menu-icon-container">
             <img src="favicon.png" alt="Icono" id="menu-icon">
         </div>
         <button class="btn-neon" onclick="startGame()">JUGAR</button>
+        <button class="btn-neon" onclick="toggleMenu('ranking-menu', true); loadScores();" style="border-color: #00ffff; box-shadow: 0 0 15px #00ffff;">RANKING</button>
         <button class="btn-neon" onclick="toggleMenu('themes-menu', true)" style="border-color: #7cfc00; box-shadow: 0 0 15px #7cfc00;">TEMAS</button>
-        <button class="btn-neon" onclick="toggleMenu('settings-menu', true)" style="border-color: #00ffff; box-shadow: 0 0 15px #00ffff;">AJUSTES</button>
+        <button class="btn-neon" onclick="toggleMenu('settings-menu', true)" style="border-color: #ffff00; box-shadow: 0 0 15px #ffff00;">AJUSTES</button>
     </div>
 
     <div id="game-wrapper">
@@ -178,103 +215,134 @@
         </div>
     </div>
 
-    <script>
-        const volumeSlider = document.getElementById("volume-control");
-        const effectsBtn = document.getElementById("effects-toggle");
-        
-        const themes = {
-            neon: { 
-                bg: "#0d0221", player: "#ff00ff", enemy: "#00ffff", point: "#ffff00", shadow: "#ff00ff", title: "NEON DASH",
-                bgList: ["#0d0221", "#2e004d", "#002b36", "#330000", "#1a1a1a"], uiColor: "#ff00ff"
-            },
-            frutiger: { 
-                bg: "#4facfe", player: "#7cfc00", enemy: "#ffffff", point: "#00eeff", shadow: "#ffffff", title: "Aero Dash",
-                bgList: ["#4facfe", "#00f2fe", "#38f9d7", "#a18cd1", "#84fab0"], uiColor: "#ffffff"
+    <script type="module">
+        // --- CONFIGURACIÓN FIREBASE ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBmEI9UPEs3ST7vJVaqzq_PzWUMo1WaYzA",
+            authDomain: "neon-dash-fac14.firebaseapp.com",
+            projectId: "neon-dash-fac14",
+            storageBucket: "neon-dash-fac14.firebasestorage.app",
+            messagingSenderId: "1046802669155",
+            appId: "1:1046802669155:web:b82655117ea092232c2256"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- FUNCIONES GLOBALIZADAS ---
+        window.toggleMenu = (menuId, show) => {
+            const menus = document.querySelectorAll('.menu-layer');
+            menus.forEach(m => {
+                m.style.display = 'none';
+                m.classList.remove('active');
+            });
+
+            if (show) {
+                const target = document.getElementById(menuId);
+                if (target) {
+                    target.classList.add('active');
+                    target.style.display = 'flex';
+                }
+            } else {
+                const start = document.getElementById('start-menu');
+                start.classList.add('active');
+                start.style.display = 'flex';
             }
         };
 
-        let currentThemeKey = localStorage.getItem("neonDashTheme") || "neon";
-        let savedVolume = localStorage.getItem("neonDashVolume");
-        let initialVol = savedVolume !== null ? parseFloat(savedVolume) : 0.5;
+        window.saveScore = async () => {
+            const nameInput = document.getElementById('player-name-input');
+            const name = nameInput.value.trim() || "Jugador";
+            const btn = document.getElementById('save-btn');
+            localStorage.setItem("neonDashPlayerName", name);
 
-        let gameSettings = {
-            volume: initialVol,
-            effectsEnabled: localStorage.getItem("neonDashEffects") !== "false" 
+            try {
+                btn.disabled = true;
+                btn.innerText = "SUBIENDO...";
+                await addDoc(collection(db, "leaderboard"), {
+                    name: name,
+                    score: score,
+                    date: new Date()
+                });
+                btn.innerText = "¡ENVIADO!";
+                setTimeout(() => { location.reload(); }, 800);
+            } catch (e) {
+                btn.innerText = "ERROR";
+                btn.disabled = false;
+            }
         };
 
-        volumeSlider.value = gameSettings.volume;
+        window.loadScores = () => {
+            const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(5));
+            const container = document.getElementById('leaderboard-content');
+            onSnapshot(q, (snapshot) => {
+                container.innerHTML = "";
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    container.innerHTML += `<div class="leaderboard-row"><span>${data.name}</span><span style="color:#00ffff">${data.score}</span></div>`;
+                });
+            });
+        };
+
+        // --- LÓGICA DEL JUEGO ---
+        const volumeSlider = document.getElementById("volume-control");
+        const effectsBtn = document.getElementById("effects-toggle");
+        const themes = {
+            neon: { bg: "#0d0221", player: "#ff00ff", enemy: "#00ffff", point: "#ffff00", shadow: "#ff00ff", title: "NEON DASH", bgList: ["#0d0221", "#2e004d", "#002b36", "#330000", "#1a1a1a"], uiColor: "#ff00ff" },
+            frutiger: { bg: "#4facfe", player: "#7cfc00", enemy: "#ffffff", point: "#00eeff", shadow: "#ffffff", title: "Aero Dash", bgList: ["#4facfe", "#00f2fe", "#38f9d7", "#a18cd1", "#84fab0"], uiColor: "#ffffff" }
+        };
+
+        let currentThemeKey = localStorage.getItem("neonDashTheme") || "neon";
+        let initialVol = localStorage.getItem("neonDashVolume") !== null ? parseFloat(localStorage.getItem("neonDashVolume")) : 0.5;
+        let gameSettings = { volume: initialVol, effectsEnabled: localStorage.getItem("neonDashEffects") !== "false" };
 
         const coinSound = new Audio('./coin.wav');
         const hitSound = new Audio('./hit.wav');
         const deathSound = new Audio('./death.wav');
 
-        function applyAudioVolumes(val) {
-            coinSound.volume = val; hitSound.volume = val; deathSound.volume = val;
-        }
-
+        function applyAudioVolumes(val) { coinSound.volume = val; hitSound.volume = val; deathSound.volume = val; }
         applyAudioVolumes(gameSettings.volume);
-        
-        function toggleMenu(menuId, show) {
-            document.querySelectorAll('.menu-layer').forEach(m => m.style.display = 'none');
-            if (show) {
-                document.getElementById(menuId).style.display = 'flex';
-            } else {
-                document.getElementById('start-menu').style.display = 'flex';
-            }
-        }
+        volumeSlider.value = gameSettings.volume;
 
-        function setTheme(key) {
+        window.setTheme = (key) => {
             currentThemeKey = key;
             localStorage.setItem("neonDashTheme", key);
             const theme = themes[key];
             document.body.style.backgroundColor = theme.bg;
-            
-            const gTitle = document.getElementById("game-title");
-            const mTitle = document.getElementById("main-title");
-            const uiPanel = document.getElementById("ui-panel");
-
-            gTitle.innerText = theme.title;
-            mTitle.innerText = (key === 'frutiger') ? "Aero Dash" : "NEON DASH";
-            uiPanel.style.color = theme.uiColor;
-
-            if(key === 'frutiger') {
-                gTitle.classList.add('frutiger-title');
-                mTitle.classList.add('frutiger-title');
-            } else {
-                gTitle.classList.remove('frutiger-title');
-                mTitle.classList.remove('frutiger-title');
-            }
-
+            document.getElementById("game-title").innerText = theme.title;
+            document.getElementById("main-title").innerText = (key === 'frutiger') ? "Aero Dash" : "NEON DASH";
+            document.getElementById("ui-panel").style.color = theme.uiColor;
+            const titles = [document.getElementById("game-title"), document.getElementById("main-title")];
+            titles.forEach(t => {
+                if(key === 'frutiger') t.classList.add('frutiger-title');
+                else t.classList.remove('frutiger-title');
+            });
             if (typeof player !== 'undefined') player.color = theme.player;
-            
-            // Actualizar brillo del panel UI si los efectos están activos
             updateEffectsUI();
             toggleMenu('themes-menu', false);
-        }
+        };
 
-        function updateVolume(val) {
-            gameSettings.volume = parseFloat(val);
-            applyAudioVolumes(gameSettings.volume);
-            localStorage.setItem("neonDashVolume", val);
-        }
+        window.updateVolume = (val) => { gameSettings.volume = parseFloat(val); applyAudioVolumes(gameSettings.volume); localStorage.setItem("neonDashVolume", val); };
+        window.toggleEffects = () => { gameSettings.effectsEnabled = !gameSettings.effectsEnabled; localStorage.setItem("neonDashEffects", gameSettings.effectsEnabled); updateEffectsUI(); };
 
-        function toggleEffects() {
-            gameSettings.effectsEnabled = !gameSettings.effectsEnabled;
-            localStorage.setItem("neonDashEffects", gameSettings.effectsEnabled);
-            updateEffectsUI();
-        }
-
+        // --- CORRECCIÓN DE EFECTOS UI ---
         function updateEffectsUI() {
             effectsBtn.innerText = gameSettings.effectsEnabled ? "ACTIVADOS" : "DESACTIVADOS";
             effectsBtn.style.borderColor = gameSettings.effectsEnabled ? "#ff00ff" : "#555";
             effectsBtn.style.boxShadow = gameSettings.effectsEnabled ? "0 0 15px #ff00ff" : "none";
             
             const uiPanel = document.getElementById("ui-panel");
+            
+            // Si efectos están activos, aplicar brillo a vidas y puntos según el tema
             if (gameSettings.effectsEnabled) {
                 const shadowCol = themes[currentThemeKey].shadow;
                 uiPanel.style.textShadow = `0 0 10px ${shadowCol}, 0 0 20px ${shadowCol}`;
                 document.body.style.transition = "background-color 0.8s ease";
             } else {
+                // Si están desactivados, quitar brillo
                 uiPanel.style.textShadow = "none";
                 document.body.style.transition = "none";
                 document.body.style.backgroundColor = themes[currentThemeKey].bg;
@@ -287,20 +355,20 @@
         const livesElement = document.getElementById("lives");
         const gameWrapper = document.getElementById("game-wrapper");
 
-        function startGame() {
-            document.querySelectorAll('.menu-layer').forEach(m => m.style.display = 'none');
+        window.startGame = () => {
+            const menus = document.querySelectorAll('.menu-layer');
+            menus.forEach(m => {
+                m.classList.remove('active');
+                m.style.display = 'none';
+            });
             gameWrapper.style.display = "flex";
             gameActive = true;
             initAeroEffects();
             draw();
-        }
+        };
 
-        const MARGIN = 15; 
-        const playerSize = 30;
-        const leftLimit = MARGIN;
-        const rightLimit = canvas.width - MARGIN - playerSize;
-
-        let score = 0, lives = 3, gameActive = false, currentLevel = 0;
+        window.score = 0; 
+        let lives = 3, gameActive = false, currentLevel = 0;
         let aeroBubbles = [], aeroRipples = [], aeroGlints = [];
 
         function initAeroEffects() {
@@ -309,21 +377,16 @@
             for(let i=0; i<3; i++) { aeroGlints.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, opacity: 0, state: 'fade' }); }
         }
 
-        const player = {
-            x: (canvas.width / 2) - (playerSize / 2),
-            y: 435, size: playerSize,
-            color: themes[currentThemeKey].player, speed: 8
-        };
-
+        const player = { x: (canvas.width / 2) - 15, y: 435, size: 30, color: themes[currentThemeKey].player, speed: 8 };
         let items = [], keys = {};
 
         canvas.addEventListener("touchmove", (e) => {
             if (!gameActive) return;
             e.preventDefault();
             const rect = canvas.getBoundingClientRect();
-            let newX = e.touches[0].clientX - rect.left - player.size / 2;
-            if (newX < leftLimit) newX = leftLimit;
-            if (newX > rightLimit) newX = rightLimit;
+            let newX = e.touches[0].clientX - rect.left - 15;
+            if (newX < 15) newX = 15;
+            if (newX > canvas.width - 45) newX = canvas.width - 45;
             player.x = newX;
         }, { passive: false });
 
@@ -333,19 +396,13 @@
         function spawnItem() {
             if (!gameActive) return;
             const isPoint = Math.random() > 0.4;
-            const spawnX = leftLimit + Math.random() * (canvas.width - (MARGIN * 2) - 20);
-            items.push({
-                x: spawnX, y: -30, size: 20,
-                type: isPoint ? "point" : "enemy",
-                color: isPoint ? themes[currentThemeKey].point : themes[currentThemeKey].enemy,
-                speed: 3.5 + (score / 200)
-            });
+            items.push({ x: 15 + Math.random() * (canvas.width - 50), y: -30, size: 20, type: isPoint ? "point" : "enemy", color: isPoint ? themes[currentThemeKey].point : themes[currentThemeKey].enemy, speed: 3.5 + (score / 200) });
         }
 
         function update() {
             if (!gameActive) return;
-            if (keys["ArrowLeft"] && player.x > leftLimit) player.x -= player.speed;
-            if (keys["ArrowRight"] && player.x < rightLimit) player.x += player.speed;
+            if (keys["ArrowLeft"] && player.x > 15) player.x -= player.speed;
+            if (keys["ArrowRight"] && player.x < canvas.width - 45) player.x += player.speed;
 
             if(currentThemeKey === 'frutiger') {
                 aeroBubbles.forEach(b => { b.y -= b.speed; if(b.y + b.r < 0) b.y = canvas.height + b.r; });
@@ -358,15 +415,15 @@
 
             items.forEach((item, index) => {
                 item.y += item.speed;
-                if (player.x < item.x + item.size && player.x + player.size > item.x && player.y < item.y + item.size && player.y + player.size > item.y) {
+                if (player.x < item.x + item.size && player.x + 30 > item.x && player.y < item.y + item.size && player.y + 30 > item.y) {
                     if (item.type === "enemy") {
                         items.splice(index, 1);
                         lives--;
-                        if (lives <= 0) { gameActive = false; deathSound.play().catch(() => {}); showGameOver(); }
-                        else { hitSound.currentTime = 0; hitSound.play().catch(() => {}); updateLivesUI(); }
+                        if (lives <= 0) { gameActive = false; deathSound.play().catch(()=>{}); showGameOver(); }
+                        else { hitSound.currentTime = 0; hitSound.play().catch(()=>{}); updateLivesUI(); }
                     } else {
                         if(currentThemeKey === 'frutiger') aeroRipples.push({ x: item.x+10, y: item.y+10, r: 10, op: 0.8 });
-                        coinSound.currentTime = 0; coinSound.play().catch(() => {});
+                        coinSound.currentTime = 0; coinSound.play().catch(()=>{});
                         score += 10; scoreElement.innerText = score;
                         items.splice(index, 1);
                         checkLevelUp();
@@ -378,10 +435,19 @@
         }
 
         function showGameOver() {
-            let savedRecord = localStorage.getItem("neonDashHighScore") || 0;
-            if (score > savedRecord) { localStorage.setItem("neonDashHighScore", score); savedRecord = score; }
+            let savedRecord = parseInt(localStorage.getItem("neonDashHighScore")) || 0;
+            const nameInput = document.getElementById('player-name-input');
+            nameInput.value = localStorage.getItem("neonDashPlayerName") || "";
             document.getElementById("final-score-val").innerText = score;
             document.getElementById("high-score-val").innerText = savedRecord;
+
+            if (score > savedRecord) {
+                localStorage.setItem("neonDashHighScore", score);
+                document.getElementById("high-score-val").innerText = score;
+                document.getElementById("save-section").style.display = "flex";
+            } else {
+                document.getElementById("save-section").style.display = "none";
+            }
             toggleMenu('game-over-menu', true);
         }
 
@@ -389,8 +455,7 @@
             livesElement.innerText = "❤️".repeat(lives);
             if (gameSettings.effectsEnabled) {
                 document.body.style.backgroundColor = "#660000";
-                const themeList = themes[currentThemeKey].bgList;
-                setTimeout(() => { document.body.style.backgroundColor = themeList[currentLevel % themeList.length]; }, 150);
+                setTimeout(() => { document.body.style.backgroundColor = themes[currentThemeKey].bgList[currentLevel % themes[currentThemeKey].bgList.length]; }, 150);
             }
         }
 
@@ -399,8 +464,7 @@
             if (newLevel > currentLevel) {
                 currentLevel = newLevel;
                 if (gameSettings.effectsEnabled) {
-                    const themeList = themes[currentThemeKey].bgList;
-                    document.body.style.backgroundColor = themeList[currentLevel % themeList.length];
+                    document.body.style.backgroundColor = themes[currentThemeKey].bgList[currentLevel % themes[currentThemeKey].bgList.length];
                 }
             }
         }
@@ -409,62 +473,30 @@
             if (!gameActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const currentTheme = themes[currentThemeKey];
-
-            if(currentThemeKey === 'frutiger' && gameSettings.effectsEnabled) {
-                let grad = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 50, canvas.width/2, canvas.height/2, 300);
-                grad.addColorStop(0, "rgba(255,255,255,0.15)");
-                grad.addColorStop(1, "rgba(255,255,255,0)");
-                ctx.fillStyle = grad; ctx.fillRect(0,0,canvas.width,canvas.height);
-                aeroGlints.forEach(g => { ctx.fillStyle = `rgba(255,255,255,${g.opacity})`; ctx.beginPath(); ctx.arc(g.x, g.y, 2, 0, Math.PI*2); ctx.fill(); });
-                aeroRipples.forEach(r => { ctx.strokeStyle = `rgba(255,255,255,${r.op})`; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, Math.PI*2); ctx.stroke(); });
-                aeroBubbles.forEach(b => {
-                    ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-                    ctx.fillStyle = "rgba(255, 255, 255, 0.1)"; ctx.fill();
-                    ctx.strokeStyle = "rgba(255, 255, 255, 0.2)"; ctx.stroke();
-                    ctx.beginPath(); ctx.arc(b.x - b.r/3, b.y - b.r/3, b.r/4, 0, Math.PI * 2);
-                    ctx.fillStyle = "rgba(255, 255, 255, 0.3)"; ctx.fill();
-                });
-            }
-
-            ctx.shadowBlur = (gameSettings.effectsEnabled) ? 15 : 0;
-            ctx.shadowColor = currentTheme.shadow;
-            ctx.fillStyle = currentTheme.player;
             
             if(currentThemeKey === 'frutiger' && gameSettings.effectsEnabled) {
-                ctx.fillRect(player.x, player.y, player.size, player.size);
-                ctx.fillStyle = "rgba(255,255,255,0.3)";
-                ctx.fillRect(player.x, player.y, player.size, player.size/2);
-            } else {
-                ctx.fillRect(player.x, player.y, player.size, player.size);
+                aeroGlints.forEach(g => { ctx.fillStyle = `rgba(255,255,255,${g.opacity})`; ctx.beginPath(); ctx.arc(g.x, g.y, 2, 0, Math.PI*2); ctx.fill(); });
+                aeroBubbles.forEach(b => { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fillStyle = "rgba(255, 255, 255, 0.1)"; ctx.fill(); ctx.strokeStyle = "rgba(255, 255, 255, 0.2)"; ctx.stroke(); });
             }
-
+            
+            ctx.shadowBlur = (gameSettings.effectsEnabled) ? 15 : 0; 
+            ctx.shadowColor = currentTheme.shadow;
+            ctx.fillStyle = currentTheme.player; 
+            ctx.fillRect(player.x, player.y, 30, 30);
+            
             items.forEach(item => {
+                ctx.fillStyle = item.color;
+                // Brillo de objetos del juego (puntos/enemigos)
                 ctx.shadowBlur = (gameSettings.effectsEnabled) ? 12 : 0;
                 ctx.shadowColor = item.color;
-                ctx.fillStyle = item.color;
-                ctx.beginPath();
-                if(item.type === "point") {
-                    ctx.arc(item.x + 10, item.y + 10, 10, 0, Math.PI * 2); ctx.fill();
-                    if(currentThemeKey === 'frutiger' && gameSettings.effectsEnabled) {
-                        ctx.shadowBlur = 0;
-                        ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
-                        ctx.beginPath(); ctx.arc(item.x + 7, item.y + 7, 3, 0, Math.PI * 2); ctx.fill();
-                    }
-                } else {
-                    ctx.fillRect(item.x, item.y, 20, 20); ctx.fill();
-                    if(currentThemeKey === 'frutiger' && gameSettings.effectsEnabled) {
-                        ctx.fillStyle = "rgba(255,255,255,0.2)";
-                        ctx.fillRect(item.x, item.y, 20, 10);
-                    }
-                }
+                if(item.type === "point") { ctx.beginPath(); ctx.arc(item.x + 10, item.y + 10, 10, 0, Math.PI * 2); ctx.fill(); }
+                else { ctx.fillRect(item.x, item.y, 20, 20); }
             });
             requestAnimationFrame(() => { update(); draw(); });
         }
 
         updateEffectsUI();
         setTheme(currentThemeKey);
-        
-        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
     </script>
 </body>
 </html>
