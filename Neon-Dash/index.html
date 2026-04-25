@@ -124,7 +124,7 @@
             margin-top: 20px;
             font-size: 1.2rem;
             font-weight: bold;
-            transition: color 0.5s ease;
+            transition: all 0.5s ease;
         }
     </style>
 </head>
@@ -246,6 +246,9 @@
             }
 
             if (typeof player !== 'undefined') player.color = theme.player;
+            
+            // Actualizar brillo del panel UI si los efectos están activos
+            updateEffectsUI();
             toggleMenu('themes-menu', false);
         }
 
@@ -265,11 +268,16 @@
             effectsBtn.innerText = gameSettings.effectsEnabled ? "ACTIVADOS" : "DESACTIVADOS";
             effectsBtn.style.borderColor = gameSettings.effectsEnabled ? "#ff00ff" : "#555";
             effectsBtn.style.boxShadow = gameSettings.effectsEnabled ? "0 0 15px #ff00ff" : "none";
-            if (!gameSettings.effectsEnabled) {
+            
+            const uiPanel = document.getElementById("ui-panel");
+            if (gameSettings.effectsEnabled) {
+                const shadowCol = themes[currentThemeKey].shadow;
+                uiPanel.style.textShadow = `0 0 10px ${shadowCol}, 0 0 20px ${shadowCol}`;
+                document.body.style.transition = "background-color 0.8s ease";
+            } else {
+                uiPanel.style.textShadow = "none";
                 document.body.style.transition = "none";
                 document.body.style.backgroundColor = themes[currentThemeKey].bg;
-            } else {
-                document.body.style.transition = "background-color 0.8s ease";
             }
         }
 
@@ -453,7 +461,6 @@
             requestAnimationFrame(() => { update(); draw(); });
         }
 
-        // Sincronización al iniciar para evitar el bug del botón
         updateEffectsUI();
         setTheme(currentThemeKey);
         
