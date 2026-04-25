@@ -1,4 +1,4 @@
-const CACHE_NAME = 'neon-dash-v27'; // Subimos a v27
+const CACHE_NAME = 'neon-dash-v28'; // Subimos a v28
 const assets = [
   './',
   './index.html',
@@ -19,7 +19,7 @@ self.addEventListener('install', event => {
   );
 });
 
-// Activación: Borra CUALQUIER caché que no sea la v27
+// Activación: Borra CUALQUIER caché que no sea la v28
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => {
