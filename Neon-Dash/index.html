@@ -144,7 +144,7 @@
         <h1 class="neon-title">AJUSTES</h1>
         <div class="setting-item">
             <span class="setting-label">VOLUMEN</span>
-            <input type="range" id="volume-control" min="0" max="1" step="0.1" value="0.5" oninput="updateVolume(this.value)">
+            <input type="range" id="volume-control" min="0" max="1" step="0.1" oninput="updateVolume(this.value)">
         </div>
         <div class="setting-item">
             <span class="setting-label">EFECTOS VISUALES</span>
@@ -172,39 +172,42 @@
     </div>
 
     <script>
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
-        const scoreElement = document.getElementById("score-val");
-        const livesElement = document.getElementById("lives");
-        const startMenu = document.getElementById("start-menu");
-        const settingsMenu = document.getElementById("settings-menu");
-        const gameOverMenu = document.getElementById("game-over-menu");
-        const gameWrapper = document.getElementById("game-wrapper");
-        const finalScoreVal = document.getElementById("final-score-val");
-        const highScoreVal = document.getElementById("high-score-val");
-        const effectsBtn = document.getElementById("effects-toggle");
+        // Elementos UI
         const volumeSlider = document.getElementById("volume-control");
+        const effectsBtn = document.getElementById("effects-toggle");
+        
+        // --- CARGA DE DATOS INMEDIATA ---
+        // Leemos primero el volumen guardado
+        let savedVolume = localStorage.getItem("neonDashVolume");
+        // Si no existe, usamos 0.5 por defecto
+        let initialVol = savedVolume !== null ? parseFloat(savedVolume) : 0.5;
 
-        // --- CARGA DE AJUSTES PERSISTENTES ---
         let gameSettings = {
-            volume: parseFloat(localStorage.getItem("neonDashVolume")) || 0.5,
+            volume: initialVol,
             effectsEnabled: localStorage.getItem("neonDashEffects") !== "false" 
         };
 
+        // Forzamos al slider a tomar el valor guardado ANTES de cualquier interacción
+        volumeSlider.value = gameSettings.volume;
+
+        // Audios
         const coinSound = new Audio('./coin.wav');
         const hitSound = new Audio('./hit.wav');
         const deathSound = new Audio('./death.wav');
 
-        // Sincronizar el slider visual y los sonidos al iniciar/recargar
-        volumeSlider.value = gameSettings.volume; 
-        updateVolume(gameSettings.volume);
-        updateEffectsUI();
-
-        function updateVolume(val) {
-            gameSettings.volume = val;
+        // Aplicamos el volumen a los objetos de audio
+        function applyAudioVolumes(val) {
             coinSound.volume = val;
             hitSound.volume = val;
             deathSound.volume = val;
+        }
+
+        applyAudioVolumes(gameSettings.volume);
+        updateEffectsUI();
+
+        function updateVolume(val) {
+            gameSettings.volume = parseFloat(val);
+            applyAudioVolumes(gameSettings.volume);
             localStorage.setItem("neonDashVolume", val);
         }
 
@@ -226,6 +229,18 @@
                 document.body.style.transition = "background-color 0.8s ease";
             }
         }
+
+        // Resto de la lógica del juego (sin cambios en funcionalidad)
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const scoreElement = document.getElementById("score-val");
+        const livesElement = document.getElementById("lives");
+        const startMenu = document.getElementById("start-menu");
+        const settingsMenu = document.getElementById("settings-menu");
+        const gameOverMenu = document.getElementById("game-over-menu");
+        const gameWrapper = document.getElementById("game-wrapper");
+        const finalScoreVal = document.getElementById("final-score-val");
+        const highScoreVal = document.getElementById("high-score-val");
 
         function toggleSettings(show) {
             startMenu.style.display = show ? "none" : "flex";
