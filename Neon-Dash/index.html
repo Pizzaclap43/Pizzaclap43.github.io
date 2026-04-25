@@ -50,6 +50,7 @@
             left: 0;
         }
 
+        /* CORRECCIÓN: Todos los menús secundarios ocultos por defecto */
         #game-over-menu, #settings-menu, #themes-menu { display: none; }
 
         #menu-icon-container {
@@ -183,7 +184,6 @@
         const volumeSlider = document.getElementById("volume-control");
         const effectsBtn = document.getElementById("effects-toggle");
         
-        // --- SISTEMA DE TEMAS ---
         const themes = {
             neon: {
                 bg: "#0d0221",
@@ -204,8 +204,6 @@
         };
 
         let currentThemeKey = localStorage.getItem("neonDashTheme") || "neon";
-        
-        // --- CARGA DE DATOS INMEDIATA ---
         let savedVolume = localStorage.getItem("neonDashVolume");
         let initialVol = savedVolume !== null ? parseFloat(savedVolume) : 0.5;
 
@@ -227,8 +225,6 @@
         }
 
         applyAudioVolumes(gameSettings.volume);
-        
-        // Aplicar tema inicial
         setTheme(currentThemeKey);
         updateEffectsUI();
 
@@ -240,12 +236,10 @@
             document.body.style.backgroundColor = theme.bg;
             document.getElementById("game-title").innerText = theme.title;
             
-            // Actualizar colores del jugador si ya existe
             if (typeof player !== 'undefined') {
                 player.color = theme.player;
             }
             
-            // Cerrar menú de temas si estaba abierto
             toggleMenu('themes-menu', false);
         }
 
@@ -444,14 +438,26 @@
                 } else { 
                     ctx.shadowBlur = 0; 
                 }
+                
                 ctx.fillStyle = item.color;
                 ctx.beginPath();
+                
                 if(item.type === "point") { 
                     ctx.arc(item.x + 10, item.y + 10, 10, 0, Math.PI * 2); 
+                    ctx.fill();
+                    
+                    // EFECTO BURBUJA PARA FRUTIGER AERO
+                    if(currentThemeKey === 'frutiger') {
+                        ctx.shadowBlur = 0;
+                        ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+                        ctx.beginPath();
+                        ctx.arc(item.x + 7, item.y + 7, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
                 } else { 
                     ctx.fillRect(item.x, item.y, 20, 20); 
+                    ctx.fill();
                 }
-                ctx.fill();
             });
             requestAnimationFrame(() => { update(); draw(); });
         }
