@@ -71,7 +71,7 @@
 
     <script>
         async function updateStatus() {
-    // Usando el proxy optimizado proporcionado
+    // Usando el proxy optimizado proporcionado por ElmichiYT
     const target = "https://cc-server-proxy.elmichiyt.workers.dev/";
     
     function formatUptime(seconds) {
@@ -93,21 +93,18 @@
         
         const data = await response.json();
         
-        // Buscamos específicamente el hash de Pizza Server
         const myServer = data.servers.find(s => s.hash === '73a30f1191366a1ac56bc4432bbb0225');
         
         const dot = document.getElementById('status-indicator');
         const text = document.getElementById('status-text');
         const players = document.getElementById('player-count');
 
-        // Nota: Mantenemos la lógica de tu HTML original que solo usa indicador, texto y jugadores
         if (myServer && dot) {
             dot.className = 'status-dot dot-on';
             text.innerHTML = `ONLINE`;
             text.style.color = '#53FC18';
             players.innerHTML = `Jugadores: ${myServer.players}/${myServer.maxplayers}`;
             
-            // Si en el futuro agregas elementos con IDs 'server-time', esto los llenará
             const uptime = document.getElementById('server-time');
             if (uptime) uptime.innerHTML = formatUptime(myServer.uptime);
             
@@ -124,10 +121,8 @@
     }
 }
 
-// Ejecución inicial
 updateStatus();
 
-// Intervalo de actualización cada 15 segundos (más rápido gracias al nuevo proxy)
 setInterval(updateStatus, 15000);
     </script>
 </body>
