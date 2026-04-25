@@ -127,19 +127,19 @@
             margin-top: 20px;
             font-size: 1.2rem;
             font-weight: bold;
-            /* El text-shadow se aplicará dinámicamente */
         }
 
-        #player-name-input {
+        #player-name-settings {
             padding: 10px;
-            margin: 10px 0;
+            margin: 5px 0;
             font-family: 'Courier New';
             background: #000;
             border: 2px solid #00ffff;
             color: #fff;
             text-align: center;
-            width: 200px;
+            width: 240px;
             outline: none;
+            box-sizing: border-box;
         }
 
         .leaderboard-row {
@@ -150,20 +150,35 @@
             border-bottom: 1px solid rgba(255,255,255,0.1);
             font-size: 1.1rem;
         }
+
+        #status-msg {
+            font-size: 0.8rem;
+            margin-top: 5px;
+            color: #7cfc00;
+            height: 15px;
+        }
     </style>
 </head>
 <body>
 
     <div id="settings-menu" class="menu-layer">
         <h1 class="neon-title">AJUSTES</h1>
+        
+        <div class="setting-item">
+            <span class="setting-label">NOMBRE DE JUGADOR</span>
+            <input type="text" id="player-name-settings" placeholder="ESCRIBE TU NOMBRE" maxlength="12" onchange="updatePlayerName(this.value)">
+        </div>
+
         <div class="setting-item">
             <span class="setting-label">VOLUMEN</span>
             <input type="range" id="volume-control" min="0" max="1" step="0.1" oninput="updateVolume(this.value)">
         </div>
+
         <div class="setting-item">
             <span class="setting-label">EFECTOS VISUALES</span>
             <button id="effects-toggle" class="btn-neon" onclick="toggleEffects()" style="font-size: 1rem; padding: 10px; width: 100%;">ACTIVADOS</button>
         </div>
+
         <button class="btn-neon" onclick="toggleMenu('settings-menu', false)" style="border-color: #ffff00; box-shadow: 0 0 15px #ffff00;">VOLVER</button>
     </div>
 
@@ -184,12 +199,7 @@
         <h1 class="neon-title" style="text-shadow: 2px 2px #ff0000;">¡FIN DEL JUEGO!</h1>
         <p class="final-score">PUNTOS: <span id="final-score-val">0</span></p>
         <p class="high-score">RECORD LOCAL: <span id="high-score-val">0</span></p>
-        
-        <div id="save-section" style="display: none; flex-direction: column; align-items: center;">
-            <input type="text" id="player-name-input" placeholder="TU NOMBRE" maxlength="12">
-            <button class="btn-neon" id="save-btn" onclick="saveScore()" style="border-color: #7cfc00; box-shadow: 0 0 15px #7cfc00; font-size: 1rem;">SUBIR PUNTAJE</button>
-        </div>
-        
+        <div id="status-msg"></div>
         <button class="btn-neon" onclick="location.reload()" style="border-color: #00ffff; box-shadow: 0 0 15px #00ffff; margin-top: 10px;">REINTENTAR</button>
     </div>
 
@@ -253,25 +263,27 @@
             }
         };
 
-        window.saveScore = async () => {
-            const nameInput = document.getElementById('player-name-input');
-            const name = nameInput.value.trim() || "Jugador";
-            const btn = document.getElementById('save-btn');
-            localStorage.setItem("neonDashPlayerName", name);
+        // Función para actualizar nombre desde Ajustes
+        window.updatePlayerName = (val) => {
+            localStorage.setItem("neonDashPlayerName", val.trim());
+        };
 
+        // Subida automática al perder
+        window.autoSaveScore = async () => {
+            const name = localStorage.getItem("neonDashPlayerName") || "Invitado";
+            const status = document.getElementById('status-msg');
+            
             try {
-                btn.disabled = true;
-                btn.innerText = "SUBIENDO...";
+                status.innerText = "SUBIENDO PUNTUACIÓN...";
                 await addDoc(collection(db, "leaderboard"), {
                     name: name,
                     score: score,
                     date: new Date()
                 });
-                btn.innerText = "¡ENVIADO!";
-                setTimeout(() => { location.reload(); }, 800);
+                status.innerText = "¡PUNTUACIÓN GUARDADA!";
             } catch (e) {
-                btn.innerText = "ERROR";
-                btn.disabled = false;
+                status.innerText = "ERROR AL SUBIR";
+                console.error(e);
             }
         };
 
@@ -290,6 +302,8 @@
         // --- LÓGICA DEL JUEGO ---
         const volumeSlider = document.getElementById("volume-control");
         const effectsBtn = document.getElementById("effects-toggle");
+        const nameInputSettings = document.getElementById("player-name-settings");
+
         const themes = {
             neon: { bg: "#0d0221", player: "#ff00ff", enemy: "#00ffff", point: "#ffff00", shadow: "#ff00ff", title: "NEON DASH", bgList: ["#0d0221", "#2e004d", "#002b36", "#330000", "#1a1a1a"], uiColor: "#ff00ff" },
             frutiger: { bg: "#4facfe", player: "#7cfc00", enemy: "#ffffff", point: "#00eeff", shadow: "#ffffff", title: "Aero Dash", bgList: ["#4facfe", "#00f2fe", "#38f9d7", "#a18cd1", "#84fab0"], uiColor: "#ffffff" }
@@ -298,6 +312,9 @@
         let currentThemeKey = localStorage.getItem("neonDashTheme") || "neon";
         let initialVol = localStorage.getItem("neonDashVolume") !== null ? parseFloat(localStorage.getItem("neonDashVolume")) : 0.5;
         let gameSettings = { volume: initialVol, effectsEnabled: localStorage.getItem("neonDashEffects") !== "false" };
+
+        // Cargar nombre guardado en el input de ajustes
+        nameInputSettings.value = localStorage.getItem("neonDashPlayerName") || "";
 
         const coinSound = new Audio('./coin.wav');
         const hitSound = new Audio('./hit.wav');
@@ -328,24 +345,16 @@
         window.updateVolume = (val) => { gameSettings.volume = parseFloat(val); applyAudioVolumes(gameSettings.volume); localStorage.setItem("neonDashVolume", val); };
         window.toggleEffects = () => { gameSettings.effectsEnabled = !gameSettings.effectsEnabled; localStorage.setItem("neonDashEffects", gameSettings.effectsEnabled); updateEffectsUI(); };
 
-        // --- CORRECCIÓN DE EFECTOS UI ---
         function updateEffectsUI() {
             effectsBtn.innerText = gameSettings.effectsEnabled ? "ACTIVADOS" : "DESACTIVADOS";
             effectsBtn.style.borderColor = gameSettings.effectsEnabled ? "#ff00ff" : "#555";
             effectsBtn.style.boxShadow = gameSettings.effectsEnabled ? "0 0 15px #ff00ff" : "none";
-            
             const uiPanel = document.getElementById("ui-panel");
-            
-            // Si efectos están activos, aplicar brillo a vidas y puntos según el tema
             if (gameSettings.effectsEnabled) {
                 const shadowCol = themes[currentThemeKey].shadow;
                 uiPanel.style.textShadow = `0 0 10px ${shadowCol}, 0 0 20px ${shadowCol}`;
-                document.body.style.transition = "background-color 0.8s ease";
             } else {
-                // Si están desactivados, quitar brillo
                 uiPanel.style.textShadow = "none";
-                document.body.style.transition = "none";
-                document.body.style.backgroundColor = themes[currentThemeKey].bg;
             }
         }
 
@@ -436,18 +445,16 @@
 
         function showGameOver() {
             let savedRecord = parseInt(localStorage.getItem("neonDashHighScore")) || 0;
-            const nameInput = document.getElementById('player-name-input');
-            nameInput.value = localStorage.getItem("neonDashPlayerName") || "";
             document.getElementById("final-score-val").innerText = score;
             document.getElementById("high-score-val").innerText = savedRecord;
 
             if (score > savedRecord) {
                 localStorage.setItem("neonDashHighScore", score);
                 document.getElementById("high-score-val").innerText = score;
-                document.getElementById("save-section").style.display = "flex";
-            } else {
-                document.getElementById("save-section").style.display = "none";
             }
+            
+            // Subida automática al Firebase
+            autoSaveScore();
             toggleMenu('game-over-menu', true);
         }
 
@@ -473,20 +480,14 @@
             if (!gameActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const currentTheme = themes[currentThemeKey];
-            
             if(currentThemeKey === 'frutiger' && gameSettings.effectsEnabled) {
                 aeroGlints.forEach(g => { ctx.fillStyle = `rgba(255,255,255,${g.opacity})`; ctx.beginPath(); ctx.arc(g.x, g.y, 2, 0, Math.PI*2); ctx.fill(); });
                 aeroBubbles.forEach(b => { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fillStyle = "rgba(255, 255, 255, 0.1)"; ctx.fill(); ctx.strokeStyle = "rgba(255, 255, 255, 0.2)"; ctx.stroke(); });
             }
-            
-            ctx.shadowBlur = (gameSettings.effectsEnabled) ? 15 : 0; 
-            ctx.shadowColor = currentTheme.shadow;
-            ctx.fillStyle = currentTheme.player; 
-            ctx.fillRect(player.x, player.y, 30, 30);
-            
+            ctx.shadowBlur = (gameSettings.effectsEnabled) ? 15 : 0; ctx.shadowColor = currentTheme.shadow;
+            ctx.fillStyle = currentTheme.player; ctx.fillRect(player.x, player.y, 30, 30);
             items.forEach(item => {
                 ctx.fillStyle = item.color;
-                // Brillo de objetos del juego (puntos/enemigos)
                 ctx.shadowBlur = (gameSettings.effectsEnabled) ? 12 : 0;
                 ctx.shadowColor = item.color;
                 if(item.type === "point") { ctx.beginPath(); ctx.arc(item.x + 10, item.y + 10, 10, 0, Math.PI * 2); ctx.fill(); }
