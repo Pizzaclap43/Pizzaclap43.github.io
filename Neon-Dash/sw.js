@@ -1,4 +1,4 @@
-const CACHE_NAME = 'neon-dash-v26';
+const CACHE_NAME = 'neon-dash-v27'; // Subimos a v27
 const assets = [
   './',
   './index.html',
@@ -9,8 +9,9 @@ const assets = [
   './death.wav'
 ];
 
+// Instalación: Limpia la caché vieja inmediatamente
 self.addEventListener('install', event => {
-  self.skipWaiting();
+  self.skipWaiting(); // Fuerza al SW nuevo a activarse sin esperar
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return cache.addAll(assets);
@@ -18,22 +19,35 @@ self.addEventListener('install', event => {
   );
 });
 
+// Activación: Borra CUALQUIER caché que no sea la v27
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => {
       return Promise.all(
-        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+        keys.map(key => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
       );
-    })
+    }).then(() => self.clients.claim()) // Toma el control de las pestañas abiertas
   );
 });
 
+// ESTRATEGIA: NETWORK FIRST (Prioriza la red sobre la caché)
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    }).catch(() => {
-      return new Response('', { status: 404, statusText: 'Offline' });
-    })
+    fetch(event.request)
+      .then(response => {
+        // Si la red funciona, actualizamos la caché con lo nuevo
+        return caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, response.clone());
+          return response;
+        });
+      })
+      .catch(() => {
+        // Si falla la red (offline), usamos la caché
+        return caches.match(event.request);
+      })
   );
 });
