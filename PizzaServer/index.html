@@ -71,38 +71,64 @@
 
     <script>
         async function updateStatus() {
-            const proxy = "https://api.allorigins.win/get?url=";
-            const target = encodeURIComponent("https://www.classicube.net/api/servers");
-            
-            try {
-                const response = await fetch(proxy + target);
-                const rawData = await response.json();
-                const data = JSON.parse(rawData.contents);
-                
-                const myServer = data.servers.find(s => s.hash === '73a30f1191366a1ac56bc4432bbb0225');
-                
-                const dot = document.getElementById('status-indicator');
-                const text = document.getElementById('status-text');
-                const players = document.getElementById('player-count');
+    // Usando el proxy optimizado proporcionado
+    const target = "https://cc-server-proxy.elmichiyt.workers.dev/";
+    
+    function formatUptime(seconds) {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
 
-                if (myServer) {
-                    dot.className = 'status-dot dot-on';
-                    text.innerHTML = 'ONLINE';
-                    text.style.color = '#53FC18';
-                    players.innerHTML = `Jugadores: ${myServer.players}/${myServer.maxplayers}`;
-                } else {
-                    dot.className = 'status-dot dot-off';
-                    text.innerHTML = 'OFFLINE';
-                    text.style.color = '#ff4444';
-                    players.innerHTML = 'El servidor está descansando';
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('status-text').innerHTML = "ERROR DE CONEXIÓN";
-            }
+        let parts = [];
+        if (h > 0) parts.push(`${h} h`);
+        if (m > 0 || h > 0) parts.push(`${m} m`);
+        parts.push(`${s} s`);
+
+        return parts.join(', ');
+    }
+
+    try {
+        const response = await fetch(target);
+        if (!response.ok) throw new Error("Error en el servidor");
+        
+        const data = await response.json();
+        
+        // Buscamos específicamente el hash de Pizza Server
+        const myServer = data.servers.find(s => s.hash === '73a30f1191366a1ac56bc4432bbb0225');
+        
+        const dot = document.getElementById('status-indicator');
+        const text = document.getElementById('status-text');
+        const players = document.getElementById('player-count');
+
+        // Nota: Mantenemos la lógica de tu HTML original que solo usa indicador, texto y jugadores
+        if (myServer && dot) {
+            dot.className = 'status-dot dot-on';
+            text.innerHTML = `ONLINE`;
+            text.style.color = '#53FC18';
+            players.innerHTML = `Jugadores: ${myServer.players}/${myServer.maxplayers}`;
+            
+            // Si en el futuro agregas elementos con IDs 'server-time', esto los llenará
+            const uptime = document.getElementById('server-time');
+            if (uptime) uptime.innerHTML = formatUptime(myServer.uptime);
+            
+        } else if (dot) {
+            dot.className = 'status-dot dot-off';
+            text.innerHTML = `OFFLINE`;
+            text.style.color = '#ff4444';
+            players.innerHTML = 'El servidor está descansando';
         }
-        updateStatus();
-        setInterval(updateStatus, 45000);
+    } catch (error) {
+        console.error('Error:', error);
+        const st = document.getElementById('status-text');
+        if (st) st.innerHTML = "ERROR DE CONEXIÓN";
+    }
+}
+
+// Ejecución inicial
+updateStatus();
+
+// Intervalo de actualización cada 15 segundos (más rápido gracias al nuevo proxy)
+setInterval(updateStatus, 15000);
     </script>
 </body>
 </html>
