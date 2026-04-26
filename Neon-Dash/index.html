@@ -177,7 +177,7 @@
         </div>
         <div class="setting-item">
             <span class="setting-label">EFECTOS VISUALES</span>
-            <button id="effects-toggle" class="btn-neon" onclick="toggleEffects()" style="font-size: 1rem; padding: 10px; width: 100%;">ACTIVADOS</button>
+            <button id="effects-toggle" class="btn-neon" onclick="toggleEffects()">ACTIVADOS</button>
         </div>
         <button class="btn-neon" onclick="toggleMenu('settings-menu', false)" style="border-color: #ffff00; box-shadow: 0 0 15px #ffff00;">VOLVER</button>
     </div>
@@ -200,7 +200,7 @@
         <p class="final-score">PUNTOS: <span id="final-score-val">0</span></p>
         <p class="high-score">RECORD LOCAL: <span id="high-score-val">0</span></p>
         <div id="status-msg"></div>
-        <button class="btn-neon" onclick="location.reload()" style="border-color: #00ffff; box-shadow: 0 0 15px #00ffff; margin-top: 10px;">REINTENTAR</button>
+        <button class="btn-neon" onclick="toggleMenu('game-over-menu', false)" style="border-color: #00ffff; box-shadow: 0 0 15px #00ffff; margin-top: 10px;">REINTENTAR</button>
     </div>
 
     <div id="start-menu" class="menu-layer active">
@@ -230,6 +230,12 @@
         import { getFirestore, collection, doc, setDoc, getDoc, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log("SW error", err));
+            });
+        }
+
         const firebaseConfig = {
             apiKey: "AIzaSyBmEI9UPEs3ST7vJVaqzq_PzWUMo1WaYzA",
             authDomain: "neon-dash-fac14.firebaseapp.com",
@@ -244,7 +250,6 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // --- AUTENTICACIÓN ---
         window.handleAuth = async (type) => {
             const email = document.getElementById('player-email').value;
             const password = document.getElementById('player-password').value;
@@ -271,15 +276,12 @@
             }
         });
 
-        // --- RANKING ---
         window.autoSaveScore = async () => {
             const user = auth.currentUser;
             let name = user ? user.displayName : (localStorage.getItem("neonDashPlayerName") || "Invitado");
-            if (!name || name.trim() === "") {
-        name = "Pizzaclap43_Player"; 
-    }
+            if (!name || name.trim() === "") { name = "Pizzaclap43_Player"; }
             const status = document.getElementById('status-msg');
-            const userId = user ? user.uid : "anonymous_" + name;
+            const userId = user ? user.uid : "anonymous_" + name + "_" + Date.now();
             try {
                 status.innerText = "REVISANDO RÉCORD...";
                 const docRef = doc(db, "leaderboard", userId);
@@ -303,15 +305,12 @@
             });
         };
 
-        // --- TEMAS Y ESCENCIA ---
         const themes = {
             neon: { bg: "#0d0221", player: "#ff00ff", enemy: "#00ffff", point: "#ffff00", shadow: "#ff00ff", title: "NEON DASH", bgList: ["#0d0221", "#2e004d", "#002b36", "#330000", "#1a1a1a"], uiColor: "#ff00ff" },
             frutiger: { bg: "#4facfe", player: "#7cfc00", enemy: "#ffffff", point: "#00eeff", shadow: "#ffffff", title: "Aero Dash", bgList: ["#4facfe", "#00f2fe", "#38f9d7", "#a18cd1", "#84fab0"], uiColor: "#ffffff" }
         };
 
         let currentThemeKey = localStorage.getItem("neonDashTheme") || "neon";
-        
-        // CARGA CRÍTICA DEL VOLUMEN DESDE LOCALSTORAGE
         let savedVol = localStorage.getItem("neonDashVolume");
         let initialVol = savedVol !== null ? parseFloat(savedVol) : 0.5;
         let gameSettings = { volume: initialVol, effectsEnabled: localStorage.getItem("neonDashEffects") !== "false" };
@@ -326,7 +325,6 @@
             deathSound.volume = val; 
         }
         
-        // Aplicar volumen guardado nada más empezar
         applyAudioVolumes(gameSettings.volume);
         document.getElementById("volume-control").value = gameSettings.volume;
 
@@ -368,11 +366,29 @@
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
         const gameWrapper = document.getElementById("game-wrapper");
+        let animationId;
 
         window.startGame = () => {
-            document.getElementById('start-menu').style.display = 'none';
+            if(animationId) cancelAnimationFrame(animationId);
+            
+            coinSound.play().then(() => { coinSound.pause(); coinSound.currentTime = 0; });
+            
+            const allMenus = document.querySelectorAll('.menu-layer');
+            allMenus.forEach(menu => {
+                menu.classList.remove('active');
+                menu.style.display = 'none';
+            });
+            
             gameWrapper.style.display = "flex";
+            score = 0;
+            lives = 3;
+            items = [];
+            currentLevel = 0;
             gameActive = true;
+            player.x = (canvas.width/2)-15;
+            
+            updateLivesUI();
+            document.getElementById("score-val").innerText = "0";
             initAeroEffects();
             draw();
         };
@@ -380,12 +396,12 @@
         window.score = 0; let lives = 3, gameActive = false, currentLevel = 0;
         let aeroBubbles = [], aeroGlints = [];
 
-        function initAeroEffects() function initAeroEffects() {
-    aeroBubbles = []; // Esto limpia las burbujas de la partida anterior
-    aeroGlints = [];   // Esto limpia los destellos
-    for(let i=0; i<10; i++) aeroBubbles.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: 4+Math.random()*12, speed: 0.4+Math.random() });
-    for(let i=0; i<4; i++) aeroGlints.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, op: 0, state: 'in' });
-}
+        function initAeroEffects() {
+            aeroBubbles = []; 
+            aeroGlints = [];   
+            for(let i=0; i<10; i++) aeroBubbles.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: 4+Math.random()*12, speed: 0.4+Math.random() });
+            for(let i=0; i<4; i++) aeroGlints.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, op: 0, state: 'in' });
+        }
 
         const player = { x: (canvas.width/2)-15, y: 435, size: 30 };
         let items = [], keys = {};
@@ -395,6 +411,7 @@
             const rect = canvas.getBoundingClientRect();
             let newX = e.touches[0].clientX - rect.left - 15;
             player.x = Math.max(15, Math.min(canvas.width - 45, newX));
+            e.preventDefault();
         }, { passive: false });
 
         document.addEventListener("keydown", (e) => keys[e.code] = true);
@@ -416,7 +433,11 @@
                 if (player.x < item.x + item.size && player.x + 30 > item.x && player.y < item.y + item.size && player.y + 30 > item.y) {
                     if (item.type === "enemy") {
                         items.splice(index, 1); lives--;
-                        if (lives <= 0) { gameActive = false; deathSound.play(); showGameOver(); }
+                        if (lives <= 0) { 
+                            gameActive = false; 
+                            deathSound.play(); 
+                            showGameOver(); 
+                        }
                         else { hitSound.play(); updateLivesUI(); }
                     } else {
                         coinSound.currentTime = 0; coinSound.play();
@@ -465,14 +486,29 @@
                 else ctx.fillRect(item.x, item.y, 20, 20);
             });
             update();
-            requestAnimationFrame(draw);
+            animationId = requestAnimationFrame(draw);
         }
 
         window.toggleMenu = (id, show) => {
             const menus = document.querySelectorAll('.menu-layer');
             menus.forEach(m => { m.style.display = 'none'; m.classList.remove('active'); });
-            if (show) { const t = document.getElementById(id); t.classList.add('active'); t.style.display = 'flex'; }
-            else { document.getElementById('start-menu').style.display = 'flex'; }
+            
+            if (show) { 
+                const t = document.getElementById(id); 
+                t.classList.add('active'); 
+                t.style.display = 'flex'; 
+            } else { 
+                // Al quitar un menú (como el de Game Over), ocultamos el wrapper del juego
+                // y mostramos el menú de inicio
+                gameActive = false;
+                if(animationId) cancelAnimationFrame(animationId);
+                gameWrapper.style.display = "none";
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                const start = document.getElementById('start-menu');
+                start.style.display = 'flex'; 
+                start.classList.add('active'); 
+            }
         };
 
         setTheme(currentThemeKey);
