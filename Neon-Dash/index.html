@@ -173,7 +173,7 @@
         </div>
         <div class="setting-item" style="border-top: 1px solid #333; padding-top: 15px;">
             <span class="setting-label">VOLUMEN</span>
-            <input type="range" id="volume-control" min="0" max="1" step="0.1" oninput="updateVolume(this.value)">
+            <input type="range" id="volume-control" min="0" max="1" step="0.1" value="0.5" oninput="updateVolume(this.value)">
         </div>
         <div class="setting-item">
             <span class="setting-label">EFECTOS VISUALES</span>
@@ -377,11 +377,12 @@
         window.score = 0; let lives = 3, gameActive = false, currentLevel = 0;
         let aeroBubbles = [], aeroGlints = [];
 
-        function initAeroEffects() {
-            aeroBubbles = []; aeroGlints = [];
-            for(let i=0; i<10; i++) aeroBubbles.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: 4+Math.random()*12, speed: 0.4+Math.random() });
-            for(let i=0; i<4; i++) aeroGlints.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, op: 0, state: 'in' });
-        }
+        function initAeroEffects() function initAeroEffects() {
+    aeroBubbles = []; // Esto limpia las burbujas de la partida anterior
+    aeroGlints = [];   // Esto limpia los destellos
+    for(let i=0; i<10; i++) aeroBubbles.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: 4+Math.random()*12, speed: 0.4+Math.random() });
+    for(let i=0; i<4; i++) aeroGlints.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, op: 0, state: 'in' });
+}
 
         const player = { x: (canvas.width/2)-15, y: 435, size: 30 };
         let items = [], keys = {};
