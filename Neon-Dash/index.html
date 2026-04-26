@@ -274,7 +274,10 @@
         // --- RANKING ---
         window.autoSaveScore = async () => {
             const user = auth.currentUser;
-            const name = user ? user.displayName : (localStorage.getItem("neonDashPlayerName") || "Invitado");
+            let name = user ? user.displayName : (localStorage.getItem("neonDashPlayerName") || "Invitado");
+            if (!name || name.trim() === "") {
+        name = "Pizzaclap43_Player"; 
+    }
             const status = document.getElementById('status-msg');
             const userId = user ? user.uid : "anonymous_" + name;
             try {
