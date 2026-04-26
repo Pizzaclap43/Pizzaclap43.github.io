@@ -227,7 +227,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -244,6 +244,7 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
+        // --- AUTENTICACIÓN ---
         window.handleAuth = async (type) => {
             const email = document.getElementById('player-email').value;
             const password = document.getElementById('player-password').value;
@@ -270,26 +271,20 @@
             }
         });
 
-        window.toggleMenu = (menuId, show) => {
-            const menus = document.querySelectorAll('.menu-layer');
-            menus.forEach(m => { m.style.display = 'none'; m.classList.remove('active'); });
-            if (show) {
-                const target = document.getElementById(menuId);
-                if (target) { target.classList.add('active'); target.style.display = 'flex'; }
-            } else {
-                const start = document.getElementById('start-menu');
-                start.classList.add('active'); start.style.display = 'flex';
-            }
-        };
-
+        // --- RANKING ---
         window.autoSaveScore = async () => {
             const user = auth.currentUser;
             const name = user ? user.displayName : (localStorage.getItem("neonDashPlayerName") || "Invitado");
             const status = document.getElementById('status-msg');
+            const userId = user ? user.uid : "anonymous_" + name;
             try {
-                status.innerText = "SUBIENDO PUNTUACIÓN...";
-                await addDoc(collection(db, "leaderboard"), { name: name, score: score, date: new Date(), userId: user ? user.uid : "anonymous" });
-                status.innerText = "¡PUNTUACIÓN GUARDADA!";
+                status.innerText = "REVISANDO RÉCORD...";
+                const docRef = doc(db, "leaderboard", userId);
+                const docSnap = await getDoc(docRef);
+                if (!docSnap.exists() || score > docSnap.data().score) {
+                    await setDoc(docRef, { name: name, score: score, date: new Date() });
+                    status.innerText = "¡NUEVO RÉCORD GLOBAL!";
+                } else { status.innerText = "PUNTUACIÓN SUBIDA"; }
             } catch (e) { status.innerText = "ERROR AL SUBIR"; }
         };
 
@@ -305,20 +300,32 @@
             });
         };
 
+        // --- TEMAS Y ESCENCIA ---
         const themes = {
             neon: { bg: "#0d0221", player: "#ff00ff", enemy: "#00ffff", point: "#ffff00", shadow: "#ff00ff", title: "NEON DASH", bgList: ["#0d0221", "#2e004d", "#002b36", "#330000", "#1a1a1a"], uiColor: "#ff00ff" },
             frutiger: { bg: "#4facfe", player: "#7cfc00", enemy: "#ffffff", point: "#00eeff", shadow: "#ffffff", title: "Aero Dash", bgList: ["#4facfe", "#00f2fe", "#38f9d7", "#a18cd1", "#84fab0"], uiColor: "#ffffff" }
         };
 
         let currentThemeKey = localStorage.getItem("neonDashTheme") || "neon";
-        let initialVol = localStorage.getItem("neonDashVolume") !== null ? parseFloat(localStorage.getItem("neonDashVolume")) : 0.5;
+        
+        // CARGA CRÍTICA DEL VOLUMEN DESDE LOCALSTORAGE
+        let savedVol = localStorage.getItem("neonDashVolume");
+        let initialVol = savedVol !== null ? parseFloat(savedVol) : 0.5;
         let gameSettings = { volume: initialVol, effectsEnabled: localStorage.getItem("neonDashEffects") !== "false" };
 
         const coinSound = new Audio('./coin.wav');
         const hitSound = new Audio('./hit.wav');
         const deathSound = new Audio('./death.wav');
-        function applyAudioVolumes(val) { coinSound.volume = val; hitSound.volume = val; deathSound.volume = val; }
+        
+        function applyAudioVolumes(val) { 
+            coinSound.volume = val; 
+            hitSound.volume = val; 
+            deathSound.volume = val; 
+        }
+        
+        // Aplicar volumen guardado nada más empezar
         applyAudioVolumes(gameSettings.volume);
+        document.getElementById("volume-control").value = gameSettings.volume;
 
         window.setTheme = (key) => {
             currentThemeKey = key;
@@ -333,12 +340,16 @@
                 if(key === 'frutiger') t.classList.add('frutiger-title');
                 else t.classList.remove('frutiger-title');
             });
-            if (typeof player !== 'undefined') player.color = theme.player;
             updateEffectsUI();
             if(gameActive) toggleMenu('themes-menu', false);
         };
 
-        window.updateVolume = (val) => { gameSettings.volume = parseFloat(val); applyAudioVolumes(gameSettings.volume); localStorage.setItem("neonDashVolume", val); };
+        window.updateVolume = (val) => { 
+            gameSettings.volume = parseFloat(val); 
+            applyAudioVolumes(gameSettings.volume); 
+            localStorage.setItem("neonDashVolume", val); 
+        };
+
         window.toggleEffects = () => { gameSettings.effectsEnabled = !gameSettings.effectsEnabled; localStorage.setItem("neonDashEffects", gameSettings.effectsEnabled); updateEffectsUI(); };
 
         function updateEffectsUI() {
@@ -347,7 +358,7 @@
             const uiPanel = document.getElementById("ui-panel");
             if (gameSettings.effectsEnabled) {
                 const shadowCol = themes[currentThemeKey].shadow;
-                uiPanel.style.textShadow = `0 0 10px ${shadowCol}`;
+                uiPanel.style.textShadow = `0 0 10px ${shadowCol}, 0 0 20px ${shadowCol}`;
             } else { uiPanel.style.textShadow = "none"; }
         }
 
@@ -356,7 +367,6 @@
         const gameWrapper = document.getElementById("game-wrapper");
 
         window.startGame = () => {
-            document.getElementById('start-menu').classList.remove('active');
             document.getElementById('start-menu').style.display = 'none';
             gameWrapper.style.display = "flex";
             gameActive = true;
@@ -365,19 +375,19 @@
         };
 
         window.score = 0; let lives = 3, gameActive = false, currentLevel = 0;
-        let aeroBubbles = [], aeroRipples = [], aeroGlints = [];
+        let aeroBubbles = [], aeroGlints = [];
 
         function initAeroEffects() {
-            aeroBubbles = []; aeroRipples = []; aeroGlints = [];
-            for(let i=0; i<8; i++) aeroBubbles.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: 5+Math.random()*15, speed: 0.5+Math.random() });
+            aeroBubbles = []; aeroGlints = [];
+            for(let i=0; i<10; i++) aeroBubbles.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: 4+Math.random()*12, speed: 0.4+Math.random() });
+            for(let i=0; i<4; i++) aeroGlints.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, op: 0, state: 'in' });
         }
 
-        const player = { x: (canvas.width/2)-15, y: 435, size: 30, color: themes[currentThemeKey].player, speed: 8 };
+        const player = { x: (canvas.width/2)-15, y: 435, size: 30 };
         let items = [], keys = {};
 
         canvas.addEventListener("touchmove", (e) => {
             if (!gameActive) return;
-            e.preventDefault();
             const rect = canvas.getBoundingClientRect();
             let newX = e.touches[0].clientX - rect.left - 15;
             player.x = Math.max(15, Math.min(canvas.width - 45, newX));
@@ -388,27 +398,37 @@
 
         function update() {
             if (!gameActive) return;
-            if (keys["ArrowLeft"] && player.x > 15) player.x -= player.speed;
-            if (keys["ArrowRight"] && player.x < canvas.width - 45) player.x += player.speed;
+            if (keys["ArrowLeft"] && player.x > 15) player.x -= 8;
+            if (keys["ArrowRight"] && player.x < canvas.width - 45) player.x += 8;
+            if(currentThemeKey === 'frutiger') {
+                aeroBubbles.forEach(b => { b.y -= b.speed; if(b.y < -20) b.y = canvas.height + 20; });
+                aeroGlints.forEach(g => {
+                    if(g.state === 'in') { g.op += 0.01; if(g.op >= 0.5) g.state = 'out'; }
+                    else { g.op -= 0.01; if(g.op <= 0) { g.x = Math.random()*canvas.width; g.y = Math.random()*canvas.height; g.state = 'in'; } }
+                });
+            }
             items.forEach((item, index) => {
                 item.y += item.speed;
                 if (player.x < item.x + item.size && player.x + 30 > item.x && player.y < item.y + item.size && player.y + 30 > item.y) {
                     if (item.type === "enemy") {
-                        items.splice(index, 1);
-                        lives--;
-                        if (lives <= 0) { gameActive = false; deathSound.play().catch(()=>{}); showGameOver(); }
-                        else { hitSound.currentTime = 0; hitSound.play().catch(()=>{}); updateLivesUI(); }
+                        items.splice(index, 1); lives--;
+                        if (lives <= 0) { gameActive = false; deathSound.play(); showGameOver(); }
+                        else { hitSound.play(); updateLivesUI(); }
                     } else {
-                        coinSound.currentTime = 0; coinSound.play().catch(()=>{});
+                        coinSound.currentTime = 0; coinSound.play();
                         score += 10; document.getElementById("score-val").innerText = score;
                         items.splice(index, 1);
+                        if(Math.floor(score/100) > currentLevel) {
+                            currentLevel++;
+                            if(gameSettings.effectsEnabled) document.body.style.backgroundColor = themes[currentThemeKey].bgList[currentLevel % 5];
+                        }
                     }
                 }
                 if (item.y > canvas.height) items.splice(index, 1);
             });
             if (Math.random() < 0.05) {
-                const isPoint = Math.random() > 0.4;
-                items.push({ x: 15+Math.random()*(canvas.width-50), y: -30, size: 20, type: isPoint?"point":"enemy", color: isPoint?themes[currentThemeKey].point:themes[currentThemeKey].enemy, speed: 3.5+(score/200) });
+                const isP = Math.random() > 0.4;
+                items.push({ x: 15+Math.random()*(canvas.width-50), y: -30, size: 20, type: isP?"point":"enemy", color: isP?themes[currentThemeKey].point:themes[currentThemeKey].enemy, speed: 3.5+(score/200) });
             }
         }
 
@@ -426,6 +446,10 @@
         function draw() {
             if (!gameActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if(currentThemeKey === 'frutiger' && gameSettings.effectsEnabled) {
+                aeroBubbles.forEach(b => { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 7); ctx.fillStyle = "rgba(255,255,255,0.15)"; ctx.fill(); ctx.strokeStyle = "rgba(255,255,255,0.3)"; ctx.stroke(); });
+                aeroGlints.forEach(g => { ctx.fillStyle = `rgba(255,255,255,${g.op})`; ctx.beginPath(); ctx.arc(g.x, g.y, 2, 0, 7); ctx.fill(); });
+            }
             ctx.shadowBlur = gameSettings.effectsEnabled ? 15 : 0;
             ctx.shadowColor = themes[currentThemeKey].shadow;
             ctx.fillStyle = themes[currentThemeKey].player;
@@ -433,16 +457,20 @@
             items.forEach(item => {
                 ctx.fillStyle = item.color;
                 ctx.shadowColor = item.color;
-                if(item.type === "point") { ctx.beginPath(); ctx.arc(item.x+10, item.y+10, 10, 0, Math.PI*2); ctx.fill(); }
+                if(item.type === "point") { ctx.beginPath(); ctx.arc(item.x+10, item.y+10, 10, 0, 7); ctx.fill(); }
                 else ctx.fillRect(item.x, item.y, 20, 20);
             });
             update();
             requestAnimationFrame(draw);
         }
 
-        // Inicialización forzada del menú
-        document.getElementById('start-menu').style.display = 'flex';
-        updateEffectsUI();
+        window.toggleMenu = (id, show) => {
+            const menus = document.querySelectorAll('.menu-layer');
+            menus.forEach(m => { m.style.display = 'none'; m.classList.remove('active'); });
+            if (show) { const t = document.getElementById(id); t.classList.add('active'); t.style.display = 'flex'; }
+            else { document.getElementById('start-menu').style.display = 'flex'; }
+        };
+
         setTheme(currentThemeKey);
     </script>
 </body>
