@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PizzaChat - Seguridad Total</title>
+    <title>PizzaChat - Blindado</title>
     <style>
         :root { --piz-orange: #e67e22; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f2f5; height: 100vh; display: flex; flex-direction: column; }
@@ -13,8 +13,11 @@
         
         header { background: var(--piz-orange); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
         #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+        
+        /* Estilos para mensajes seguros */
         .msg { background: white; padding: 10px; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); max-width: 80%; align-self: flex-start; }
-        .msg b { color: var(--piz-orange); display: block; font-size: 0.85em; }
+        .msg-author { color: var(--piz-orange); font-weight: bold; font-size: 0.85em; display: block; margin-bottom: 3px; }
+        .msg-text { word-wrap: break-word; white-space: pre-wrap; }
         
         #input-area { padding: 15px; background: white; display: flex; gap: 10px; border-top: 1px solid #eee; }
         input, button { padding: 12px; border-radius: 8px; border: 1px solid #ddd; outline: none; }
@@ -45,7 +48,7 @@
     </div>
 
     <div id="verify-banner" class="hidden">
-        ⚠️ Debes verificar tu correo para usar el chat. 
+        ⚠️ Verifica tu correo para chatear. 
         <button onclick="reviarVerificacion()" style="padding: 2px 10px; margin-left: 10px;">Ya lo verifiqué</button>
     </div>
 
@@ -84,57 +87,39 @@
         let miUsuario = null;
         const errorArea = document.getElementById('error-msg');
 
-        // --- RESTABLECER CONTRASEÑA ---
         window.restablecerClave = async () => {
             const email = document.getElementById('email').value;
-            if (!email) {
-                errorArea.innerText = "Escribe tu correo arriba primero.";
-                return;
-            }
+            if (!email) { errorArea.innerText = "Escribe tu correo primero."; return; }
             try {
                 await sendPasswordResetEmail(auth, email);
-                alert("Correo de restablecimiento enviado a " + email);
-                errorArea.innerText = "";
-            } catch (error) {
-                errorArea.innerText = "Error al enviar el correo.";
-            }
+                alert("Correo de restablecimiento enviado.");
+            } catch (error) { errorArea.innerText = "Error al enviar correo."; }
         };
 
-        // --- ENTRAR ---
         document.getElementById('btnEntrar').onclick = async () => {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('pass').value;
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
-            } catch (error) {
-                errorArea.innerText = "Error: Credenciales incorrectas.";
-            }
+            try { await signInWithEmailAndPassword(auth, email, pass); } 
+            catch (error) { errorArea.innerText = "Error: Credenciales incorrectas."; }
         };
 
-        // --- REGISTRO ---
         document.getElementById('btnRegistro').onclick = async () => {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('pass').value;
             const nick = document.getElementById('nickname').value;
-
             if(!nick) { errorArea.innerText = "Elige un apodo."; return; }
-
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
                 await updateProfile(userCredential.user, { displayName: nick });
                 await sendEmailVerification(userCredential.user);
-                alert("¡Cuenta creada! Revisa tu correo para verificar.");
-            } catch (error) {
-                errorArea.innerText = "Error al registrar.";
-            }
+                alert("¡Cuenta creada! Verifica tu correo.");
+            } catch (error) { errorArea.innerText = "Error al registrar."; }
         };
 
         document.getElementById('btnSalir').onclick = () => signOut(auth);
 
         window.reviarVerificacion = () => {
-            auth.currentUser.reload().then(() => {
-                location.reload();
-            });
+            auth.currentUser.reload().then(() => { location.reload(); });
         };
 
         onAuthStateChanged(auth, (user) => {
@@ -150,7 +135,7 @@
                 if (!user.emailVerified) {
                     banner.classList.remove('hidden');
                     inputArea.classList.add('hidden');
-                    chatBox.innerHTML = "<p style='text-align:center; padding:20px;'>Verifica tu cuenta para chatear.</p>";
+                    chatBox.innerHTML = "<p style='text-align:center;'>Verifica tu cuenta.</p>";
                 } else {
                     banner.classList.add('hidden');
                     inputArea.classList.remove('hidden');
@@ -158,10 +143,22 @@
                     
                     onChildAdded(chatRef, (snapshot) => {
                         const data = snapshot.val();
+                        
+                        // --- CREACIÓN SEGURA DE MENSAJES ---
                         const div = document.createElement('div');
                         div.className = 'msg';
-                        const nombreAMostrar = data.nombre || data.usuario.split('@')[0];
-                        div.innerHTML = `<b>${nombreAMostrar}</b> ${data.texto}`;
+
+                        const spanAuthor = document.createElement('span');
+                        spanAuthor.className = 'msg-author';
+                        spanAuthor.textContent = data.nombre || data.usuario.split('@')[0];
+
+                        const spanText = document.createElement('span');
+                        spanText.className = 'msg-text';
+                        spanText.textContent = data.texto; // AQUÍ ESTÁ LA SEGURIDAD (textContent)
+
+                        div.appendChild(spanAuthor);
+                        div.appendChild(spanText);
+                        
                         chatBox.appendChild(div);
                         chatBox.scrollTop = chatBox.scrollHeight;
                     });
