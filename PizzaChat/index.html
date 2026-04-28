@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PizzaChat - Verificado</title>
+    <title>PizzaChat - Seguridad Total</title>
     <style>
         :root { --piz-orange: #e67e22; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f2f5; height: 100vh; display: flex; flex-direction: column; }
@@ -25,6 +25,7 @@
         .hidden { display: none !important; }
         #error-msg { color: #e74c3c; font-size: 0.85em; text-align: center; min-height: 1.2em; }
         #verify-banner { background: #f1c40f; color: #000; padding: 10px; text-align: center; font-size: 0.9em; font-weight: bold; }
+        .reset-link { font-size: 0.75em; text-align: center; color: #3498db; cursor: pointer; text-decoration: underline; margin-top: -5px; }
     </style>
 </head>
 <body>
@@ -36,13 +37,15 @@
             <input type="text" id="nickname" placeholder="Tu Apodo (Solo registro)">
             <input type="email" id="email" placeholder="Correo electrónico">
             <input type="password" id="pass" placeholder="Contraseña">
+            
             <button id="btnEntrar" class="btn-main">Iniciar Sesión</button>
+            <div class="reset-link" onclick="restablecerClave()">¿Olvidaste tu contraseña?</div>
             <button id="btnRegistro" class="btn-secondary">Crear Cuenta Nueva</button>
         </div>
     </div>
 
     <div id="verify-banner" class="hidden">
-        ⚠️ Debes verificar tu correo para leer y enviar mensajes. 
+        ⚠️ Debes verificar tu correo para usar el chat. 
         <button onclick="reviarVerificacion()" style="padding: 2px 10px; margin-left: 10px;">Ya lo verifiqué</button>
     </div>
 
@@ -61,7 +64,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, push, onChildAdded, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD_o9hukEo6Pol4NcncYmP_9M5ltGfFHqQ",
@@ -81,6 +84,22 @@
         let miUsuario = null;
         const errorArea = document.getElementById('error-msg');
 
+        // --- RESTABLECER CONTRASEÑA ---
+        window.restablecerClave = async () => {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                errorArea.innerText = "Escribe tu correo arriba primero.";
+                return;
+            }
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert("Correo de restablecimiento enviado a " + email);
+                errorArea.innerText = "";
+            } catch (error) {
+                errorArea.innerText = "Error al enviar el correo.";
+            }
+        };
+
         // --- ENTRAR ---
         document.getElementById('btnEntrar').onclick = async () => {
             const email = document.getElementById('email').value;
@@ -92,7 +111,7 @@
             }
         };
 
-        // --- REGISTRO CON ENVÍO DE VERIFICACIÓN ---
+        // --- REGISTRO ---
         document.getElementById('btnRegistro').onclick = async () => {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('pass').value;
@@ -103,9 +122,8 @@
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
                 await updateProfile(userCredential.user, { displayName: nick });
-                // ENVIAR CORREO DE VERIFICACIÓN
                 await sendEmailVerification(userCredential.user);
-                alert("¡Cuenta creada! Revisa tu correo para verificar tu cuenta.");
+                alert("¡Cuenta creada! Revisa tu correo para verificar.");
             } catch (error) {
                 errorArea.innerText = "Error al registrar.";
             }
@@ -113,14 +131,12 @@
 
         document.getElementById('btnSalir').onclick = () => signOut(auth);
 
-        // Función manual para recargar el estado del usuario
         window.reviarVerificacion = () => {
             auth.currentUser.reload().then(() => {
-                location.reload(); // Recarga la página para aplicar cambios
+                location.reload();
             });
         };
 
-        // --- MONITOR DE SESIÓN ---
         onAuthStateChanged(auth, (user) => {
             const screen = document.getElementById('login-screen');
             const chatBox = document.getElementById('chat');
@@ -131,13 +147,11 @@
                 miUsuario = user;
                 screen.classList.add('hidden');
                 
-                // Si el usuario NO ha verificado su correo:
                 if (!user.emailVerified) {
                     banner.classList.remove('hidden');
                     inputArea.classList.add('hidden');
-                    chatBox.innerHTML = "<p style='text-align:center; padding:20px;'>Tu cuenta no está verificada. Revisa tu bandeja de entrada.</p>";
+                    chatBox.innerHTML = "<p style='text-align:center; padding:20px;'>Verifica tu cuenta para chatear.</p>";
                 } else {
-                    // Si está verificado:
                     banner.classList.add('hidden');
                     inputArea.classList.remove('hidden');
                     chatBox.innerHTML = "";
