@@ -20,16 +20,23 @@ const chatRef = ref(db, 'mensajes');
 let miUsuario = null;
 const inputMsg = document.getElementById('mensaje');
 
-// --- DETECTORES DE CONTENIDO ---
+// --- DETECTORES ---
 const esImagen = (url) => /\.(jpg|jpeg|png|webp|gif|avif)$/i.test(url.split('?')[0]);
-const esAudio = (url) => /\.(mp3|wav|ogg)$/i.test(url.split('?')[0]);
 const obtenerIdYoutube = (url) => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
     return (match && match[2].length === 11) ? match[2] : null;
 };
 
-// --- LÓGICA DE TEMAS ---
+// Función para convertir texto plano en links HTML
+const linkify = (text) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, (url) => {
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+    });
+};
+
+// --- TEMAS ---
 const aplicarTema = (t) => {
     if (t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.body.classList.add('dark');
@@ -47,7 +54,6 @@ document.getElementById('btnEntrar').onclick = async () => {
     const pass = document.getElementById('pass').value;
     try { await signInWithEmailAndPassword(auth, email, pass); } catch (e) { alert("Error al entrar."); }
 };
-
 document.getElementById('btnRegistro').onclick = async () => {
     const email = document.getElementById('email').value;
     const pass = document.getElementById('pass').value;
@@ -60,7 +66,6 @@ document.getElementById('btnRegistro').onclick = async () => {
         alert("Verifica tu correo.");
     } catch (e) { alert("Error al registrar."); }
 };
-
 document.getElementById('btnSalir').onclick = () => signOut(auth);
 
 onAuthStateChanged(auth, (user) => {
@@ -79,42 +84,27 @@ onAuthStateChanged(auth, (user) => {
                 authSpan.textContent = data.nombre || data.usuario.split('@')[0];
                 div.appendChild(authSpan);
 
-                // Texto del mensaje (link)
+                // Texto del mensaje con soporte para links
                 const txtSpan = document.createElement('span');
                 txtSpan.className = 'msg-text';
-                txtSpan.textContent = data.texto;
+                txtSpan.innerHTML = linkify(data.texto);
                 div.appendChild(txtSpan);
 
-                // --- LÓGICA DE DETECCIÓN AUTOMÁTICA ---
+                // --- PREVISUALIZACIÓN ---
                 const contenido = data.texto.trim();
                 const ytId = obtenerIdYoutube(contenido);
 
                 if (esImagen(contenido)) {
-                    const img = document.createElement('img');
-                    img.src = contenido;
-                    img.className = 'preview-media';
-                    img.onerror = () => img.style.display = 'none'; // Si el link no es una imagen real, no muestra nada roto
-                    div.appendChild(img);
-                } else if (esAudio(contenido)) {
-                    const aud = document.createElement('audio');
-                    aud.src = contenido;
-                    aud.controls = true;
-                    aud.style.width = "100%";
-                    aud.style.marginTop = "10px";
-                    div.appendChild(aud);
+                    const img = document.createElement('img'); img.src = contenido; img.className = 'preview-media'; div.appendChild(img);
                 } else if (ytId) {
-                    const container = document.createElement('div');
-                    container.className = 'yt-container';
+                    const container = document.createElement('div'); container.className = 'yt-container';
                     const iframe = document.createElement('iframe');
                     iframe.src = `https://www.youtube.com/embed/${ytId}`;
-                    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
                     iframe.allowFullscreen = true;
-                    container.appendChild(iframe);
-                    div.appendChild(container);
+                    container.appendChild(iframe); div.appendChild(container);
                 }
 
-                chatBox.appendChild(div);
-                chatBox.scrollTop = chatBox.scrollHeight;
+                chatBox.appendChild(div); chatBox.scrollTop = chatBox.scrollHeight;
             });
         }
     } else { miUsuario = null; screen.classList.remove('hidden'); }
@@ -132,18 +122,9 @@ const enviar = () => {
         inputMsg.value = ""; inputMsg.style.height = 'auto';
     }
 };
-
 document.getElementById('btnEnviar').onclick = enviar;
-
-inputMsg.oninput = function() {
-    this.style.height = 'auto';
-    this.style.height = this.scrollHeight + 'px';
-};
-
+inputMsg.oninput = function() { this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px'; };
 inputMsg.onkeydown = (e) => {
     const isMob = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (e.key === 'Enter' && !isMob && !e.shiftKey) {
-        e.preventDefault();
-        enviar();
-    }
+    if (e.key === 'Enter' && !isMob && !e.shiftKey) { e.preventDefault(); enviar(); }
 };
