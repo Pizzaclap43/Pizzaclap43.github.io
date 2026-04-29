@@ -40,12 +40,32 @@ body.dark .msg { background: #242526; color: #e4e6eb; }
 
 .msg-author { color: var(--piz-orange); font-weight: bold; font-size: 0.85em; display: block; margin-bottom: 5px; }
 
+.msg-text { word-wrap: break-word; white-space: pre-wrap; }
+
+/* Estilos para contenido automático */
 .preview-media {
-    max-width: 100%; max-height: 350px; border-radius: 8px;
-    margin-top: 8px; display: block; border: 1px solid #ddd;
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 8px;
+    margin-top: 10px;
+    display: block;
+    border: 1px solid rgba(0,0,0,0.1);
 }
 
-.yt-frame { width: 100%; aspect-ratio: 16/9; border-radius: 8px; border: none; margin-top: 8px; }
+.yt-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* Relación 16:9 */
+    margin-top: 10px;
+}
+
+.yt-container iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border-radius: 8px;
+    border: none;
+}
 
 #input-area { padding: 15px; background: white; display: flex; align-items: center; gap: 10px; border-top: 1px solid #eee; }
 body.dark #input-area { background: #242526; border-top-color: #3a3b3c; }
