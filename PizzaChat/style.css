@@ -1,94 +1,113 @@
-* { box-sizing: border-box; }
-
-html, body {
-    height: 100%; /* Obligatorio para que el flex funcione */
-    margin: 0;
-    padding: 0;
-    overflow: hidden; /* Evita que la página entera haga scroll */
-}
-
+/* RESET SENCILLO */
 body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    display: flex;
-    flex-direction: column; /* Alinea header, chat e input uno sobre otro */
-    background: #f0f2f5;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5; /* Fondo claro por defecto */
 }
 
-body.dark { background: #18191a; color: #e4e6eb; }
+/* Colores para modo oscuro */
+body.dark { background-color: #18191a; color: white; }
+body.dark .msg { background-color: #242526; color: white; border-color: #3a3b3c; }
+body.dark header { background-color: #242526; }
+body.dark #input-area { background-color: #242526; border-bottom-color: #3a3b3c; }
 
 header {
     background: #e67e22;
     color: white;
-    padding: 12px 20px;
+    padding: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-shrink: 0; /* Impide que el header se encoja */
-    z-index: 10;
 }
-
-body.dark header { background: #242526; border-bottom: 1px solid #3a3b3c; }
-
-/* ESTA ES LA PARTE QUE ARREGLA TU FOTO */
-#chat {
-    flex: 1; /* Esto obliga al chat a ocupar TODO el espacio restante */
-    overflow-y: auto; /* Solo el chat tendrá barra de scroll */
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    background: #ffffff;
-}
-
-body.dark #chat { background: #18191a; }
 
 #input-area {
+    padding: 15px;
     background: white;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    gap: 10px;
+}
+
+#mensaje {
+    flex: 1;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    resize: none;
+    height: 40px;
+}
+
+#btnEnviar {
+    background: #e67e22;
+    color: white;
+    border: none;
+    padding: 0 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#chat {
     padding: 15px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 10px;
-    border-top: 1px solid #ddd;
-    flex-shrink: 0; /* Mantiene la barra siempre abajo con su tamaño original */
 }
 
-body.dark #input-area { background: #242526; border-top-color: #3a3b3c; }
-
-textarea {
-    flex: 1;
-    padding: 12px 18px;
-    border-radius: 25px;
-    border: 1px solid #ddd;
-    background: #f0f2f5;
-    resize: none;
-    outline: none;
-    font-family: inherit;
-}
-
-body.dark textarea { background: #3a3b3c; border-color: #4e4f50; color: white; }
-
-/* Burbujas */
+/* Burbujas de mensaje */
 .msg {
-    background: #e4e6eb;
-    padding: 10px 15px;
-    border-radius: 18px;
-    max-width: 80%;
-    align-self: flex-start;
-    color: black;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    background: white;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    max-width: 90%;
+    word-wrap: break-word;
 }
 
-body.dark .msg { background: #3a3b3c; color: white; }
+.msg-author {
+    font-weight: bold;
+    color: #e67e22;
+    font-size: 0.9em;
+    display: block;
+    margin-bottom: 5px;
+}
 
-.msg-author { color: #e67e22; font-weight: bold; font-size: 0.8em; margin-bottom: 3px; display: block; }
-.msg-text a { color: #3498db; text-decoration: underline; }
+/* Estilo para los links */
+.msg-text a {
+    color: #3498db;
+    text-decoration: underline;
+}
 
-.btn-main { background: #e67e22; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; }
-.btn-logout { background: transparent; border: 1px solid white; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+/* Multimedia */
+.preview-media {
+    max-width: 100%;
+    margin-top: 10px;
+    border-radius: 8px;
+    display: block;
+}
+
+.yt-container {
+    margin-top: 10px;
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+}
+
+.yt-container iframe {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    border-radius: 8px;
+}
+
 .hidden { display: none !important; }
 
+/* Pantalla de Login */
 #login-screen {
-    position: fixed; inset: 0; background: white; z-index: 100;
+    position: fixed; inset: 0; background: white; z-index: 1000;
     display: flex; align-items: center; justify-content: center;
 }
-.auth-card { display: flex; flex-direction: column; gap: 10px; width: 300px; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
+.auth-card { display: flex; flex-direction: column; gap: 10px; width: 280px; }
+.auth-card input { padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
+.btn-main { background: #e67e22; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; }
+.btn-secondary { background: #eee; border: 1px solid #ccc; padding: 10px; border-radius: 5px; cursor: pointer; }
