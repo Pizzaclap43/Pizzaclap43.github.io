@@ -20,7 +20,7 @@ const chatRef = ref(db, 'mensajes');
 let miUsuario = null;
 const inputMsg = document.getElementById('mensaje');
 
-// --- DETECTORES ---
+// --- DETECTORES DE CONTENIDO ---
 const esImagen = (url) => /\.(jpg|jpeg|png|webp|gif|avif)$/i.test(url.split('?')[0]);
 const obtenerIdYoutube = (url) => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -28,7 +28,7 @@ const obtenerIdYoutube = (url) => {
     return (match && match[2].length === 11) ? match[2] : null;
 };
 
-// Función para convertir texto plano en links HTML
+// Función para convertir URLs de texto en enlaces cliqueables
 const linkify = (text) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     return text.replace(urlRegex, (url) => {
@@ -36,7 +36,7 @@ const linkify = (text) => {
     });
 };
 
-// --- TEMAS ---
+// --- LÓGICA DE TEMAS ---
 const aplicarTema = (t) => {
     if (t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.body.classList.add('dark');
@@ -63,10 +63,11 @@ document.getElementById('btnRegistro').onclick = async () => {
         const res = await createUserWithEmailAndPassword(auth, email, pass);
         await updateProfile(res.user, { displayName: nick });
         await sendEmailVerification(res.user);
-        alert("Verifica tu correo.");
+        alert("¡Cuenta creada! Verifica tu correo.");
     } catch (e) { alert("Error al registrar."); }
 };
 document.getElementById('btnSalir').onclick = () => signOut(auth);
+window.reviarVerificacion = () => auth.currentUser.reload().then(() => location.reload());
 
 onAuthStateChanged(auth, (user) => {
     const screen = document.getElementById('login-screen'), chatBox = document.getElementById('chat');
@@ -84,13 +85,12 @@ onAuthStateChanged(auth, (user) => {
                 authSpan.textContent = data.nombre || data.usuario.split('@')[0];
                 div.appendChild(authSpan);
 
-                // Texto del mensaje con soporte para links
                 const txtSpan = document.createElement('span');
                 txtSpan.className = 'msg-text';
                 txtSpan.innerHTML = linkify(data.texto);
                 div.appendChild(txtSpan);
 
-                // --- PREVISUALIZACIÓN ---
+                // --- DETECCION MULTIMEDIA ---
                 const contenido = data.texto.trim();
                 const ytId = obtenerIdYoutube(contenido);
 
@@ -104,7 +104,8 @@ onAuthStateChanged(auth, (user) => {
                     container.appendChild(iframe); div.appendChild(container);
                 }
 
-                chatBox.appendChild(div); chatBox.scrollTop = chatBox.scrollHeight;
+                chatBox.appendChild(div);
+                chatBox.scrollTop = chatBox.scrollHeight;
             });
         }
     } else { miUsuario = null; screen.classList.remove('hidden'); }
@@ -125,6 +126,7 @@ const enviar = () => {
 document.getElementById('btnEnviar').onclick = enviar;
 inputMsg.oninput = function() { this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px'; };
 inputMsg.onkeydown = (e) => {
-    const isMob = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (e.key === 'Enter' && !isMob && !e.shiftKey) { e.preventDefault(); enviar(); }
+    if (e.key === 'Enter' && !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && !e.shiftKey) {
+        e.preventDefault(); enviar();
+    }
 };
