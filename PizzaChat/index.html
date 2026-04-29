@@ -3,39 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PizzaChat - Original</title>
+    <title>PizzaChat - Inteligente</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div id="login-screen">
         <div class="auth-card">
-            <h2 style="text-align: center; color: #e67e22;">🍕 PizzaChat</h2>
-            <input type="text" id="nickname" placeholder="Tu Apodo">
-            <input type="email" id="email" placeholder="Correo">
+            <h2 style="text-align: center; margin: 0; color: #e67e22;">🍕 PizzaChat</h2>
+            <p id="error-msg"></p>
+            <input type="text" id="nickname" placeholder="Tu Apodo (Solo registro)">
+            <input type="email" id="email" placeholder="Correo electrónico">
             <input type="password" id="pass" placeholder="Contraseña">
-            <button id="btnEntrar" class="btn-main">Entrar</button>
-            <button id="btnRegistro" class="btn-secondary">Registrarse</button>
+            
+            <button id="btnEntrar" class="btn-main">Iniciar Sesión</button>
+            <button id="btnRegistro" class="btn-secondary">Crear Cuenta Nueva</button>
         </div>
     </div>
 
     <header>
-        <span>PIZZACHAT GLOBAL</span>
-        <div style="display: flex; gap: 5px;">
+        <span style="font-weight: bold;">PIZZACHAT GLOBAL</span>
+        <div style="display: flex; gap: 10px; align-items: center;">
             <select id="theme-selector">
                 <option value="light">☀️ Claro</option>
                 <option value="dark">🌙 Oscuro</option>
             </select>
-            <button id="btnSalir">Salir</button>
+            <button id="btnSalir" class="btn-logout">Salir</button>
         </div>
     </header>
 
-    <div id="input-area" class="hidden">
-        <textarea id="mensaje" placeholder="Escribe un mensaje o pega un link..."></textarea>
-        <button id="btnEnviar">Enviar</button>
-    </div>
-
     <div id="chat"></div>
+
+    <div id="input-area" class="hidden">
+        <textarea id="mensaje" placeholder="Escribe un mensaje o pega un link..." rows="1"></textarea>
+        <button id="btnEnviar" class="btn-main">Enviar</button>
+    </div>
 
     <script type="module" src="main.js"></script>
 </body>
