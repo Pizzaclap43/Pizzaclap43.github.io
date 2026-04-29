@@ -21,7 +21,7 @@ let miUsuario = null;
 const errorArea = document.getElementById('error-msg');
 const inputMsg = document.getElementById('mensaje');
 
-// --- TEMAS ---
+// --- LÓGICA DE TEMAS ---
 const aplicarTema = (t) => {
     if (t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.body.classList.add('dark');
@@ -35,7 +35,6 @@ document.getElementById('theme-selector').onchange = (e) => {
     localStorage.setItem('piz-theme', e.target.value);
 };
 
-// Cargar tema inicial
 const temaGuardado = localStorage.getItem('piz-theme') || 'system';
 document.getElementById('theme-selector').value = temaGuardado;
 aplicarTema(temaGuardado);
@@ -134,14 +133,29 @@ const enviar = () => {
 
 document.getElementById('btnEnviar').onclick = enviar;
 
+// Ajuste automático de altura
 inputMsg.oninput = function() {
     this.style.height = 'auto';
     this.style.height = (this.scrollHeight) + 'px';
 };
 
+// --- SOLUCIÓN PARA MÓVIL Y PC ---
 inputMsg.onkeydown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        enviar();
+    // Detectamos si es un dispositivo móvil
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (e.key === 'Enter') {
+        if (isMobile) {
+            // En móvil: No hacemos nada especial, permitimos que el Enter baje de línea
+            return; 
+        } else {
+            // En PC:
+            if (!e.shiftKey) {
+                // Enter solo: Envía
+                e.preventDefault();
+                enviar();
+            }
+            // Shift + Enter: El navegador baja de línea automáticamente (comportamiento por defecto)
+        }
     }
 };
