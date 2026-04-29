@@ -10,7 +10,6 @@ body {
     transition: background 0.3s;
 }
 
-/* Modo Oscuro */
 body.dark {
     background: #18191a;
     color: #e4e6eb;
@@ -112,6 +111,7 @@ textarea {
     resize: none;
     font-family: inherit;
     max-height: 150px;
+    overflow-y: auto;
 }
 
 .btn-main { background: var(--piz-orange); color: white; border: none; cursor: pointer; font-weight: bold; }
