@@ -3,28 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PizzaChat - Inteligente Pro</title>
+    <title>PizzaChat - Oficial</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div id="login-screen">
         <div class="auth-card">
-            <h2 style="text-align: center; margin: 0; color: var(--piz-orange);">🍕 PizzaChat</h2>
+            <h2 style="text-align: center; margin: 0; color: #e67e22;">🍕 PizzaChat</h2>
             <p id="error-msg"></p>
             <input type="text" id="nickname" placeholder="Tu Apodo (Solo registro)">
             <input type="email" id="email" placeholder="Correo electrónico">
             <input type="password" id="pass" placeholder="Contraseña">
-            
             <button id="btnEntrar" class="btn-main">Iniciar Sesión</button>
-            <div class="reset-link" onclick="restablecerClave()">¿Olvidaste tu contraseña?</div>
             <button id="btnRegistro" class="btn-secondary">Crear Cuenta Nueva</button>
         </div>
-    </div>
-
-    <div id="verify-banner" class="hidden">
-        ⚠️ Verifica tu correo para usar el chat. 
-        <button onclick="reviarVerificacion()" style="padding: 2px 10px; margin-left: 10px;">Ya lo verifiqué</button>
     </div>
 
     <header>
@@ -33,7 +26,6 @@
             <select id="theme-selector">
                 <option value="light">☀️ Claro</option>
                 <option value="dark">🌙 Oscuro</option>
-                <option value="system">🖥️ Sistema</option>
             </select>
             <button id="btnSalir" class="btn-logout">Salir</button>
         </div>
