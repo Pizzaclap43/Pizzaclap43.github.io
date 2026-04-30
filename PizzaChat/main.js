@@ -79,13 +79,32 @@ onAuthStateChanged(auth, (user) => {
                 authSpan.textContent = data.nombre || data.usuario.split('@')[0];
                 div.appendChild(authSpan);
 
-                // Texto del mensaje (link)
+                // --- PROCESAMIENTO SEGURO DE TEXTO Y LINKS ---
                 const txtSpan = document.createElement('span');
                 txtSpan.className = 'msg-text';
-                txtSpan.textContent = data.texto;
+                
+                const palabras = data.texto.split(' ');
+                palabras.forEach((palabra, index) => {
+                    if (palabra.startsWith('http://') || palabra.startsWith('https://')) {
+                        const link = document.createElement('a');
+                        link.href = palabra;
+                        link.textContent = palabra; // Seguro: trata el link como texto plano
+                        link.target = "_blank";
+                        link.rel = "noopener noreferrer";
+                        link.style.color = "#3498db";
+                        link.style.textDecoration = "underline";
+                        txtSpan.appendChild(link);
+                    } else {
+                        // Seguro: trata el texto del usuario como nodo de texto puro
+                        txtSpan.appendChild(document.createTextNode(palabra));
+                    }
+                    if (index < palabras.length - 1) {
+                        txtSpan.appendChild(document.createTextNode(' '));
+                    }
+                });
                 div.appendChild(txtSpan);
 
-                // --- LÓGICA DE DETECCIÓN AUTOMÁTICA ---
+                // --- LÓGICA DE DETECCIÓN AUTOMÁTICA (MULTIMEDIA) ---
                 const contenido = data.texto.trim();
                 const ytId = obtenerIdYoutube(contenido);
 
@@ -93,7 +112,7 @@ onAuthStateChanged(auth, (user) => {
                     const img = document.createElement('img');
                     img.src = contenido;
                     img.className = 'preview-media';
-                    img.onerror = () => img.style.display = 'none'; // Si el link no es una imagen real, no muestra nada roto
+                    img.onerror = () => img.style.display = 'none';
                     div.appendChild(img);
                 } else if (esAudio(contenido)) {
                     const aud = document.createElement('audio');
