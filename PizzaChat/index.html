@@ -8,6 +8,12 @@
 </head>
 <body>
 
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <div class="pizza-loader">🍕</div>
+        <p id="splash-status">Iniciando PizzaChat...</p>
+    </div>
+
     <div id="login-screen">
         <div class="auth-card">
             <h2 style="text-align: center; margin: 0; color: var(--piz-orange);">🍕 PizzaChat</h2>
@@ -17,14 +23,14 @@
             <input type="password" id="pass" placeholder="Contraseña">
             
             <button id="btnEntrar" class="btn-main">Iniciar Sesión</button>
-            <div class="reset-link" onclick="restablecerClave()">¿Olvidaste tu contraseña?</div>
-            <button id="btnRegistro" class="btn-secondary">Crear Cuenta Nueva</button>
+            <div class="reset-link" style="text-align:center; cursor:pointer; font-size: 0.9em; text-decoration: underline;" onclick="restablecerClave()">¿Olvidaste tu contraseña?</div>
+            <button id="btnRegistro" class="btn-secondary" style="margin-top: 10px;">Crear Cuenta Nueva</button>
         </div>
     </div>
 
     <div id="verify-banner" class="hidden">
         ⚠️ Verifica tu correo para usar el chat. 
-        <button onclick="reviarVerificacion()" style="padding: 2px 10px; margin-left: 10px;">Ya lo verifiqué</button>
+        <button id="btnVerificado" style="padding: 2px 10px; margin-left: 10px;">Ya lo verifiqué</button>
     </div>
 
     <header>
@@ -39,7 +45,10 @@
         </div>
     </header>
 
-    <div id="chat"></div>
+    <div id="chat">
+        <!-- Indicador de carga para mensajes viejos -->
+        <div id="load-more" class="hidden" style="text-align:center; padding: 10px; color: var(--piz-orange); font-size: 0.8em;"> Cargando historial... </div>
+    </div>
 
     <div id="input-area" class="hidden">
         <textarea id="mensaje" placeholder="Escribe un mensaje o pega un link de imagen/YouTube..." rows="1"></textarea>
