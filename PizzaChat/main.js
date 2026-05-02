@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { getDatabase, ref, push, onChildAdded, serverTimestamp, query, limitToLast, orderByKey, get, endBefore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -18,6 +18,8 @@ const auth = getAuth(app);
 const chatRef = ref(db, 'mensajes');
 
 let miUsuario = null;
+let oldestKey = null;
+let cargandoAnteriores = false;
 const inputMsg = document.getElementById('mensaje');
 
 // --- DETECTORES DE CONTENIDO ---
@@ -41,116 +43,130 @@ document.getElementById('theme-selector').onchange = (e) => {
 };
 aplicarTema(localStorage.getItem('piz-theme') || 'system');
 
-// --- AUTENTICACIÓN ---
-document.getElementById('btnEntrar').onclick = async () => {
-    const email = document.getElementById('email').value;
-    const pass = document.getElementById('pass').value;
-    try { await signInWithEmailAndPassword(auth, email, pass); } catch (e) { alert("Error al entrar."); }
-};
+// --- CONSTRUCTOR DE MENSAJES ---
+const crearDivMensaje = (data, key) => {
+    const div = document.createElement('div'); 
+    div.className = 'msg';
+    div.setAttribute('data-key', key);
+    
+    const authSpan = document.createElement('span'); 
+    authSpan.className = 'msg-author';
+    authSpan.textContent = data.nombre || data.usuario.split('@')[0];
+    div.appendChild(authSpan);
 
-document.getElementById('btnRegistro').onclick = async () => {
-    const email = document.getElementById('email').value;
-    const pass = document.getElementById('pass').value;
-    const nick = document.getElementById('nickname').value;
-    if(!nick) return alert("Pon un apodo.");
-    try {
-        const res = await createUserWithEmailAndPassword(auth, email, pass);
-        await updateProfile(res.user, { displayName: nick });
-        await sendEmailVerification(res.user);
-        alert("Verifica tu correo.");
-    } catch (e) { alert("Error al registrar."); }
-};
+    const txtSpan = document.createElement('span'); 
+    txtSpan.className = 'msg-text';
+    
+    data.texto.split(' ').forEach((palabra, i, arr) => {
+        if (palabra.startsWith('http')) {
+            const link = document.createElement('a');
+            link.href = palabra; link.textContent = palabra;
+            link.target = "_blank"; link.rel = "noopener";
+            link.style.color = "#3498db";
+            txtSpan.appendChild(link);
+        } else {
+            txtSpan.appendChild(document.createTextNode(palabra));
+        }
+        if (i < arr.length - 1) txtSpan.appendChild(document.createTextNode(' '));
+    });
+    div.appendChild(txtSpan);
 
-document.getElementById('btnSalir').onclick = () => signOut(auth);
+    const contenido = data.texto.trim();
+    const ytId = obtenerIdYoutube(contenido);
 
-// --- FUNCIÓN RECUPERAR CONTRASEÑA ---
-window.restablecerClave = async () => {
-    const email = document.getElementById('email').value;
-    if (!email) return alert("Escribe tu correo en el cuadro de arriba para enviarte el enlace de recuperación.");
-    try {
-        await sendPasswordResetEmail(auth, email);
-        alert("Correo de recuperación enviado. Revisa tu bandeja de entrada o spam.");
-    } catch (e) {
-        alert("Error: Asegúrate de que el correo sea correcto.");
+    if (esImagen(contenido)) {
+        const img = document.createElement('img'); img.src = contenido;
+        img.className = 'preview-media'; div.appendChild(img);
+    } else if (esAudio(contenido)) {
+        const aud = document.createElement('audio'); aud.src = contenido;
+        aud.controls = true; aud.style.width = "100%"; div.appendChild(aud);
+    } else if (ytId) {
+        const con = document.createElement('div'); con.className = 'yt-container';
+        con.innerHTML = `<iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen></iframe>`;
+        div.appendChild(con);
     }
+    return div;
 };
 
+// --- PAGINACIÓN (CARGAR MENSAJES ANTERIORES) ---
+const cargarMensajesAnteriores = async () => {
+    if (cargandoAnteriores || !oldestKey) return;
+    cargandoAnteriores = true;
+    const loadBtn = document.getElementById('load-more');
+    loadBtn.classList.remove('hidden');
+
+    const q = query(chatRef, orderByKey(), endBefore(oldestKey), limitToLast(15));
+    const snapshot = await get(q);
+    const chatBox = document.getElementById('chat');
+
+    const mensajesNuevos = [];
+    snapshot.forEach(child => { 
+        mensajesNuevos.push({ key: child.key, data: child.val() }); 
+    });
+
+    if (mensajesNuevos.length > 0) {
+        oldestKey = mensajesNuevos[0].key;
+        const alturaPrevia = chatBox.scrollHeight;
+        
+        mensajesNuevos.reverse().forEach(item => {
+            const div = crearDivMensaje(item.data, item.key);
+            loadBtn.after(div);
+        });
+        chatBox.scrollTop = chatBox.scrollHeight - alturaPrevia;
+    }
+    loadBtn.classList.add('hidden');
+    cargandoAnteriores = false;
+};
+
+// --- GESTIÓN DE ESTADO ---
 onAuthStateChanged(auth, (user) => {
-    const screen = document.getElementById('login-screen'), chatBox = document.getElementById('chat');
+    const splash = document.getElementById('splash-screen');
+    const screen = document.getElementById('login-screen');
+    const chatBox = document.getElementById('chat');
     const banner = document.getElementById('verify-banner'), inputArea = document.getElementById('input-area');
+
+    setTimeout(() => { 
+        splash.style.opacity = '0'; 
+        setTimeout(() => splash.classList.add('hidden'), 500); 
+    }, 1500);
+
     if (user) {
         miUsuario = user; screen.classList.add('hidden');
         if (!user.emailVerified) {
             banner.classList.remove('hidden'); inputArea.classList.add('hidden');
         } else {
-            banner.classList.add('hidden'); inputArea.classList.remove('hidden'); chatBox.innerHTML = "";
-            onChildAdded(chatRef, (snap) => {
-                const data = snap.val();
-                const div = document.createElement('div'); div.className = 'msg';
-                const authSpan = document.createElement('span'); authSpan.className = 'msg-author';
-                authSpan.textContent = data.nombre || data.usuario.split('@')[0];
-                div.appendChild(authSpan);
-
-                // --- PROCESAMIENTO SEGURO DE TEXTO Y LINKS ---
-                const txtSpan = document.createElement('span');
-                txtSpan.className = 'msg-text';
+            banner.classList.add('hidden'); inputArea.classList.remove('hidden');
+            
+            // Carga inicial
+            const qInicial = query(chatRef, limitToLast(20));
+            get(qInicial).then(snap => {
+                chatBox.innerHTML = '<div id="load-more" class="hidden">Cargando...</div>';
+                const iniciales = [];
+                snap.forEach(child => iniciales.push({ key: child.key, data: child.val() }));
                 
-                const palabras = data.texto.split(' ');
-                palabras.forEach((palabra, index) => {
-                    if (palabra.startsWith('http://') || palabra.startsWith('https://')) {
-                        const link = document.createElement('a');
-                        link.href = palabra;
-                        link.textContent = palabra; 
-                        link.target = "_blank";
-                        link.rel = "noopener noreferrer";
-                        link.style.color = "#3498db";
-                        link.style.textDecoration = "underline";
-                        txtSpan.appendChild(link);
-                    } else {
-                        txtSpan.appendChild(document.createTextNode(palabra));
-                    }
-                    if (index < palabras.length - 1) {
-                        txtSpan.appendChild(document.createTextNode(' '));
-                    }
-                });
-                div.appendChild(txtSpan);
-
-                // --- LÓGICA DE DETECCIÓN AUTOMÁTICA (MULTIMEDIA) ---
-                const contenido = data.texto.trim();
-                const ytId = obtenerIdYoutube(contenido);
-
-                if (esImagen(contenido)) {
-                    const img = document.createElement('img');
-                    img.src = contenido;
-                    img.className = 'preview-media';
-                    img.onerror = () => img.style.display = 'none';
-                    div.appendChild(img);
-                } else if (esAudio(contenido)) {
-                    const aud = document.createElement('audio');
-                    aud.src = contenido;
-                    aud.controls = true;
-                    aud.style.width = "100%";
-                    aud.style.marginTop = "10px";
-                    div.appendChild(aud);
-                } else if (ytId) {
-                    const container = document.createElement('div');
-                    container.className = 'yt-container';
-                    const iframe = document.createElement('iframe');
-                    iframe.src = `https://www.youtube.com/embed/${ytId}`;
-                    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-                    iframe.allowFullscreen = true;
-                    container.appendChild(iframe);
-                    div.appendChild(container);
+                if(iniciales.length > 0) {
+                    oldestKey = iniciales[0].key;
+                    iniciales.forEach(m => chatBox.appendChild(crearDivMensaje(m.data, m.key)));
+                    chatBox.scrollTop = chatBox.scrollHeight;
                 }
-
-                chatBox.appendChild(div);
-                chatBox.scrollTop = chatBox.scrollHeight;
+                
+                // Escuchar nuevos
+                onChildAdded(chatRef, (newSnap) => {
+                    if (document.querySelector(`[data-key="${newSnap.key}"]`)) return;
+                    chatBox.appendChild(crearDivMensaje(newSnap.val(), newSnap.key));
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                });
             });
         }
     } else { miUsuario = null; screen.classList.remove('hidden'); }
 });
 
-// --- ENVÍO ---
+// Detectar Scroll arriba
+document.getElementById('chat').onscroll = function() {
+    if (this.scrollTop === 0) cargarMensajesAnteriores();
+};
+
+// --- ACCIONES ---
 const enviar = () => {
     if (inputMsg.value.trim() && miUsuario?.emailVerified) {
         push(chatRef, {
@@ -164,16 +180,31 @@ const enviar = () => {
 };
 
 document.getElementById('btnEnviar').onclick = enviar;
+document.getElementById('btnVerificado').onclick = () => location.reload();
+document.getElementById('btnSalir').onclick = () => signOut(auth).then(() => location.reload());
 
-inputMsg.oninput = function() {
-    this.style.height = 'auto';
-    this.style.height = this.scrollHeight + 'px';
+window.restablecerClave = async () => {
+    const email = document.getElementById('email').value;
+    if (!email) return alert("Escribe tu correo primero.");
+    try { await sendPasswordResetEmail(auth, email); alert("Enlace enviado."); } catch { alert("Error."); }
 };
 
-inputMsg.onkeydown = (e) => {
-    const isMob = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (e.key === 'Enter' && !isMob && !e.shiftKey) {
-        e.preventDefault();
-        enviar();
-    }
+document.getElementById('btnEntrar').onclick = async () => {
+    const e = document.getElementById('email').value, p = document.getElementById('pass').value;
+    try { await signInWithEmailAndPassword(auth, e, p); } catch { alert("Error al entrar."); }
 };
+
+document.getElementById('btnRegistro').onclick = async () => {
+    const e = document.getElementById('email').value, p = document.getElementById('pass').value, n = document.getElementById('nickname').value;
+    if(!n) return alert("Pon un apodo.");
+    try {
+        const res = await createUserWithEmailAndPassword(auth, e, p);
+        await updateProfile(res.user, { displayName: n });
+        await sendEmailVerification(res.user);
+        alert("Verifica tu correo.");
+    } catch { alert("Error al registrar."); }
+};
+
+// Ajuste automático de textarea
+inputMsg.oninput = function() { this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px'; };
+inputMsg.onkeydown = (e) => { if (e.key === 'Enter' && !/Android|iPhone/i.test(navigator.userAgent) && !e.shiftKey) { e.preventDefault(); enviar(); } };
