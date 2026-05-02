@@ -63,6 +63,18 @@ document.getElementById('btnRegistro').onclick = async () => {
 
 document.getElementById('btnSalir').onclick = () => signOut(auth);
 
+// --- FUNCIÓN RECUPERAR CONTRASEÑA ---
+window.restablecerClave = async () => {
+    const email = document.getElementById('email').value;
+    if (!email) return alert("Escribe tu correo en el cuadro de arriba para enviarte el enlace de recuperación.");
+    try {
+        await sendPasswordResetEmail(auth, email);
+        alert("Correo de recuperación enviado. Revisa tu bandeja de entrada o spam.");
+    } catch (e) {
+        alert("Error: Asegúrate de que el correo sea correcto.");
+    }
+};
+
 onAuthStateChanged(auth, (user) => {
     const screen = document.getElementById('login-screen'), chatBox = document.getElementById('chat');
     const banner = document.getElementById('verify-banner'), inputArea = document.getElementById('input-area');
@@ -88,14 +100,13 @@ onAuthStateChanged(auth, (user) => {
                     if (palabra.startsWith('http://') || palabra.startsWith('https://')) {
                         const link = document.createElement('a');
                         link.href = palabra;
-                        link.textContent = palabra; // Seguro: trata el link como texto plano
+                        link.textContent = palabra; 
                         link.target = "_blank";
                         link.rel = "noopener noreferrer";
                         link.style.color = "#3498db";
                         link.style.textDecoration = "underline";
                         txtSpan.appendChild(link);
                     } else {
-                        // Seguro: trata el texto del usuario como nodo de texto puro
                         txtSpan.appendChild(document.createTextNode(palabra));
                     }
                     if (index < palabras.length - 1) {
