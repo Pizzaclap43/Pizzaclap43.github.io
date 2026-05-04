@@ -1,60 +1,72 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="system">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PizzaChat - Inteligente</title>
+    <title>PizzaChat</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- Splash Screen -->
-    <div id="splash-screen">
-        <div class="pizza-loader">🍕</div>
-        <p id="splash-status">Iniciando PizzaChat...</p>
-    </div>
-
-    <div id="login-screen">
+    <!-- Pantalla de Autenticación -->
+    <div id="auth-container" class="full-screen">
         <div class="auth-card">
-            <h2 style="text-align: center; margin: 0; color: var(--piz-orange);">🍕 PizzaChat</h2>
-            <p id="error-msg"></p>
-            <input type="text" id="nickname" placeholder="Tu Apodo (Solo registro)">
-            <input type="email" id="email" placeholder="Correo electrónico">
-            <input type="password" id="pass" placeholder="Contraseña">
-            
-            <button id="btnEntrar" class="btn-main">Iniciar Sesión</button>
-            <div class="reset-link" style="text-align:center; cursor:pointer; font-size: 0.9em; text-decoration: underline;" onclick="restablecerClave()">¿Olvidaste tu contraseña?</div>
-            <button id="btnRegistro" class="btn-secondary" style="margin-top: 10px;">Crear Cuenta Nueva</button>
+            <h1>🍕 PizzaChat</h1>
+            <input type="email" id="auth-email" placeholder="Correo electrónico">
+            <input type="password" id="auth-password" placeholder="Contraseña">
+            <div class="auth-buttons">
+                <button id="btn-login">Iniciar Sesión</button>
+                <button id="btn-register">Registrarse</button>
+            </div>
+            <button id="btn-reset" class="link-btn">¿Olvidaste tu contraseña?</button>
         </div>
     </div>
 
-    <div id="verify-banner" class="hidden">
-        ⚠️ Verifica tu correo para usar el chat. 
-        <button id="btnVerificado" style="padding: 2px 10px; margin-left: 10px;">Ya lo verifiqué</button>
+    <!-- Aplicación Principal -->
+    <div id="app-container" class="hidden">
+        <aside id="sidebar">
+            <header class="user-profile-header">
+                <img id="my-avatar" src="https://via.placeholder.com/40" alt="Perfil">
+                <span id="my-name">Cargando...</span>
+                <button id="btn-settings">⚙️</button>
+            </header>
+            <div id="contact-list">
+                <!-- Lista de chats dinámica -->
+            </div>
+            <button id="btn-logout">Cerrar Sesión</button>
+        </aside>
+
+        <main id="chat-window">
+            <header id="chat-header">
+                <h2 id="target-name">Selecciona un chat</h2>
+                <span id="target-status"></span>
+            </header>
+            <div id="messages-container"></div>
+            <div id="typing-indicator" class="hidden">Alguien está escribiendo...</div>
+            <footer id="input-area">
+                <textarea id="message-input" placeholder="Escribe un mensaje..."></textarea>
+                <button id="btn-send">Enviar</button>
+            </footer>
+        </main>
     </div>
 
-    <header>
-        <span style="font-weight: bold;">PIZZACHAT GLOBAL</span>
-        <div style="display: flex; gap: 10px; align-items: center;">
+    <!-- Modal de Perfil -->
+    <div id="profile-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Editar Perfil</h3>
+            <input type="text" id="edit-name" placeholder="Nombre de usuario">
+            <input type="text" id="edit-bio" placeholder="Descripción">
+            <input type="text" id="edit-photo" placeholder="URL de foto de perfil">
             <select id="theme-selector">
-                <option value="light">☀️ Claro</option>
-                <option value="dark">🌙 Oscuro</option>
-                <option value="system">🖥️ Sistema</option>
+                <option value="light">Modo Claro</option>
+                <option value="dark">Modo Oscuro</option>
+                <option value="system">Sistema</option>
             </select>
-            <button id="btnSalir" class="btn-logout">Salir</button>
+            <button id="save-profile">Guardar</button>
+            <button id="close-modal">Cerrar</button>
         </div>
-    </header>
-
-    <div id="chat">
-        <!-- Indicador de carga para mensajes viejos -->
-        <div id="load-more" class="hidden" style="text-align:center; padding: 10px; color: var(--piz-orange); font-size: 0.8em;"> Cargando historial... </div>
     </div>
 
-    <div id="input-area" class="hidden">
-        <textarea id="mensaje" placeholder="Escribe un mensaje o pega un link de imagen/YouTube..." rows="1"></textarea>
-        <button id="btnEnviar" class="btn-main">Enviar</button>
-    </div>
-
-    <script type="module" src="main.js"></script>
+    <!-- Firebase SDK -->
+    <script type="module" src="app.js"></script>
 </body>
 </html>
