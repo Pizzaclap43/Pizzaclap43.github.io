@@ -1,56 +1,72 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="system">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PizzaChat</title>
+    <title>PizzaChat | Messenger</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div id="app">
-        <!-- Pantalla de Autenticación -->
-        <section id="auth-screen" class="screen">
-            <div class="auth-card">
-                <h1>🍕 PizzaChat</h1>
-                <input type="email" id="email" placeholder="Correo electrónico">
-                <input type="password" id="password" placeholder="Contraseña">
-                <div class="auth-buttons">
-                    <button id="login-btn">Entrar</button>
-                    <button id="register-btn">Registrarse</button>
-                </div>
-                <p id="forgot-password">¿Olvidaste tu contraseña?</p>
+<body class="theme-system">
+    <div id="auth-container">
+        <div class="auth-box">
+            <h1 id="pizza-logo">🍕 PizzaChat</h1>
+            <input type="email" id="auth-email" placeholder="Correo electrónico">
+            <input type="password" id="auth-pass" placeholder="Contraseña">
+            <div class="auth-buttons">
+                <button onclick="login()">Iniciar Sesión</button>
+                <button onclick="register()">Registrarse</button>
             </div>
-        </section>
-
-        <!-- Pantalla Principal -->
-        <section id="main-screen" class="screen hidden">
-            <aside id="sidebar">
-                <header>
-                    <img id="my-avatar" src="https://via.placeholder.com/40" alt="Perfil">
-                    <button id="settings-btn">⚙️</button>
-                    <button id="logout-btn">Salir</button>
-                </header>
-                <div id="search-bar">
-                    <input type="text" id="find-user" placeholder="Buscar amigos por ID...">
-                </div>
-                <div id="chat-list"></div>
-            </aside>
-
-            <main id="chat-window">
-                <header id="chat-header">
-                    <h2 id="target-name">Selecciona un chat</h2>
-                    <span id="target-status"></span>
-                </header>
-                <div id="messages-container"></div>
-                <footer id="input-area">
-                    <textarea id="message-input" placeholder="Escribe un mensaje o pega una URL..."></textarea>
-                    <button id="send-btn">➤</button>
-                </footer>
-            </main>
-        </section>
+            <p onclick="resetPassword()" class="link-text">¿Olvidaste tu contraseña?</p>
+        </div>
     </div>
 
-    <!-- Scripts de Firebase (V9 Modular) -->
-    <script type="module" src="script.js"></script>
+    <div id="app-container" class="hidden">
+        <aside id="sidebar">
+            <header>
+                <img id="my-avatar" src="https://via.placeholder.com/40" alt="Perfil">
+                <span id="my-name">Cargando...</span>
+                <button onclick="toggleSettings()">⚙️</button>
+            </header>
+            <div id="contact-list"></div>
+            <button onclick="logout()" class="btn-logout">Cerrar Sesión</button>
+        </aside>
+
+        <main id="chat-window">
+            <header id="chat-header">
+                <button id="back-btn" onclick="closeChat()">⬅</button>
+                <div id="active-user-info">
+                    <strong id="active-chat-name">Selecciona un chat</strong>
+                    <span id="active-status"></span>
+                </div>
+            </header>
+            <div id="messages-display"></div>
+            <div id="typing-indicator" class="hidden">Alguien está escribiendo...</div>
+            <footer id="input-area">
+                <textarea id="msg-input" placeholder="Escribe un mensaje o pega una URL..."></textarea>
+                <button id="send-btn">🍕</button>
+            </footer>
+        </main>
+
+        <div id="settings-modal" class="hidden">
+            <div class="modal-content">
+                <h3>Perfil y Configuración</h3>
+                <input type="text" id="edit-name" placeholder="Tu nombre">
+                <textarea id="edit-bio" placeholder="Tu descripción"></textarea>
+                <input type="text" id="edit-pic" placeholder="URL de foto de perfil">
+                <select id="theme-select" onchange="changeTheme(this.value)">
+                    <option value="system">Sistema</option>
+                    <option value="light">Claro</option>
+                    <option value="dark">Oscuro</option>
+                </select>
+                <button onclick="saveProfile()">Guardar</button>
+                <button onclick="toggleSettings()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
