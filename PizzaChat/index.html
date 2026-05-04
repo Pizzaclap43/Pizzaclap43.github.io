@@ -7,66 +7,50 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Pantalla de Autenticación -->
-    <div id="auth-container" class="full-screen">
-        <div class="auth-card">
-            <h1>🍕 PizzaChat</h1>
-            <input type="email" id="auth-email" placeholder="Correo electrónico">
-            <input type="password" id="auth-password" placeholder="Contraseña">
-            <div class="auth-buttons">
-                <button id="btn-login">Iniciar Sesión</button>
-                <button id="btn-register">Registrarse</button>
+    <div id="app">
+        <!-- Pantalla de Autenticación -->
+        <section id="auth-screen" class="screen">
+            <div class="auth-card">
+                <h1>🍕 PizzaChat</h1>
+                <input type="email" id="email" placeholder="Correo electrónico">
+                <input type="password" id="password" placeholder="Contraseña">
+                <div class="auth-buttons">
+                    <button id="login-btn">Entrar</button>
+                    <button id="register-btn">Registrarse</button>
+                </div>
+                <p id="forgot-password">¿Olvidaste tu contraseña?</p>
             </div>
-            <button id="btn-reset" class="link-btn">¿Olvidaste tu contraseña?</button>
-        </div>
+        </section>
+
+        <!-- Pantalla Principal -->
+        <section id="main-screen" class="screen hidden">
+            <aside id="sidebar">
+                <header>
+                    <img id="my-avatar" src="https://via.placeholder.com/40" alt="Perfil">
+                    <button id="settings-btn">⚙️</button>
+                    <button id="logout-btn">Salir</button>
+                </header>
+                <div id="search-bar">
+                    <input type="text" id="find-user" placeholder="Buscar amigos por ID...">
+                </div>
+                <div id="chat-list"></div>
+            </aside>
+
+            <main id="chat-window">
+                <header id="chat-header">
+                    <h2 id="target-name">Selecciona un chat</h2>
+                    <span id="target-status"></span>
+                </header>
+                <div id="messages-container"></div>
+                <footer id="input-area">
+                    <textarea id="message-input" placeholder="Escribe un mensaje o pega una URL..."></textarea>
+                    <button id="send-btn">➤</button>
+                </footer>
+            </main>
+        </section>
     </div>
 
-    <!-- Aplicación Principal -->
-    <div id="app-container" class="hidden">
-        <aside id="sidebar">
-            <header class="user-profile-header">
-                <img id="my-avatar" src="https://via.placeholder.com/40" alt="Perfil">
-                <span id="my-name">Cargando...</span>
-                <button id="btn-settings">⚙️</button>
-            </header>
-            <div id="contact-list">
-                <!-- Lista de chats dinámica -->
-            </div>
-            <button id="btn-logout">Cerrar Sesión</button>
-        </aside>
-
-        <main id="chat-window">
-            <header id="chat-header">
-                <h2 id="target-name">Selecciona un chat</h2>
-                <span id="target-status"></span>
-            </header>
-            <div id="messages-container"></div>
-            <div id="typing-indicator" class="hidden">Alguien está escribiendo...</div>
-            <footer id="input-area">
-                <textarea id="message-input" placeholder="Escribe un mensaje..."></textarea>
-                <button id="btn-send">Enviar</button>
-            </footer>
-        </main>
-    </div>
-
-    <!-- Modal de Perfil -->
-    <div id="profile-modal" class="modal hidden">
-        <div class="modal-content">
-            <h3>Editar Perfil</h3>
-            <input type="text" id="edit-name" placeholder="Nombre de usuario">
-            <input type="text" id="edit-bio" placeholder="Descripción">
-            <input type="text" id="edit-photo" placeholder="URL de foto de perfil">
-            <select id="theme-selector">
-                <option value="light">Modo Claro</option>
-                <option value="dark">Modo Oscuro</option>
-                <option value="system">Sistema</option>
-            </select>
-            <button id="save-profile">Guardar</button>
-            <button id="close-modal">Cerrar</button>
-        </div>
-    </div>
-
-    <!-- Firebase SDK -->
-    <script type="module" src="app.js"></script>
+    <!-- Scripts de Firebase (V9 Modular) -->
+    <script type="module" src="script.js"></script>
 </body>
 </html>
