@@ -1,6 +1,6 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getDatabase, ref, set, push, onValue, serverTimestamp, query, limitToLast, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+import { getDatabase, ref, set, push, onValue, serverTimestamp, query, limitToLast } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyD_o9hukEo6Pol4NcncYmP_9M5ltGfFHqQ",
@@ -17,115 +17,120 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-let currentUser = null;
-let activeChatId = null;
+// --- UTILIDADES ---
+const safeText = (text) => {
+    const span = document.createElement('span');
+    span.textContent = text;
+    return span.innerHTML;
+};
 
-// --- Lógica de Seguridad para Mensajes ---
-function renderMessage(data) {
+// Detectar si es móvil
+const isMobile = () => /Mobi|Android/i.test(navigator.userAgent);
+
+// --- MANEJO DE MENSAJES ---
+function renderMessage(data, isMe) {
     const container = document.getElementById('messages-container');
-    const msgDiv = document.createElement('div');
-    msgDiv.className = `message ${data.senderId === auth.currentUser.uid ? 'me' : 'them'}`;
+    const div = document.createElement('div');
+    div.className = `message ${isMe ? 'me' : 'them'}`;
+    
+    // Texto seguro
+    const textNode = document.createTextNode(data.text);
+    div.appendChild(textNode);
 
-    // Protección contra XSS usando textContent
-    const textNode = document.createElement('p');
-    textNode.textContent = data.text;
-    msgDiv.appendChild(textNode);
-
-    // Detección de archivos por URL
-    if (data.text.match(/\.(jpeg|jpg|gif|png)$/) != null) {
-        const img = document.createElement('img');
-        img.src = data.text;
-        img.style.maxWidth = "100%";
-        msgDiv.appendChild(img);
-    } else if (data.text.match(/\.(mp4|webm)$/) != null) {
-        const video = document.createElement('video');
-        video.src = data.text;
-        video.controls = true;
-        video.style.maxWidth = "100%";
-        msgDiv.appendChild(video);
+    // Detección de multimedia simple (URLs)
+    const urlPattern = /(https?:\/\/[^\s]+)/g;
+    const matches = data.text.match(urlPattern);
+    
+    if(matches) {
+        matches.forEach(url => {
+            if(url.match(/\.(jpeg|jpg|gif|png)$/)) {
+                const img = document.createElement('img');
+                img.src = url;
+                img.className = "media-content";
+                div.appendChild(img);
+            } else if(url.match(/\.(mp4|webm)$/)) {
+                const vid = document.createElement('video');
+                vid.src = url;
+                vid.controls = true;
+                vid.className = "media-content";
+                div.appendChild(vid);
+            }
+        });
     }
 
-    // Check de lectura
-    const status = document.createElement('span');
-    status.className = "status-tick";
-    status.textContent = data.read ? " ✓✓" : " ✓";
-    msgDiv.appendChild(status);
-
-    container.appendChild(msgDiv);
+    container.appendChild(div);
     container.scrollTop = container.scrollHeight;
 }
 
-// --- Manejo de Teclado (Híbrido) ---
-const input = document.getElementById('message-input');
-input.addEventListener('keydown', (e) => {
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    
-    if (e.key === 'Enter') {
-        if (!isMobile && e.shiftKey) {
-            // Shift + Enter en PC: Salto de línea (comportamiento default)
-        } else if (!isMobile && !e.shiftKey) {
-            // Enter solo en PC: Enviar
+// --- LOGICA DE ENTRADA ---
+document.getElementById('message-input').addEventListener('keydown', (e) => {
+    if (e.key === "Enter") {
+        if (!isMobile() && e.shiftKey) {
+            // Salto de línea en PC con Shift+Enter
+            return;
+        } else if (!isMobile() && !e.shiftKey) {
             e.preventDefault();
             sendMessage();
-        } else if (isMobile) {
-            // Enter en Móvil: Enviar
-            e.preventDefault();
+        } else if (isMobile()) {
+            // En móvil, Enter normal envía (o puedes ajustarlo)
             sendMessage();
         }
     }
 });
 
-async function sendMessage() {
+function sendMessage() {
+    const input = document.getElementById('message-input');
     const text = input.value.trim();
-    if (!text || !activeChatId) return;
+    if (!text || !auth.currentUser) return;
 
-    const msgRef = ref(db, `messages/${activeChatId}`);
-    await push(msgRef, {
-        senderId: auth.currentUser.uid,
-        text: text,
+    const chatRef = ref(db, `messages/global_chat`); // Ejemplo simple de canal global
+    push(chatRef, {
+        uid: auth.currentUser.uid,
+        text: text, // Para cifrado real, usa una librería como CryptoJS aquí
         timestamp: serverTimestamp(),
         read: false
     });
 
-    input.value = '';
+    input.value = "";
 }
 
-// --- Notificaciones ---
-function notifyUser(msg) {
-    if (document.hidden && Notification.permission === "granted") {
-        new Notification("Nuevo mensaje en PizzaChat", { body: msg });
-    }
-}
-
-if (Notification.permission !== "denied") {
-    Notification.requestPermission();
-}
-
-// --- Autenticación y Perfil ---
-document.getElementById('btn-login').onclick = () => {
-    const email = document.getElementById('auth-email').value;
-    const pass = document.getElementById('auth-password').value;
-    signInWithEmailAndPassword(auth, email, pass).catch(err => alert(err.message));
+// --- AUTENTICACIÓN ---
+document.getElementById('login-btn').onclick = () => {
+    const e = document.getElementById('email').value;
+    const p = document.getElementById('password').value;
+    signInWithEmailAndPassword(auth, e, p).catch(err => alert(err.message));
 };
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        document.getElementById('auth-container').classList.add('hidden');
-        document.getElementById('app-container').classList.remove('hidden');
-        loadUserProfile(user.uid);
+        document.getElementById('auth-screen').classList.add('hidden');
+        document.getElementById('main-screen').classList.remove('hidden');
+        loadMessages();
     } else {
-        document.getElementById('auth-container').classList.remove('hidden');
-        document.getElementById('app-container').classList.add('hidden');
+        document.getElementById('auth-screen').classList.remove('hidden');
+        document.getElementById('main-screen').classList.add('hidden');
     }
 });
 
-function loadUserProfile(uid) {
-    onValue(ref(db, `users/${uid}`), (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            document.getElementById('my-name').textContent = data.name;
-            document.getElementById('my-avatar').src = data.photo || "https://via.placeholder.com/40";
-            document.documentElement.setAttribute('data-theme', data.theme || 'system');
-        }
+function loadMessages() {
+    const messagesRef = query(ref(db, `messages/global_chat`), limitToLast(50));
+    onValue(messagesRef, (snapshot) => {
+        const container = document.getElementById('messages-container');
+        container.innerHTML = ""; // Limpiar para recargar (puedes optimizar con child_added)
+        snapshot.forEach((child) => {
+            const data = child.val();
+            renderMessage(data, data.uid === auth.currentUser.uid);
+        });
     });
 }
+
+// --- TEMAS ---
+const setTheme = (theme) => {
+    if (theme === 'system') {
+        const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    } else {
+        document.documentElement.setAttribute('data-theme', theme);
+    }
+};
+setTheme('system'); // Por defecto
