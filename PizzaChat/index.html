@@ -1,72 +1,307 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PizzaChat | Messenger</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PizzaChat 🍕</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Pacifico&display=swap" rel="stylesheet" />
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <!-- Emoji Picker -->
+  <script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1/index.js" type="module"></script>
 </head>
-<body class="theme-system">
-    <div id="auth-container">
-        <div class="auth-box">
-            <h1 id="pizza-logo">🍕 PizzaChat</h1>
-            <input type="email" id="auth-email" placeholder="Correo electrónico">
-            <input type="password" id="auth-pass" placeholder="Contraseña">
-            <div class="auth-buttons">
-                <button onclick="login()">Iniciar Sesión</button>
-                <button onclick="register()">Registrarse</button>
-            </div>
-            <p onclick="resetPassword()" class="link-text">¿Olvidaste tu contraseña?</p>
-        </div>
+<body data-theme="system">
+
+  <!-- ========== AUTH SCREEN ========== -->
+  <div id="auth-screen" class="screen active">
+    <div class="auth-bg">
+      <div class="pizza-float">🍕</div>
+      <div class="pizza-float">🍕</div>
+      <div class="pizza-float">🍕</div>
     </div>
+    <div class="auth-card">
+      <div class="auth-logo">
+        <span class="logo-icon">🍕</span>
+        <span class="logo-text">PizzaChat</span>
+      </div>
+      <p class="auth-subtitle">¡Chatea con todos, con sabor!</p>
 
-    <div id="app-container" class="hidden">
-        <aside id="sidebar">
-            <header>
-                <img id="my-avatar" src="https://via.placeholder.com/40" alt="Perfil">
-                <span id="my-name">Cargando...</span>
-                <button onclick="toggleSettings()">⚙️</button>
-            </header>
-            <div id="contact-list"></div>
-            <button onclick="logout()" class="btn-logout">Cerrar Sesión</button>
-        </aside>
+      <!-- Tab buttons -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Iniciar Sesión</button>
+        <button class="auth-tab" data-tab="register">Registrarse</button>
+      </div>
 
-        <main id="chat-window">
-            <header id="chat-header">
-                <button id="back-btn" onclick="closeChat()">⬅</button>
-                <div id="active-user-info">
-                    <strong id="active-chat-name">Selecciona un chat</strong>
-                    <span id="active-status"></span>
-                </div>
-            </header>
-            <div id="messages-display"></div>
-            <div id="typing-indicator" class="hidden">Alguien está escribiendo...</div>
-            <footer id="input-area">
-                <textarea id="msg-input" placeholder="Escribe un mensaje o pega una URL..."></textarea>
-                <button id="send-btn">🍕</button>
-            </footer>
-        </main>
-
-        <div id="settings-modal" class="hidden">
-            <div class="modal-content">
-                <h3>Perfil y Configuración</h3>
-                <input type="text" id="edit-name" placeholder="Tu nombre">
-                <textarea id="edit-bio" placeholder="Tu descripción"></textarea>
-                <input type="text" id="edit-pic" placeholder="URL de foto de perfil">
-                <select id="theme-select" onchange="changeTheme(this.value)">
-                    <option value="system">Sistema</option>
-                    <option value="light">Claro</option>
-                    <option value="dark">Oscuro</option>
-                </select>
-                <button onclick="saveProfile()">Guardar</button>
-                <button onclick="toggleSettings()">Cerrar</button>
-            </div>
+      <!-- Login Form -->
+      <div id="tab-login" class="auth-form active">
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" id="login-email" placeholder="tu@correo.com" autocomplete="email" />
         </div>
-    </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <div class="input-password-wrap">
+            <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" />
+            <button class="toggle-pw" data-target="login-password">👁</button>
+          </div>
+        </div>
+        <button class="btn-primary" id="btn-login">Iniciar Sesión</button>
+        <button class="btn-link" id="btn-forgot">¿Olvidaste tu contraseña?</button>
+      </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-    <script src="main.js"></script>
+      <!-- Register Form -->
+      <div id="tab-register" class="auth-form">
+        <div class="form-group">
+          <label>Nombre de usuario</label>
+          <input type="text" id="reg-name" placeholder="TuNombre" autocomplete="username" />
+        </div>
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" id="reg-email" placeholder="tu@correo.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <div class="input-password-wrap">
+            <input type="password" id="reg-password" placeholder="Mínimo 6 caracteres" autocomplete="new-password" />
+            <button class="toggle-pw" data-target="reg-password">👁</button>
+          </div>
+        </div>
+        <button class="btn-primary" id="btn-register">Crear cuenta</button>
+      </div>
+
+      <!-- Forgot Password Form -->
+      <div id="tab-forgot" class="auth-form">
+        <p class="forgot-desc">Ingresa tu correo y te enviaremos un enlace para restablecer tu contraseña.</p>
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" id="forgot-email" placeholder="tu@correo.com" />
+        </div>
+        <button class="btn-primary" id="btn-send-reset">Enviar enlace</button>
+        <button class="btn-link" id="btn-back-login">← Volver al inicio de sesión</button>
+      </div>
+
+      <div id="auth-message" class="auth-message"></div>
+    </div>
+  </div>
+
+  <!-- ========== MAIN APP ========== -->
+  <div id="app-screen" class="screen">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <span>🍕</span>
+          <span class="logo-text-sm">PizzaChat</span>
+        </div>
+        <div class="sidebar-actions">
+          <button class="icon-btn" id="btn-theme" title="Cambiar tema">🌗</button>
+          <button class="icon-btn" id="btn-open-profile" title="Mi perfil">👤</button>
+          <button class="icon-btn" id="btn-logout" title="Cerrar sesión">🚪</button>
+        </div>
+      </div>
+
+      <!-- Search / Add contact -->
+      <div class="sidebar-search">
+        <input type="text" id="search-contacts" placeholder="🔍 Buscar o añadir usuario..." />
+        <button class="icon-btn" id="btn-add-contact" title="Añadir contacto">➕</button>
+      </div>
+
+      <!-- Contact list -->
+      <div id="contact-list" class="contact-list">
+        <div class="empty-contacts">
+          <span>🍕</span>
+          <p>Agrega un amigo para empezar a chatear</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Chat Area -->
+    <main id="chat-area" class="chat-area">
+      <!-- Welcome Screen -->
+      <div id="welcome-screen" class="welcome-screen">
+        <div class="welcome-pizza">🍕</div>
+        <h2>Bienvenido a PizzaChat</h2>
+        <p>Selecciona un chat o añade un amigo para comenzar</p>
+      </div>
+
+      <!-- Chat Window -->
+      <div id="chat-window" class="chat-window hidden">
+        <!-- Chat Header -->
+        <div class="chat-header">
+          <button class="icon-btn back-btn" id="btn-back-sidebar">←</button>
+          <div class="chat-header-avatar" id="chat-header-avatar"></div>
+          <div class="chat-header-info">
+            <div class="chat-header-name" id="chat-header-name"></div>
+            <div class="chat-header-status" id="chat-header-status"></div>
+          </div>
+          <div class="chat-header-actions">
+            <button class="icon-btn" id="btn-view-profile" title="Ver perfil">ℹ️</button>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div id="messages-container" class="messages-container">
+          <div id="messages-list" class="messages-list"></div>
+          <div id="typing-indicator" class="typing-indicator hidden">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+          </div>
+        </div>
+
+        <!-- Load more -->
+        <button id="btn-load-more" class="btn-load-more hidden">⬆ Cargar mensajes anteriores</button>
+
+        <!-- Input Area -->
+        <div class="input-area">
+          <button class="icon-btn input-action-btn" id="btn-attach" title="Adjuntar URL">📎</button>
+          <button class="icon-btn input-action-btn" id="btn-emoji" title="Emojis">😊</button>
+          <div class="text-input-wrap">
+            <div
+              id="message-input"
+              class="message-input"
+              contenteditable="true"
+              data-placeholder="Escribe un mensaje..."
+              role="textbox"
+              aria-multiline="true"
+            ></div>
+          </div>
+          <button class="icon-btn input-action-btn" id="btn-voice" title="Nota de voz">🎤</button>
+          <button class="btn-send" id="btn-send">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Emoji Picker Panel -->
+        <div id="emoji-panel" class="emoji-panel hidden">
+          <emoji-picker></emoji-picker>
+        </div>
+
+        <!-- Attach URL Panel -->
+        <div id="attach-panel" class="attach-panel hidden">
+          <div class="attach-panel-inner">
+            <h4>📎 Adjuntar por URL</h4>
+            <select id="attach-type">
+              <option value="image">🖼 Imagen</option>
+              <option value="video">🎬 Video</option>
+              <option value="audio">🎵 Audio</option>
+              <option value="link">🔗 Enlace</option>
+            </select>
+            <input type="url" id="attach-url" placeholder="https://ejemplo.com/archivo.jpg" />
+            <div class="attach-actions">
+              <button class="btn-primary" id="btn-send-attach">Adjuntar</button>
+              <button class="btn-secondary" id="btn-cancel-attach">Cancelar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Voice panel -->
+        <div id="voice-panel" class="voice-panel hidden">
+          <div class="voice-panel-inner">
+            <div class="voice-indicator">
+              <span class="voice-dot"></span>
+              <span id="voice-timer">🎤</span>
+            </div>
+            <p>Pega la URL del audio que quieras enviar como nota de voz.</p>
+            <input type="url" id="voice-url" placeholder="Pega URL del audio aquí..." />
+            <div class="attach-actions">
+              <button class="btn-primary" id="btn-send-voice">Enviar audio</button>
+              <button class="btn-secondary" id="btn-cancel-voice">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Mobile overlay -->
+    <div id="sidebar-overlay" class="sidebar-overlay hidden"></div>
+  </div>
+
+  <!-- ========== MODALS ========== -->
+
+  <!-- Profile Modal -->
+  <div id="modal-profile" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Mi Perfil</h3>
+        <button class="modal-close" data-modal="modal-profile">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="profile-avatar-edit">
+          <div class="profile-avatar-preview" id="profile-avatar-preview"></div>
+          <div class="profile-avatar-actions">
+            <p class="profile-avatar-label">Foto de perfil (URL)</p>
+            <input type="url" id="profile-photo-url" placeholder="https://ejemplo.com/foto.jpg" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Nombre de usuario</label>
+          <input type="text" id="profile-name" placeholder="Tu nombre" maxlength="30" />
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea id="profile-bio" placeholder="Cuéntanos algo sobre ti..." maxlength="150" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Correo (no editable)</label>
+          <input type="email" id="profile-email" disabled />
+        </div>
+        <button class="btn-primary" id="btn-save-profile">Guardar cambios</button>
+        <div id="profile-message" class="auth-message"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Contact Profile Modal -->
+  <div id="modal-view-profile" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Perfil</h3>
+        <button class="modal-close" data-modal="modal-view-profile">✕</button>
+      </div>
+      <div class="modal-body view-profile-body">
+        <div class="view-profile-avatar" id="view-profile-avatar"></div>
+        <div class="view-profile-name" id="view-profile-name"></div>
+        <div class="view-profile-status" id="view-profile-online"></div>
+        <div class="view-profile-bio" id="view-profile-bio"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Contact Modal -->
+  <div id="modal-add-contact" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Añadir contacto</h3>
+        <button class="modal-close" data-modal="modal-add-contact">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.9rem; opacity:0.75; margin-bottom:1rem;">Busca a un usuario por su nombre o correo exacto para iniciar una conversación.</p>
+        <div class="form-group">
+          <label>Nombre o correo del usuario</label>
+          <input type="text" id="add-contact-query" placeholder="nombre o correo exacto..." />
+        </div>
+        <button class="btn-primary" id="btn-search-user">Buscar</button>
+        <div id="search-results" class="search-results"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification sound -->
+  <audio id="notif-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+
+  <script src="app.js"></script>
 </body>
 </html>
