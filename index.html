@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <title>Pizzaclap43 | Creador de Contenido y Desarrollador</title>
     <meta name="description" content="Página oficial de Pizzaclap43. Encuentra mis redes sociales, mi servidor de ClassiCube, juegos como Neon Dash y más contenido.">
     <meta name="keywords" content="Pizzaclap43, Neon Dash, ClassiCube, Pizza Server, Creador de contenido, Venezuela">
@@ -16,54 +16,109 @@
 
     <link rel="icon" type="image/png" href="avatarHead.png">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="background-overlay"></div>
-    <div class="scanlines"></div>
-    
+
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+
     <div class="container">
+
         <header>
-            <div class="profile-container">
+            <div class="profile-wrapper">
                 <img src="perfil.png" alt="Pizzaclap43" class="profile-pic">
             </div>
             <h1>Pizzaclap43</h1>
-            <p class="subtitle">Creador de Contenido</p>
+            <p class="subtitle">Creador de Contenido &amp; Desarrollador</p>
+            <div class="badge">🇻🇪 Venezuela</div>
         </header>
 
-        <div class="video-container">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/rdKisMpCmzI?si=mDrRXaTHS-rsA2oI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
-        <p class="subtitle-shadow">Último video de Pizzaclap43</p>
+        <section class="video-section">
+            <p class="section-label">Último video</p>
+            <div class="video-wrapper">
+                <iframe
+                    src="https://www.youtube.com/embed/rdKisMpCmzI?si=mDrRXaTHS-rsA2oI"
+                    title="Último video de Pizzaclap43"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </section>
 
-        <section class="featured">
-            <p class="subtitle-shadow" style="margin-bottom: 20px;">PROYECTO DESTACADO</p>
-            <a href="https://pizzaclap43.github.io/Neon-Dash" target="_blank" class="link-card neon-dash-btn featured-anim" style="--i:1">
-                <i class="fas fa-bolt"></i> ¡JUEGA NEON DASH!
+        <section class="featured-section">
+            <p class="section-label">Proyecto destacado</p>
+            <a href="https://pizzaclap43.github.io/Neon-Dash" target="_blank" class="neon-dash-card">
+                <div class="nd-icon">⚡</div>
+                <div class="nd-text">
+                    <span class="nd-title">Neon Dash</span>
+                    <span class="nd-sub">Jugar ahora →</span>
+                </div>
             </a>
         </section>
 
-        <main class="links">
-            <a href="https://instagram.com/pizzaclap43" target="_blank" class="link-card instagram-btn" style="--i:2"><i class="fab fa-instagram"></i> Instagram</a>
-            <a href="https://tiktok.com/@pizzaclap43" target="_blank" class="link-card tiktok-btn" style="--i:3"><i class="fab fa-tiktok"></i> TikTok</a>
-            <a href="https://youtube.com/@Pizzaclap43" target="_blank" class="link-card youtube-btn" style="--i:4"><i class="fab fa-youtube"></i> YouTube</a>
-            <a href="https://twitch.tv/pizzaclap43" target="_blank" class="link-card twitch-btn" style="--i:5"><i class="fab fa-twitch"></i> Twitch</a>
-            <a href="https://kick.com/pizzaclap43" target="_blank" class="link-card kick-btn" style="--i:6"><i class="fas fa-bolt"></i> Kick</a>
-            <a href="https://discord.com/invite/BhSYNUYrxP" target="_blank" class="link-card discord-btn" style="--i:7"><i class="fab fa-discord"></i> Discord</a>
-            <a href="https://twitter.com/Pizzaclap43" target="_blank" class="link-card twitter-btn" style="--i:8"><i class="fab fa-twitter"></i> Twitter</a>
-            <a href="https://facebook.com/pizzaclap43" target="_blank" class="link-card facebook-btn" style="--i:9"><i class="fab fa-facebook"></i> Facebook</a>
-            <a href="https://t.me/pizzaclap43" target="_blank" class="link-card telegram-btn" style="--i:10"><i class="fab fa-telegram-plane"></i> Telegram</a>
-            <a href="https://open.spotify.com/user/3167cgabjecc74nd7xf6yadlryc4?si=3571e122a64d4df4" target="_blank" class="link-card spotify-btn" style="--i:11"><i class="fab fa-spotify"></i> Spotify</a>
-            <a href="https://music.youtube.com/channel/UCK2QmDn8eU70eSQcYndJIfg" target="_blank" class="link-card yt-music-btn" style="--i:12"><i class="fab fa-youtube"></i> YouTube Music</a>
-            <a href="https://github.com/Pizzaclap43" target="_blank" class="link-card github-btn" style="--i:13"><i class="fab fa-github"></i> GitHub</a>
-            <a href="https://pizzaclap43.github.io/PizzaServer" class="link-card pizza-server-btn" style="--i:14"><i class="fas fa-cube"></i> Pizza Server</a>
-            <a href="mailto:pizzaclapyt@gmail.com" class="link-card contact-btn" style="--i:15"><i class="fas fa-envelope"></i> Contacto</a>
-        </main>
+        <section class="links-section">
+            <p class="section-label">Redes sociales</p>
+            <div class="links-grid">
+                <a href="https://instagram.com/pizzaclap43" target="_blank" class="link-card" data-platform="instagram">
+                    <i class="fab fa-instagram"></i><span>Instagram</span>
+                </a>
+                <a href="https://tiktok.com/@pizzaclap43" target="_blank" class="link-card" data-platform="tiktok">
+                    <i class="fab fa-tiktok"></i><span>TikTok</span>
+                </a>
+                <a href="https://youtube.com/@Pizzaclap43" target="_blank" class="link-card" data-platform="youtube">
+                    <i class="fab fa-youtube"></i><span>YouTube</span>
+                </a>
+                <a href="https://twitch.tv/pizzaclap43" target="_blank" class="link-card" data-platform="twitch">
+                    <i class="fab fa-twitch"></i><span>Twitch</span>
+                </a>
+                <a href="https://kick.com/pizzaclap43" target="_blank" class="link-card" data-platform="kick">
+                    <i class="fas fa-bolt"></i><span>Kick</span>
+                </a>
+                <a href="https://discord.com/invite/BhSYNUYrxP" target="_blank" class="link-card" data-platform="discord">
+                    <i class="fab fa-discord"></i><span>Discord</span>
+                </a>
+                <a href="https://twitter.com/Pizzaclap43" target="_blank" class="link-card" data-platform="twitter">
+                    <i class="fab fa-x-twitter"></i><span>Twitter / X</span>
+                </a>
+                <a href="https://facebook.com/pizzaclap43" target="_blank" class="link-card" data-platform="facebook">
+                    <i class="fab fa-facebook"></i><span>Facebook</span>
+                </a>
+                <a href="https://t.me/pizzaclap43" target="_blank" class="link-card" data-platform="telegram">
+                    <i class="fab fa-telegram"></i><span>Telegram</span>
+                </a>
+                <a href="https://open.spotify.com/user/3167cgabjecc74nd7xf6yadlryc4?si=3571e122a64d4df4" target="_blank" class="link-card" data-platform="spotify">
+                    <i class="fab fa-spotify"></i><span>Spotify</span>
+                </a>
+                <a href="https://music.youtube.com/channel/UCK2QmDn8eU70eSQcYndJIfg" target="_blank" class="link-card" data-platform="ytmusic">
+                    <i class="fab fa-youtube"></i><span>YT Music</span>
+                </a>
+                <a href="https://github.com/Pizzaclap43" target="_blank" class="link-card" data-platform="github">
+                    <i class="fab fa-github"></i><span>GitHub</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="links-section">
+            <p class="section-label">Más</p>
+            <div class="links-grid links-grid--wide">
+                <a href="https://pizzaclap43.github.io/PizzaServer" class="link-card" data-platform="pizzaserver">
+                    <i class="fas fa-cube"></i><span>Pizza Server</span>
+                </a>
+                <a href="mailto:pizzaclapyt@gmail.com" class="link-card" data-platform="email">
+                    <i class="fas fa-envelope"></i><span>Contacto</span>
+                </a>
+            </div>
+        </section>
 
         <footer>
-            <p class="copyright">©TODOS LOS DERECHOS RESERVADOS - PIZZACLAP43 2026</p>
+            <p>© 2026 Pizzaclap43 · Todos los derechos reservados</p>
         </footer>
-    </div> 
+
+    </div>
+
 </body>
 </html>
