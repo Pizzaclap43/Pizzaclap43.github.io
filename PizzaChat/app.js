@@ -836,39 +836,98 @@ document.getElementById('btn-send-voice').addEventListener('click', () => {
 document.getElementById('btn-add-contact').addEventListener('click', () => openModal('modal-add-contact'));
 
 document.getElementById('btn-search-user').addEventListener('click', async () => {
-  const query     = document.getElementById('add-contact-query').value.trim().toLowerCase();
+  const raw      = document.getElementById('add-contact-query').value.trim();
+  const query    = raw.toLowerCase();
   if (!query) return;
-  const resultsEl  = document.getElementById('search-results');
+
+  const resultsEl = document.getElementById('search-results');
   resultsEl.innerHTML = '';
 
-  const loadingEl  = document.createElement('p');
+  const loadingEl = document.createElement('p');
   loadingEl.style.fontSize = '0.88rem';
   loadingEl.style.color    = 'var(--text-muted)';
   loadingEl.appendChild(document.createTextNode('Buscando...'));
   resultsEl.appendChild(loadingEl);
 
-  const snap  = await db.ref('users').once('value');
-  const users = snap.val() || {};
+  // Usamos un Map para evitar duplicados (misma persona por nombre y email)
+  const found = new Map();
+
+  try {
+    // 1) Búsqueda exacta por nombre (case-sensitive en Firebase,
+    //    probamos con el texto original y con primera letra en mayúscula)
+    const namesToTry = new Set([raw, query,
+      raw.charAt(0).toUpperCase() + raw.slice(1),
+      raw.toUpperCase()
+    ]);
+
+    for (const nameVariant of namesToTry) {
+      const snapName = await db.ref('users')
+        .orderByChild('name')
+        .equalTo(nameVariant)
+        .once('value');
+      if (snapName.exists()) {
+        snapName.forEach(child => {
+          if (child.key !== currentUser.uid) found.set(child.key, child.val());
+        });
+      }
+    }
+
+    // 2) Búsqueda exacta por email (siempre en minúsculas)
+    const snapEmail = await db.ref('users')
+      .orderByChild('email')
+      .equalTo(query)
+      .once('value');
+    if (snapEmail.exists()) {
+      snapEmail.forEach(child => {
+        if (child.key !== currentUser.uid) found.set(child.key, child.val());
+      });
+    }
+
+    // 3) Búsqueda por rango de nombre (startAt / endAt) para coincidencias parciales
+    //    Cubre "jua" → "Juan", "mar" → "Maria", etc.
+    const startKey = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+    const endKey   = startKey + '\uf8ff';
+    const snapRange = await db.ref('users')
+      .orderByChild('name')
+      .startAt(startKey)
+      .endAt(endKey)
+      .once('value');
+    if (snapRange.exists()) {
+      snapRange.forEach(child => {
+        if (child.key !== currentUser.uid) found.set(child.key, child.val());
+      });
+    }
+
+    // También rango en minúsculas por si el nombre fue guardado así
+    const snapRangeLower = await db.ref('users')
+      .orderByChild('name')
+      .startAt(query)
+      .endAt(query + '\uf8ff')
+      .once('value');
+    if (snapRangeLower.exists()) {
+      snapRangeLower.forEach(child => {
+        if (child.key !== currentUser.uid) found.set(child.key, child.val());
+      });
+    }
+
+  } catch (e) {
+    console.error('Error en búsqueda:', e);
+  }
+
   resultsEl.innerHTML = '';
 
-  let found = false;
-  Object.entries(users).forEach(([uid, userData]) => {
-    if (uid === currentUser.uid) return;
-    const nameMatch  = (userData.name  || '').toLowerCase().includes(query);
-    const emailMatch = (userData.email || '').toLowerCase() === query;
-    if (nameMatch || emailMatch) {
-      found = true;
-      resultsEl.appendChild(buildSearchResultItem(uid, userData));
-    }
-  });
-
-  if (!found) {
+  if (found.size === 0) {
     const noResult = document.createElement('p');
     noResult.style.fontSize = '0.88rem';
     noResult.style.color    = 'var(--text-muted)';
     noResult.appendChild(document.createTextNode('No se encontraron usuarios.'));
     resultsEl.appendChild(noResult);
+    return;
   }
+
+  found.forEach((userData, uid) => {
+    resultsEl.appendChild(buildSearchResultItem(uid, userData));
+  });
 });
 
 // Enter key en búsqueda
