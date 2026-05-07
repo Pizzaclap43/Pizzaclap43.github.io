@@ -1,0 +1,550 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0d0221">
+    <title>Neon Dash - Global Edition</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            margin: 0;
+            background-color: #0d0221;
+            color: #ff00ff;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            transition: background-color 0.8s ease;
+            touch-action: none;
+        }
+
+        .neon-title {
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            position: relative;
+            color: #fff;
+            text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff;
+            margin-bottom: 15px;
+            letter-spacing: 4px;
+            text-align: center;
+            transition: all 0.5s ease;
+        }
+
+        .frutiger-title {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+            text-transform: none !important;
+            font-weight: 600 !important;
+            letter-spacing: 0px !important;
+            text-shadow: 0px 2px 4px rgba(0,0,0,0.2) !important;
+            background: linear-gradient(to bottom, #ffffff 0%, #a1c4fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .menu-layer {
+            position: absolute;
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(13, 2, 33, 0.98);
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: auto;
+        }
+
+        .menu-layer.active {
+            display: flex !important;
+            z-index: 200;
+        }
+
+        #menu-icon-container {
+            margin: 10px 0 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #menu-icon {
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px #ff00ff);
+            border-radius: 24px;
+            transition: 0.2s;
+        }
+
+        #menu-icon:hover {
+            scale: 1.1;
+        }
+
+        .btn-neon {
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: #fff;
+            background: transparent;
+            border: 3px solid #ff00ff;
+            cursor: pointer;
+            box-shadow: 0 0 15px #ff00ff;
+            transition: 0.2s;
+            text-transform: uppercase;
+            margin-top: 12px;
+            width: 250px;
+            z-index: 210;
+            pointer-events: auto;
+            border-radius: 16px;
+            transition: 0.2s;
+        }
+
+        .btn-neon:hover {
+            scale: 1.1;
+        }
+
+        .btn-neon:active { transform: scale(0.95); background: rgba(255, 0, 255, 0.3); }
+
+        .final-score { font-size: 1.8rem; color: #00ffff; margin: 5px 0; }
+        .high-score { font-size: 1rem; color: #ffff00; margin-bottom: 10px; }
+
+        .setting-item { margin: 15px 0; width: 280px; text-align: center; }
+        .setting-label { font-size: 1.1rem; color: #fff; display: block; margin-bottom: 8px; }
+        input[type=range] { width: 100%; cursor: pointer; }
+
+        #game-wrapper { display: none; flex-direction: column; align-items: center; }
+        #game-container {
+            position: relative;
+            border: 4px solid #fff;
+            box-shadow: 0 0 25px #ff00ff;
+            background: #000;
+        }
+
+        canvas { display: block; }
+        .ui-panel {
+            display: flex;
+            justify-content: space-between;
+            width: 360px;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .auth-input {
+            padding: 10px;
+            margin: 5px 0;
+            font-family: 'Courier New';
+            background: #000;
+            border: 2px solid #00ffff;
+            color: #fff;
+            text-align: center;
+            width: 100%;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .leaderboard-row {
+            display: flex;
+            justify-content: space-between;
+            width: 280px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 1.1rem;
+        }
+
+        #status-msg, #auth-status {
+            font-size: 0.8rem;
+            margin-top: 5px;
+            color: #7cfc00;
+            height: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="settings-menu" class="menu-layer">
+        <h1 class="neon-title">MI CUENTA</h1>
+        <div id="auth-forms" style="width: 280px;">
+            <input type="text" id="player-name-settings" class="auth-input" placeholder="NOMBRE DE USUARIO" maxlength="12">
+            <input type="email" id="player-email" class="auth-input" placeholder="CORREO" style="border-color: #ff00ff;">
+            <input type="password" id="player-password" class="auth-input" placeholder="CONTRASEÑA" style="border-color: #ffff00;">
+            <div style="display: flex; gap: 5px;">
+                <button class="btn-neon" onclick="handleAuth('login')" style="font-size: 0.8rem; width: 50%; border-color: #00ffff; box-shadow: 0 0 10px #00ffff;">ENTRAR</button>
+                <button class="btn-neon" onclick="handleAuth('register')" style="font-size: 0.8rem; width: 50%; border-color: #ff00ff; box-shadow: 0 0 10px #ff00ff;">CREAR</button>
+            </div>
+            <p id="auth-status"></p>
+        </div>
+        <div class="setting-item" style="border-top: 1px solid #333; padding-top: 15px;">
+            <span class="setting-label">VOLUMEN</span>
+            <input type="range" id="volume-control" min="0" max="1" step="0.1" value="0.5" oninput="updateVolume(this.value)">
+        </div>
+        <div class="setting-item">
+            <span class="setting-label">EFECTOS VISUALES</span>
+            <button id="effects-toggle" class="btn-neon" onclick="toggleEffects()">ACTIVADOS</button>
+        </div>
+        <button class="btn-neon" onclick="toggleMenu('settings-menu', false)" style="border-color: #ffff00; box-shadow: 0 0 15px #ffff00;">VOLVER</button>
+    </div>
+
+    <div id="themes-menu" class="menu-layer">
+        <h1 class="neon-title">TEMAS</h1>
+        <button class="btn-neon" onclick="setTheme('neon')" style="border-color: #ff00ff; box-shadow: 0 0 15px #ff00ff;">NEON NIGHT</button>
+        <button class="btn-neon" onclick="setTheme('frutiger')" style="border-color: #4facfe; box-shadow: 0 0 15px #4facfe;">FRUTIGER AERO</button>
+        <button class="btn-neon" onclick="toggleMenu('themes-menu', false)" style="border-color: #ffff00; box-shadow: 0 0 15px #ffff00; margin-top: 30px;">VOLVER</button>
+    </div>
+
+    <div id="ranking-menu" class="menu-layer">
+        <h1 class="neon-title">TOP GLOBAL</h1>
+        <div id="leaderboard-content" style="margin-bottom: 20px; color: #fff;">Cargando...</div>
+        <button class="btn-neon" onclick="toggleMenu('ranking-menu', false)" style="border-color: #ffff00; box-shadow: 0 0 15px #ffff00;">VOLVER</button>
+    </div>
+
+    <div id="game-over-menu" class="menu-layer">
+        <h1 class="neon-title" style="text-shadow: 2px 2px #ff0000;">¡FIN DEL JUEGO!</h1>
+        <p class="final-score">PUNTOS: <span id="final-score-val">0</span></p>
+        <p class="high-score">RECORD LOCAL: <span id="high-score-val">0</span></p>
+        <div id="status-msg"></div>
+        <button class="btn-neon" onclick="toggleMenu('game-over-menu', false)" style="border-color: #00ffff; box-shadow: 0 0 15px #00ffff; margin-top: 10px;">REINTENTAR</button>
+    </div>
+
+    <div id="start-menu" class="menu-layer active">
+        <h1 class="neon-title" id="main-title">NEON DASH</h1>
+        <div id="menu-icon-container">
+            <img src="https://pizzaclap43.github.io/Neon-Dash/favicon.png" alt="Icono" id="menu-icon">
+        </div>
+        <button class="btn-neon" onclick="startGame()">JUGAR</button>
+        <button class="btn-neon" onclick="toggleMenu('ranking-menu', true); loadScores();" style="border-color: #00ffff; box-shadow: 0 0 10px #00ffff;">RANKING</button>
+        <button class="btn-neon" onclick="toggleMenu('themes-menu', true)" style="border-color: #7cfc00; box-shadow: 0 0 10px #7cfc00;">TEMAS</button>
+        <button class="btn-neon" onclick="toggleMenu('settings-menu', true)" style="border-color: #ffff00; box-shadow: 0 0 10px #ffff00;">AJUSTES</button>
+    </div>
+
+    <div id="game-wrapper">
+        <h1 class="neon-title" id="game-title">NEON DASH</h1>
+        <div id="game-container">
+            <canvas id="gameCanvas" width="360" height="500"></canvas>
+        </div>
+        <div class="ui-panel" id="ui-panel">
+            <div id="lives">❤️❤️❤️</div>
+            <div id="score-panel">PUNTOS: <span id="score-val">0</span></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log("SW error", err));
+            });
+        }
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBmEI9UPEs3ST7vJVaqzq_PzWUMo1WaYzA",
+            authDomain: "neon-dash-fac14.firebaseapp.com",
+            projectId: "neon-dash-fac14",
+            storageBucket: "neon-dash-fac14.firebasestorage.app",
+            messagingSenderId: "1046802669155",
+            appId: "1:1046802669155:web:b82655117ea092232c2256",
+            measurementId: "G-YT2N2SET2N"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        window.handleAuth = async (type) => {
+            const email = document.getElementById('player-email').value;
+            const password = document.getElementById('player-password').value;
+            const name = document.getElementById('player-name-settings').value;
+            const status = document.getElementById('auth-status');
+            if(!email || !password) { status.innerText = "FALTAN DATOS"; return; }
+            try {
+                if (type === 'register') {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    await updateProfile(userCredential.user, { displayName: name || "Jugador" });
+                    status.innerText = "¡CUENTA CREADA!";
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    status.innerText = "SESIÓN INICIADA";
+                }
+            } catch (error) { status.innerText = "ERROR: " + error.code.replace('auth/', ''); }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                localStorage.setItem("neonDashPlayerName", user.displayName || "Jugador");
+                document.getElementById('player-name-settings').value = user.displayName || "";
+                document.getElementById('auth-status').innerText = "CONECTADO: " + user.displayName;
+            }
+        });
+
+        window.autoSaveScore = async () => {
+            const user = auth.currentUser;
+            let name = user ? user.displayName : (localStorage.getItem("neonDashPlayerName") || "Invitado");
+            if (!name || name.trim() === "") { name = "Pizzaclap43_Player"; }
+            const status = document.getElementById('status-msg');
+            // Para usuarios no autenticados, el ID es estable basado en nombre (no timestamp)
+            // para evitar duplicados en el leaderboard global.
+            const userId = user ? user.uid : "guest_" + name.toLowerCase().replace(/\s+/g, '_');
+            try {
+                status.innerText = "REVISANDO RÉCORD...";
+                const docRef = doc(db, "leaderboard", userId);
+                const docSnap = await getDoc(docRef);
+                if (!docSnap.exists() || score > docSnap.data().score) {
+                    await setDoc(docRef, { name: name, score: score, date: new Date() });
+                    status.innerText = "¡NUEVO RÉCORD GLOBAL!";
+                } else { status.innerText = "PUNTUACIÓN SUBIDA"; }
+            } catch (e) { status.innerText = "ERROR AL SUBIR"; }
+        };
+
+        window.loadScores = () => {
+            const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(5));
+            const container = document.getElementById('leaderboard-content');
+            onSnapshot(q, (snapshot) => {
+                container.innerHTML = "";
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    container.innerHTML += `<div class="leaderboard-row"><span>${data.name}</span><span style="color:#00ffff">${data.score}</span></div>`;
+                });
+            });
+        };
+
+        const themes = {
+            neon: { bg: "#0d0221", player: "#ff00ff", enemy: "#00ffff", point: "#ffff00", shadow: "#ff00ff", title: "NEON DASH", bgList: ["#0d0221", "#2e004d", "#002b36", "#330000", "#1a1a1a"], uiColor: "#ff00ff" },
+            frutiger: { bg: "#4facfe", player: "#7cfc00", enemy: "#ffffff", point: "#00eeff", shadow: "#ffffff", title: "Aero Dash", bgList: ["#4facfe", "#00f2fe", "#38f9d7", "#a18cd1", "#84fab0"], uiColor: "#ffffff" }
+        };
+
+        let currentThemeKey = localStorage.getItem("neonDashTheme") || "neon";
+        let savedVol = localStorage.getItem("neonDashVolume");
+        let initialVol = savedVol !== null ? parseFloat(savedVol) : 0.5;
+        let gameSettings = { volume: initialVol, effectsEnabled: localStorage.getItem("neonDashEffects") !== "false" };
+
+        const coinSound = new Audio('./coin.wav');
+        const hitSound = new Audio('./hit.wav');
+        const deathSound = new Audio('./death.wav');
+        
+        function applyAudioVolumes(val) { 
+            coinSound.volume = val; 
+            hitSound.volume = val; 
+            deathSound.volume = val; 
+        }
+        
+        applyAudioVolumes(gameSettings.volume);
+        document.getElementById("volume-control").value = gameSettings.volume;
+
+        window.setTheme = (key) => {
+            currentThemeKey = key;
+            localStorage.setItem("neonDashTheme", key);
+            const theme = themes[key];
+            document.body.style.backgroundColor = theme.bg;
+            document.getElementById("game-title").innerText = theme.title;
+            document.getElementById("main-title").innerText = (key === 'frutiger') ? "Aero Dash" : "NEON DASH";
+            document.getElementById("ui-panel").style.color = theme.uiColor;
+            const titles = [document.getElementById("game-title"), document.getElementById("main-title")];
+            titles.forEach(t => {
+                if(key === 'frutiger') t.classList.add('frutiger-title');
+                else t.classList.remove('frutiger-title');
+            });
+            updateEffectsUI();
+            if(gameActive) toggleMenu('themes-menu', false);
+        };
+
+        window.updateVolume = (val) => { 
+            gameSettings.volume = parseFloat(val); 
+            applyAudioVolumes(gameSettings.volume); 
+            localStorage.setItem("neonDashVolume", val); 
+        };
+
+        window.toggleEffects = () => { gameSettings.effectsEnabled = !gameSettings.effectsEnabled; localStorage.setItem("neonDashEffects", gameSettings.effectsEnabled); updateEffectsUI(); };
+
+        function updateEffectsUI() {
+            const btn = document.getElementById("effects-toggle");
+            btn.innerText = gameSettings.effectsEnabled ? "ACTIVADOS" : "DESACTIVADOS";
+            const uiPanel = document.getElementById("ui-panel");
+            if (gameSettings.effectsEnabled) {
+                const shadowCol = themes[currentThemeKey].shadow;
+                uiPanel.style.textShadow = `0 0 10px ${shadowCol}, 0 0 20px ${shadowCol}`;
+            } else { uiPanel.style.textShadow = "none"; }
+        }
+
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const gameWrapper = document.getElementById("game-wrapper");
+        let animationId;
+
+        window.startGame = () => {
+            if(animationId) cancelAnimationFrame(animationId);
+            
+            coinSound.play().then(() => { coinSound.pause(); coinSound.currentTime = 0; });
+            
+            const allMenus = document.querySelectorAll('.menu-layer');
+            allMenus.forEach(menu => {
+                menu.classList.remove('active');
+                menu.style.display = 'none';
+            });
+            
+            gameWrapper.style.display = "flex";
+            score = 0;
+            lives = 3;
+            items = [];
+            currentLevel = 0;
+            gameActive = true;
+            invincible = false;
+            player.x = (canvas.width/2)-15;
+            
+            updateLivesUI();
+            document.getElementById("score-val").innerText = "0";
+            initAeroEffects();
+            draw();
+        };
+
+        window.score = 0; let lives = 3, gameActive = false, currentLevel = 0;
+        let aeroBubbles = [], aeroGlints = [];
+
+        function initAeroEffects() {
+            aeroBubbles = []; 
+            aeroGlints = [];   
+            for(let i=0; i<10; i++) aeroBubbles.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: 4+Math.random()*12, speed: 0.4+Math.random() });
+            for(let i=0; i<4; i++) aeroGlints.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, op: 0, state: 'in' });
+        }
+
+        const player = { x: (canvas.width/2)-15, y: 435, size: 30 };
+        let items = [], keys = {};
+
+        canvas.addEventListener("touchmove", (e) => {
+            if (!gameActive) return;
+            const rect = canvas.getBoundingClientRect();
+            let newX = e.touches[0].clientX - rect.left - 15;
+            player.x = Math.max(15, Math.min(canvas.width - player.size - 15, newX));
+            e.preventDefault();
+        }, { passive: false });
+
+        document.addEventListener("keydown", (e) => keys[e.code] = true);
+        document.addEventListener("keyup", (e) => keys[e.code] = false);
+
+        let invincible = false;
+
+        function update() {
+            if (!gameActive) return;
+            if (keys["ArrowLeft"] && player.x > 15) player.x -= 8;
+            if (keys["ArrowRight"] && player.x < canvas.width - player.size) player.x += 8;
+            if(currentThemeKey === 'frutiger') {
+                aeroBubbles.forEach(b => { b.y -= b.speed; if(b.y < -20) b.y = canvas.height + 20; });
+                aeroGlints.forEach(g => {
+                    if(g.state === 'in') { g.op += 0.01; if(g.op >= 0.5) g.state = 'out'; }
+                    else { g.op -= 0.01; if(g.op <= 0) { g.x = Math.random()*canvas.width; g.y = Math.random()*canvas.height; g.state = 'in'; } }
+                });
+            }
+
+            let toRemove = [];
+            items.forEach((item, index) => {
+                item.y += item.speed;
+                const hit = player.x < item.x + item.size &&
+                            player.x + player.size > item.x &&
+                            player.y < item.y + item.size &&
+                            player.y + player.size > item.y;
+                if (hit) {
+                    if (item.type === "enemy") {
+                        if (!invincible) {
+                            toRemove.push(index);
+                            lives--;
+                            if (lives <= 0) {
+                                gameActive = false;
+                                deathSound.play();
+                                showGameOver();
+                            } else {
+                                hitSound.play();
+                                updateLivesUI();
+                                invincible = true;
+                                setTimeout(() => { invincible = false; }, 800);
+                            }
+                        }
+                    } else {
+                        toRemove.push(index);
+                        coinSound.currentTime = 0; coinSound.play();
+                        score += 10; document.getElementById("score-val").innerText = score;
+                        if(Math.floor(score/100) > currentLevel) {
+                            currentLevel++;
+                            if(gameSettings.effectsEnabled) document.body.style.backgroundColor = themes[currentThemeKey].bgList[currentLevel % 5];
+                        }
+                    }
+                }
+                if (item.y > canvas.height) toRemove.push(index);
+            });
+            items = items.filter((_, i) => !toRemove.includes(i));
+
+            if (Math.random() < 0.05) {
+                const isP = Math.random() > 0.4;
+                items.push({ x: 15+Math.random()*(canvas.width-50), y: -30, size: 20, type: isP?"point":"enemy", color: isP?themes[currentThemeKey].point:themes[currentThemeKey].enemy, speed: 3.5+(score/200) });
+            }
+        }
+
+        function showGameOver() {
+            let record = parseInt(localStorage.getItem("neonDashHighScore")) || 0;
+            if (score > record) localStorage.setItem("neonDashHighScore", score);
+            document.getElementById("final-score-val").innerText = score;
+            document.getElementById("high-score-val").innerText = Math.max(score, record);
+            autoSaveScore();
+            toggleMenu('game-over-menu', true);
+        }
+
+        function updateLivesUI() { document.getElementById("lives").innerText = "❤️".repeat(lives); }
+
+        function draw() {
+            if (!gameActive) return;
+            update();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if(currentThemeKey === 'frutiger' && gameSettings.effectsEnabled) {
+                aeroBubbles.forEach(b => { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI*2); ctx.fillStyle = "rgba(255,255,255,0.15)"; ctx.fill(); ctx.strokeStyle = "rgba(255,255,255,0.3)"; ctx.stroke(); });
+                aeroGlints.forEach(g => { ctx.fillStyle = `rgba(255,255,255,${g.op})`; ctx.beginPath(); ctx.arc(g.x, g.y, 2, 0, Math.PI*2); ctx.fill(); });
+            }
+            ctx.shadowBlur = gameSettings.effectsEnabled ? 15 : 0;
+            ctx.shadowColor = themes[currentThemeKey].shadow;
+            ctx.fillStyle = themes[currentThemeKey].player;
+            ctx.fillRect(player.x, player.y, player.size, player.size);
+            items.forEach(item => {
+                ctx.fillStyle = item.color;
+                ctx.shadowColor = item.color;
+                if(item.type === "point") { ctx.beginPath(); ctx.arc(item.x+10, item.y+10, 10, 0, Math.PI*2); ctx.fill(); }
+                else ctx.fillRect(item.x, item.y, 20, 20);
+            });
+            animationId = requestAnimationFrame(draw);
+        }
+
+        window.toggleMenu = (id, show) => {
+            const menus = document.querySelectorAll('.menu-layer');
+            menus.forEach(m => { m.style.display = 'none'; m.classList.remove('active'); });
+            
+            if (show) { 
+                const t = document.getElementById(id); 
+                t.classList.add('active'); 
+                t.style.display = 'flex'; 
+            } else { 
+                // Al quitar un menú (como el de Game Over), ocultamos el wrapper del juego
+                // y mostramos el menú de inicio
+                gameActive = false;
+                if(animationId) cancelAnimationFrame(animationId);
+                gameWrapper.style.display = "none";
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                const start = document.getElementById('start-menu');
+                start.style.display = 'flex'; 
+                start.classList.add('active'); 
+            }
+        };
+
+        setTheme(currentThemeKey);
+    </script>
+</body>
+</html>
