@@ -281,7 +281,9 @@
             let name = user ? user.displayName : (localStorage.getItem("neonDashPlayerName") || "Invitado");
             if (!name || name.trim() === "") { name = "Pizzaclap43_Player"; }
             const status = document.getElementById('status-msg');
-            const userId = user ? user.uid : "anonymous_" + name + "_" + Date.now();
+            // Para usuarios no autenticados, el ID es estable basado en nombre (no timestamp)
+            // para evitar duplicados en el leaderboard global.
+            const userId = user ? user.uid : "guest_" + name.toLowerCase().replace(/\s+/g, '_');
             try {
                 status.innerText = "REVISANDO RÉCORD...";
                 const docRef = doc(db, "leaderboard", userId);
@@ -385,6 +387,7 @@
             items = [];
             currentLevel = 0;
             gameActive = true;
+            invincible = false;
             player.x = (canvas.width/2)-15;
             
             updateLivesUI();
@@ -410,17 +413,19 @@
             if (!gameActive) return;
             const rect = canvas.getBoundingClientRect();
             let newX = e.touches[0].clientX - rect.left - 15;
-            player.x = Math.max(15, Math.min(canvas.width - 45, newX));
+            player.x = Math.max(15, Math.min(canvas.width - player.size - 15, newX));
             e.preventDefault();
         }, { passive: false });
 
         document.addEventListener("keydown", (e) => keys[e.code] = true);
         document.addEventListener("keyup", (e) => keys[e.code] = false);
 
+        let invincible = false;
+
         function update() {
             if (!gameActive) return;
             if (keys["ArrowLeft"] && player.x > 15) player.x -= 8;
-            if (keys["ArrowRight"] && player.x < canvas.width - 45) player.x += 8;
+            if (keys["ArrowRight"] && player.x < canvas.width - player.size) player.x += 8;
             if(currentThemeKey === 'frutiger') {
                 aeroBubbles.forEach(b => { b.y -= b.speed; if(b.y < -20) b.y = canvas.height + 20; });
                 aeroGlints.forEach(g => {
@@ -428,29 +433,44 @@
                     else { g.op -= 0.01; if(g.op <= 0) { g.x = Math.random()*canvas.width; g.y = Math.random()*canvas.height; g.state = 'in'; } }
                 });
             }
+
+            let toRemove = [];
             items.forEach((item, index) => {
                 item.y += item.speed;
-                if (player.x < item.x + item.size && player.x + 30 > item.x && player.y < item.y + item.size && player.y + 30 > item.y) {
+                const hit = player.x < item.x + item.size &&
+                            player.x + player.size > item.x &&
+                            player.y < item.y + item.size &&
+                            player.y + player.size > item.y;
+                if (hit) {
                     if (item.type === "enemy") {
-                        items.splice(index, 1); lives--;
-                        if (lives <= 0) { 
-                            gameActive = false; 
-                            deathSound.play(); 
-                            showGameOver(); 
+                        if (!invincible) {
+                            toRemove.push(index);
+                            lives--;
+                            if (lives <= 0) {
+                                gameActive = false;
+                                deathSound.play();
+                                showGameOver();
+                            } else {
+                                hitSound.play();
+                                updateLivesUI();
+                                invincible = true;
+                                setTimeout(() => { invincible = false; }, 800);
+                            }
                         }
-                        else { hitSound.play(); updateLivesUI(); }
                     } else {
+                        toRemove.push(index);
                         coinSound.currentTime = 0; coinSound.play();
                         score += 10; document.getElementById("score-val").innerText = score;
-                        items.splice(index, 1);
                         if(Math.floor(score/100) > currentLevel) {
                             currentLevel++;
                             if(gameSettings.effectsEnabled) document.body.style.backgroundColor = themes[currentThemeKey].bgList[currentLevel % 5];
                         }
                     }
                 }
-                if (item.y > canvas.height) items.splice(index, 1);
+                if (item.y > canvas.height) toRemove.push(index);
             });
+            items = items.filter((_, i) => !toRemove.includes(i));
+
             if (Math.random() < 0.05) {
                 const isP = Math.random() > 0.4;
                 items.push({ x: 15+Math.random()*(canvas.width-50), y: -30, size: 20, type: isP?"point":"enemy", color: isP?themes[currentThemeKey].point:themes[currentThemeKey].enemy, speed: 3.5+(score/200) });
@@ -470,22 +490,22 @@
 
         function draw() {
             if (!gameActive) return;
+            update();
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             if(currentThemeKey === 'frutiger' && gameSettings.effectsEnabled) {
-                aeroBubbles.forEach(b => { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 7); ctx.fillStyle = "rgba(255,255,255,0.15)"; ctx.fill(); ctx.strokeStyle = "rgba(255,255,255,0.3)"; ctx.stroke(); });
-                aeroGlints.forEach(g => { ctx.fillStyle = `rgba(255,255,255,${g.op})`; ctx.beginPath(); ctx.arc(g.x, g.y, 2, 0, 7); ctx.fill(); });
+                aeroBubbles.forEach(b => { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI*2); ctx.fillStyle = "rgba(255,255,255,0.15)"; ctx.fill(); ctx.strokeStyle = "rgba(255,255,255,0.3)"; ctx.stroke(); });
+                aeroGlints.forEach(g => { ctx.fillStyle = `rgba(255,255,255,${g.op})`; ctx.beginPath(); ctx.arc(g.x, g.y, 2, 0, Math.PI*2); ctx.fill(); });
             }
             ctx.shadowBlur = gameSettings.effectsEnabled ? 15 : 0;
             ctx.shadowColor = themes[currentThemeKey].shadow;
             ctx.fillStyle = themes[currentThemeKey].player;
-            ctx.fillRect(player.x, player.y, 30, 30);
+            ctx.fillRect(player.x, player.y, player.size, player.size);
             items.forEach(item => {
                 ctx.fillStyle = item.color;
                 ctx.shadowColor = item.color;
-                if(item.type === "point") { ctx.beginPath(); ctx.arc(item.x+10, item.y+10, 10, 0, 7); ctx.fill(); }
+                if(item.type === "point") { ctx.beginPath(); ctx.arc(item.x+10, item.y+10, 10, 0, Math.PI*2); ctx.fill(); }
                 else ctx.fillRect(item.x, item.y, 20, 20);
             });
-            update();
             animationId = requestAnimationFrame(draw);
         }
 
