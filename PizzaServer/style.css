@@ -311,6 +311,42 @@ main.links .pixel-title {
     box-shadow: 0 0 14px rgba(88,101,242,0.8), 0 8px 28px rgba(88,101,242,0.5);
 }
 
+/* Botón Instagram (degradado rosa/morado) */
+.instagram-btn {
+    background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+    border-color: rgba(253,29,29,0.6);
+    color: #fff;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+    box-shadow: 0 4px 18px rgba(131,58,180,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.instagram-btn:hover {
+    box-shadow: 0 0 14px rgba(253,29,29,0.7), 0 8px 28px rgba(131,58,180,0.5);
+}
+
+/* Botón WhatsApp (verde) */
+.whatsapp-btn {
+    background: linear-gradient(135deg, #075e54 0%, #25d366 50%, #128c7e 100%);
+    border-color: rgba(37,211,102,0.6);
+    color: #fff;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+    box-shadow: 0 4px 18px rgba(37,211,102,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.whatsapp-btn:hover {
+    box-shadow: 0 0 14px rgba(37,211,102,0.8), 0 8px 28px rgba(37,211,102,0.5);
+}
+
+/* Botón Contacto (azul acero) */
+.contacto-btn {
+    background: linear-gradient(135deg, #1a3a5c 0%, #2e86de 50%, #1a5276 100%);
+    border-color: rgba(46,134,222,0.6);
+    color: #fff;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+    box-shadow: 0 4px 18px rgba(46,134,222,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.contacto-btn:hover {
+    box-shadow: 0 0 14px rgba(46,134,222,0.8), 0 8px 28px rgba(46,134,222,0.5);
+}
+
 /* ─── Footer ─── */
 footer {
     text-align: center;
