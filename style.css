@@ -229,20 +229,21 @@ h1 {
 }
 
 /* Platform accent colors on icons */
-[data-platform="instagram"] i { color: #e1306c; }
-[data-platform="tiktok"] i    { color: #f0f0f5; }
-[data-platform="youtube"] i   { color: #ff0000; }
-[data-platform="twitch"] i    { color: #9146ff; }
-[data-platform="kick"] i      { color: #53fc18; }
-[data-platform="discord"] i   { color: #5865f2; }
-[data-platform="twitter"] i   { color: #f0f0f5; }
-[data-platform="facebook"] i  { color: #1877f2; }
-[data-platform="telegram"] i  { color: #26a5e4; }
-[data-platform="spotify"] i   { color: #1db954; }
-[data-platform="ytmusic"] i   { color: #ff0000; }
-[data-platform="github"] i    { color: #f0f0f5; }
+[data-platform="instagram"] i   { color: #e1306c; }
+[data-platform="tiktok"] i      { color: #f0f0f5; }
+[data-platform="youtube"] i     { color: #ff0000; }
+[data-platform="twitch"] i      { color: #9146ff; }
+[data-platform="kick"] i        { color: #53fc18; }
+[data-platform="discord"] i     { color: #5865f2; }
+[data-platform="twitter"] i     { color: #f0f0f5; }
+[data-platform="facebook"] i    { color: #1877f2; }
+[data-platform="telegram"] i    { color: #26a5e4; }
+[data-platform="spotify"] i     { color: #1db954; }
+[data-platform="ytmusic"] i     { color: #ff0000; }
+[data-platform="github"] i      { color: #f0f0f5; }
 [data-platform="pizzaserver"] i { color: var(--accent); }
-[data-platform="email"] i     { color: var(--text-secondary); }
+[data-platform="email"] i       { color: var(--text-secondary); }
+[data-platform="catweb"] i      { color: #ff6b9d; }
 
 /* --- Footer --- */
 footer {
