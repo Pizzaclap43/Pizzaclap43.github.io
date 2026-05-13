@@ -1,0 +1,577 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); background: transparent; color: var(--color-text-primary); }
+
+  #game-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 1rem 0;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #CF142B 0%, #CF142B 33%, #003DA5 33%, #003DA5 66%, #F5D800 66%);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.45);
+    border-radius: var(--border-radius-lg);
+  }
+  .header-content { position: relative; z-index: 1; }
+  .header h1 { font-size: 22px; font-weight: 500; color: #fff; margin-bottom: 4px; }
+  .header p { font-size: 13px; color: rgba(255,255,255,0.85); }
+
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 1.5rem;
+  }
+  .stat-card {
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    padding: 10px;
+    text-align: center;
+  }
+  .stat-label { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px; }
+  .stat-val { font-size: 18px; font-weight: 500; }
+  .stat-val.red { color: #CF142B; }
+  .stat-val.blue { color: #003DA5; }
+  .stat-val.yellow { color: #c8a800; }
+  .stat-val.green { color: #1D9E75; }
+
+  .scene-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .scene-location {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .scene-location i { font-size: 14px; }
+  .scene-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+  }
+  .scene-img-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .scene-tag {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--color-background-secondary);
+    color: var(--color-text-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+  }
+
+  .choices-title {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .choices { display: flex; flex-direction: column; gap: 8px; }
+  .choice-btn {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    padding: 10px 14px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--color-text-primary);
+    transition: background 0.15s, border-color 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .choice-btn:hover { background: var(--color-background-secondary); border-color: var(--color-border-primary); }
+  .choice-btn:active { transform: scale(0.99); }
+  .choice-icon { font-size: 16px; flex-shrink: 0; }
+
+  .inventory {
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+  .inv-title { font-size: 13px; font-weight: 500; margin-bottom: 10px; color: var(--color-text-secondary); }
+  .inv-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+  .inv-item {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    color: var(--color-text-primary);
+  }
+
+  .log {
+    margin-top: 1rem;
+    max-height: 120px;
+    overflow-y: auto;
+    border-top: 0.5px solid var(--color-border-tertiary);
+    padding-top: 10px;
+  }
+  .log-entry {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    padding: 3px 0;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+  .log-entry:last-child { border-bottom: none; }
+
+  .char-select {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 1rem;
+  }
+  .char-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    text-align: center;
+  }
+  .char-card:hover { background: var(--color-background-secondary); border-color: var(--color-border-primary); }
+  .char-avatar { font-size: 36px; margin-bottom: 8px; }
+  .char-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  .char-desc { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+  .char-stats { display: flex; justify-content: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .char-stat { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: var(--color-background-secondary); color: var(--color-text-secondary); }
+
+  .modal-overlay {
+    min-height: 300px;
+    background: rgba(0,0,0,0.45);
+    border-radius: var(--border-radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  .modal-box {
+    background: var(--color-background-primary);
+    border-radius: var(--border-radius-lg);
+    border: 0.5px solid var(--color-border-tertiary);
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 460px;
+    text-align: center;
+  }
+  .modal-box h2 { font-size: 18px; font-weight: 500; margin-bottom: 8px; }
+  .modal-box p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 1rem; }
+  .btn-primary {
+    background: #CF142B;
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius-md);
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+  }
+  .btn-primary:hover { background: #a5102a; }
+
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-right: 4px; }
+  .badge-red { background: #FAECE7; color: #993C1D; }
+  .badge-blue { background: #E6F1FB; color: #185FA5; }
+  .badge-yellow { background: #FAEEDA; color: #854F0B; }
+</style>
+</head>
+<body>
+<div id="game-container">
+  <div class="header">
+    <div class="header-content">
+      <h1>🇻🇪 Venezuela: La Gran Aventura</h1>
+      <p>Un RPG de texto venezolano — ¡Dale que vamos!</p>
+    </div>
+  </div>
+  <div id="root"></div>
+</div>
+
+<script>
+const CHARS = [
+  {
+    id:'llanero', name:'El Llanero', avatar:'🤠',
+    desc:'Criado en los llanos de Apure. Experto en caballos, coleo y música de arpa. Conoce cada rincón del llano.',
+    stats:{fuerza:8,astucia:5,labia:6,resistencia:9},
+    items:['Sombrero pelo e\' guama','Machete llanero','Cuatro','Cochino frito'],
+    bonus:'Maestro del llano — viaja más rápido por tierra'
+  },
+  {
+    id:'maracucha', name:'La Maracucha', avatar:'👩',
+    desc:'Del mismísimo Maracaibo. Habla muy rápido, es carateca y conoce todos los mercados del Zulia.',
+    stats:{fuerza:6,astucia:7,labia:10,resistencia:7},
+    items:['Chinelas','Patilla (mitad)','Rosquete de coco','Gazpacho zuliense'],
+    bonus:'Reina del regateo — precios más bajos en mercados'
+  },
+  {
+    id:'caraqueña', name:'La Caraqueña', avatar:'👩‍💼',
+    desc:'Caraqueña de La Candelaria. Sabe navegar el metro, los cachifos y la vida urbana de la capital.',
+    stats:{fuerza:5,astucia:9,labia:8,resistencia:6},
+    items:['Tarjeta del Metro','Arepa pelada','Cafecito negro','Diario El Universal'],
+    bonus:'Pilla del asfalto — encuentra atajos en ciudades'
+  },
+  {
+    id:'pescador', name:'El Pescador Margariteño', avatar:'🎣',
+    desc:'Nacido en Porlamar, Isla de Margarita. Experto marinero, cocinero de queso de mano y jugador de dominó.',
+    stats:{fuerza:7,astucia:8,labia:7,resistencia:8},
+    items:['Red de pesca','Queso de mano','Ron Santa Teresa','Dominó'],
+    bonus:'Hijo del mar — acceso a rutas costeras'
+  }
+];
+
+const SCENARIOS = [
+  {
+    id:'mercado_chacao',
+    location:'Mercado de Chacao, Caracas',
+    icon:'ti-building-store',
+    tags:['Gastronomía','Caracas','Comercio'],
+    text: `Llegas al famoso Mercado de Chacao en plena mañana caraqueña. El olor a arepas recién hechas, café negro y caraotas llena el aire. Doña Rosa te llama desde su puesto: "¡Mijo, tienes que probar mi desayuno completo!" Un señor más allá pelea con un vendedor de cambur sobre el precio, mientras suena Víctor Cuica por un radio viejo. De repente, un muchacho te jala del brazo susurrando: "Psst, hay una noticia importante... pero primero tienes que ayudarme con algo."`,
+    choices:[
+      {text:'Desayunar con Doña Rosa: arepa, caraotas, queso blanco y café', icon:'ti-coffee', next:'desayuno_doña_rosa', effect:{hambre:+20,plata:-5}},
+      {text:'Escuchar al muchacho misterioso', icon:'ti-ear', next:'muchacho_misterioso', effect:{astucia:+1}},
+      {text:'Comprar en el mercado: topocho, papelón y chorizos', icon:'ti-shopping-bag', next:'compras_mercado', effect:{inventario:'Topocho, Papelón, Chorizo',plata:-8}},
+      {text:'Buscar información sobre el Gran Sabana con el vendedor de mapas', icon:'ti-map', next:'aventura_gran_sabana', effect:{}}
+    ]
+  },
+  {
+    id:'desayuno_doña_rosa',
+    location:'Puesto de Doña Rosa, Mercado de Chacao',
+    icon:'ti-egg-fried',
+    tags:['Gastronomía','Cultura'],
+    text:`Doña Rosa te sirve un desayuno de campeones: arepa de maíz pilao' rellena de caraotas negras y queso de mano, tajadas de plátano frito, perico (huevos con tomate y cebolla), y un cafecito negro bien cargado. "¡Esto es lo que nos da la vida, mijo!", dice mientras te palmea el hombro. Mientras comes, te cuenta que hay un festival de música llanera este fin de semana en los Llanos, pero también escuchas que un anciano cerca llora porque perdió su locha de la suerte, una moneda de 12,5 céntimos de bolívar que vale más por el recuerdo que por su valor.`,
+    choices:[
+      {text:'Ayudar al anciano a buscar su locha', icon:'ti-coin', next:'locha_anciano', effect:{bondad:+2}},
+      {text:'Preguntar más sobre el festival llanero', icon:'ti-music', next:'festival_llanero', effect:{}},
+      {text:'Salir hacia el centro histórico de Caracas', icon:'ti-building', next:'centro_historico', effect:{}}
+    ]
+  },
+  {
+    id:'festival_llanero',
+    location:'Llanos de Apure',
+    icon:'ti-music',
+    tags:['Cultura','Música','Llanos'],
+    text:`Viajas en un por puesto destartalado — un Ford F-150 del 80 con 20 personas adentro — hasta los Llanos de Apure. Huele a tierra mojada, ganado y sebo. Al llegar al festival, la orquesta de joropo toca "Alma Llanera" y un tío con sombrero de cogollo te invita a bailar. Hay mesas llenas de hallaquitas de chicharrón, pisillo de chigüire, carne en vara y muraparo. El rey del festival es Don Eustaquio, campeón de coleo que monta su caballo como si fuera parte de él. Te reta: "¿Tienes madera de llanero, muchacho?"`,
+    choices:[
+      {text:'Aceptar el reto del coleo', icon:'ti-horse-toy', next:'coleo_reto', effect:{fuerza:+1}},
+      {text:'Aprender a tocar el cuatro con el músico local', icon:'ti-guitar', next:'aprender_cuatro', effect:{astucia:+1}},
+      {text:'Comer chigüire asado y escuchar historias del llano', icon:'ti-flame', next:'historias_llano', effect:{hambre:+15}},
+      {text:'Ayudar a organizar el joropo bailado', icon:'ti-users', next:'joropo_baile', effect:{labia:+1}}
+    ]
+  },
+  {
+    id:'muchacho_misterioso',
+    location:'Callejón del Mercado, Caracas',
+    icon:'ti-spy',
+    tags:['Misterio','Caracas'],
+    text:`El muchacho — Jesús, unos 16 años, con una camiseta del Caracas FC — te lleva a un lado. "Mira, soy mensajero. Hay un señor que busca a alguien que conozca bien el país. Dice que perdió una maleta llena de recetas de cocina venezolana que su abuela le dejó, con platos que ya nadie sabe preparar: el hervido de res de la abuela, el bienmesabe original, hasta la receta del golfeado de San Antonio de los Altos." Saca un papelito con una dirección en La Candelaria y te lo entrega. "¿Vas?"`,
+    choices:[
+      {text:'Ir a La Candelaria a encontrar al señor de las recetas', icon:'ti-map-pin', next:'la_candelaria', effect:{astucia:+1}},
+      {text:'Desconfiar — esto suena como tigre (algo sospechoso)', icon:'ti-alert-triangle', next:'desconfiar', effect:{}},
+      {text:'Pedirle al muchacho que te acompañe', icon:'ti-user-plus', next:'muchacho_acompañante', effect:{labia:+1}}
+    ]
+  },
+  {
+    id:'la_candelaria',
+    location:'La Candelaria, Caracas',
+    icon:'ti-building',
+    tags:['Caracas','Historia','Cultura'],
+    text:`Llegas a La Candelaria, el barrio italiano de Caracas, lleno de cantinas, pastelerías y ancianitos jugando dominó en la plaza. El señor de las recetas resulta ser Don Carmelo, un italiano-venezolano de 80 años con bigote blanco. "Mis recetas son el tesoro más grande de esta familia", dice con voz temblorosa. "Las perdí en el Ávila cuando hacía senderismo." El Parque Nacional El Ávila — el cerro que abraza Caracas — es enorme. La búsqueda podría tomar días. Don Carmelo te ofrece su colección de CD de Simón Díaz y una botella de Solera 1796 como pago.`,
+    choices:[
+      {text:'Subir al Ávila a buscar las recetas', icon:'ti-mountain', next:'avila_busqueda', effect:{resistencia:+1}},
+      {text:'Preguntar a los vecinos de La Candelaria', icon:'ti-users', next:'vecinos_candelaria', effect:{labia:+1}},
+      {text:'Revisar el teleférico Warairarepano (si está funcionando)', icon:'ti-aerial-lift', next:'teleferico', effect:{}}
+    ]
+  },
+  {
+    id:'avila_busqueda',
+    location:'Parque Nacional El Ávila, Caracas',
+    icon:'ti-mountain',
+    tags:['Naturaleza','Aventura','Caracas'],
+    text:`Subes el Ávila por la ruta de los Venados. El camino es verde, fresco y hermoso — el contraste con la ciudad es total. Te cruzas con senderistas, parejas de novios y un señor vendiendo refrescos Frescolita y Bimbo. A mitad del camino encuentras la maleta de cuero marrón de Don Carmelo entre unas helechos. Pero al abrirla, encuentras también un mapa viejo, arrugado, que muestra una ruta secreta hacia el Salto Ángel en el estado Bolívar — el salto de agua más alto del mundo — con una nota que dice: "Quien llegue aquí primero encontrará el verdadero tesoro de Venezuela."`,
+    choices:[
+      {text:'Regresar las recetas a Don Carmelo y seguir el mapa al Salto Ángel', icon:'ti-map-2', next:'mision_salto_angel', effect:{inventario:'Mapa del Salto Ángel'}},
+      {text:'Solo regresar las recetas — ya está bueno de aventura', icon:'ti-home', next:'final_recetas', effect:{bondad:+3}},
+      {text:'Quedarte a explorar más el Ávila hoy', icon:'ti-trees', next:'avila_explorar', effect:{resistencia:+1}}
+    ]
+  },
+  {
+    id:'mision_salto_angel',
+    location:'Estado Bolívar — Canaima',
+    icon:'ti-waterfall',
+    tags:['Aventura','Naturaleza','Gran Sabana'],
+    text:`Vuelas en un avioneta desde Ciudad Bolívar (la avioneta huele a cuero viejo y café) hasta Canaima. El piloto, un tipo calmadísimo apodado "El Pana", te explica que el Salto Ángel — llamado Kerepakupai Merú por los Pemón — cae 979 metros desde la cima del Auyán-Tepuy. Al llegar, los tepuyes emergen de la neblina como islas flotantes. Una indígena Pemón llamada Yukepa te ofrece casabe y catara (una salsa de hormigas bachacos) a cambio de ayudar con algo: los turistas tiran basura cerca del salto sagrado.`,
+    choices:[
+      {text:'Ayudar a limpiar con Yukepa y aprender sobre la cultura Pemón', icon:'ti-recycle', next:'cultura_pemon', effect:{bondad:+2,astucia:+1}},
+      {text:'Navegar en bongo hasta la base del Salto Ángel', icon:'ti-sailboat', next:'salto_angel_base', effect:{resistencia:+1}},
+      {text:'Explorar los tepuyes y buscar el tesoro del mapa', icon:'ti-diamond', next:'tesoro_tepuy', effect:{}}
+    ]
+  },
+  {
+    id:'tesoro_tepuy',
+    location:'Auyán-Tepuy, Estado Bolívar',
+    icon:'ti-diamond',
+    tags:['Aventura','Final','Gran Sabana'],
+    text:`Escalar el Auyán-Tepuy es una proeza: plantas carnívoras, niebla densa, rocas resbaladizas y el sonido del salto de fondo. Llegas a una cueva donde el mapa te indica. Adentro no hay oro ni joyas — hay algo más valioso: una cápsula de tiempo dejada por exploradores venezolanos en 1950. Contiene: recetas de platos ancestrales, partituras de joropos olvidados, fotos de Venezuela de ese entonces, y una carta que dice: "El verdadero tesoro de Venezuela es su gente, su cultura y su tierra. Quien encuentre esto, compártelo." Afuera, el Salto Ángel cae eterno. Lo lograste.`,
+    choices:[
+      {text:'¡Compartir el tesoro con el mundo! (Fin épico)', icon:'ti-world', next:'fin_epico', effect:{bondad:+5}},
+      {text:'Volver a Caracas y donar el contenido a un museo', icon:'ti-building-community', next:'fin_museo', effect:{bondad:+3}},
+      {text:'Seguir la aventura por Venezuela — hay más por descubrir', icon:'ti-map-2', next:'mercado_chacao', effect:{}}
+    ]
+  },
+  {
+    id:'fin_epico',
+    location:'Venezuela — Tu Historia',
+    icon:'ti-trophy',
+    tags:['Final','Épico'],
+    text:`Compartes el tesoro con Venezuela entera. Los periódicos, las redes, la televisión (incluyendo Venevisión y Televen) hablan del hallazgo. Don Carmelo llora de emoción cuando ve las recetas ancestrales. Yukepa sonríe desde Canaima. El Llanero toca su cuatro bajo las estrellas del Llano. Y tú, parado frente al Salto Ángel más alto del mundo, entiendes: Venezuela no es perfecta, pero es única, viva, sabrossísima y llena de gente con un corazón enorme. ¡Dale que vamos, Venezuela! 🇻🇪`,
+    choices:[
+      {text:'¡Jugar de nuevo con otro personaje! ↗', icon:'ti-refresh', next:'__restart__', effect:{}}
+    ]
+  },
+  {
+    id:'fin_museo',
+    location:'Museo de Arte de Caracas',
+    icon:'ti-building-community',
+    tags:['Final'],
+    text:`Donas todo al Museo de Bellas Artes de Caracas. La directora, emocionada, te da un abrazo que sabe a hallaca de Navidad. Organizan una exposición llamada "El Alma de Venezuela" que recorre todo el país — desde Maracaibo hasta Maturín, de Mérida hasta Tucupita. En la inauguración tocan Los Amigos Invisibles, sirven pabellón criollo y el Presidente del Museo te entrega una medalla. Afuera, la Caracas de siempre: caótica, ruidosa, calurosa y bellísima. Tu aventura terminó, pero Venezuela siempre seguirá.`,
+    choices:[
+      {text:'¡Volver a empezar con otro personaje! ↗', icon:'ti-refresh', next:'__restart__', effect:{}}
+    ]
+  },
+  {
+    id:'coleo_reto',
+    location:'Festival de Coleo, Llanos de Apure',
+    icon:'ti-horse-toy',
+    tags:['Cultura','Llanos','Deporte'],
+    text:`Te montas en el caballo — un palomino llamado "Simón Bolívar de los Llanos" — y sales a todo galope. El toro (un maute de 400kg) va delante. Lo alcanzas, agarras la cola con ambas manos, ¡y lo tumbas! La gente explota: "¡Arriba, arriba!" Don Eustaquio te palmea la espalda: "¡Eso es puro corazón venezolano, muchacho!" Te ganas una botella de anisao, un sombrero de cogollo auténtico y el respeto de todo el llano. Pero el momento es interrumpido por un paje que trae un mensaje urgente desde Caracas.`,
+    choices:[
+      {text:'Leer el mensaje urgente de Caracas', icon:'ti-mail', next:'muchacho_misterioso', effect:{}},
+      {text:'Quedarte en el festival y seguir disfrutando', icon:'ti-confetti', next:'festival_llanero', effect:{hambre:+10}},
+      {text:'Viajar al Lago de Maracaibo a relajarte', icon:'ti-droplet', next:'lago_maracaibo', effect:{}}
+    ]
+  },
+  {
+    id:'lago_maracaibo',
+    location:'Lago de Maracaibo, Zulia',
+    icon:'ti-droplet',
+    tags:['Zulia','Naturaleza','Cultura'],
+    text:`El Lago de Maracaibo te recibe con su famoso Relámpago del Catatumbo: miles de rayos que iluminan el cielo sin sonido, como una discoteca cósmica. Un pescador zuliano te lleva en su bongo entre las casas de palafitos (viviendas sobre el agua). Te ofrece tostones con queso llanero y mandoca (fritura dulce de cambur y papelón). "El lago es nuestra vida", dice. Pero te cuenta que las palafitos están siendo abandonadas. Un empresario quiere construir un hotel allí. Los habitantes piden ayuda.`,
+    choices:[
+      {text:'Ayudar a los palafiteros a defender su hogar', icon:'ti-shield', next:'palafitos_defensa', effect:{bondad:+2,labia:+1}},
+      {text:'Cruzar el Lago en la noche del relámpago (peligroso pero épico)', icon:'ti-bolt', next:'cruce_nocturno', effect:{resistencia:+2}},
+      {text:'Visitar Maracaibo y comer en una feria zuliana', icon:'ti-building-store', next:'mercado_chacao', effect:{hambre:+15}}
+    ]
+  },
+  {
+    id:'palafitos_defensa',
+    location:'Palafitos del Lago de Maracaibo',
+    icon:'ti-shield',
+    tags:['Cultura','Zulia','Justicia'],
+    text:`Organizas una asamblea con los palafiteros. Con tu labia y astucia, redactas una carta dirigida al Ministerio de Ecosocialismo y logras que periodistas de Globovisión y VPI TV cubran la historia. La comunidad canta una gaita zuliana en tu honor — "El Palafito No Se Vende" — y el empresario retira su proyecto. La abuela de la comunidad, Doña Sixta, te da un collar de pepas del llano como agradecimiento. "Tú tienes corazón venezolano, sea de donde seas", te dice. Y con ese corazón venezolano, tu próxima aventura te espera.`,
+    choices:[
+      {text:'Continuar la aventura hacia la Gran Sabana ↗', icon:'ti-map-2', next:'mision_salto_angel', effect:{bondad:+2}},
+      {text:'Volver al inicio y explorar otra ruta', icon:'ti-refresh', next:'mercado_chacao', effect:{}}
+    ]
+  }
+];
+
+const SCENE_MAP = {};
+SCENARIOS.forEach(s => SCENE_MAP[s.id] = s);
+
+let state = {
+  phase: 'intro',
+  char: null,
+  currentScene: 'mercado_chacao',
+  stats: {hambre:60, plata:50, bondad:5, fuerza:5, astucia:5, labia:5, resistencia:5},
+  inventory: [],
+  log: []
+};
+
+function getScene(id){ return SCENE_MAP[id] || SCENE_MAP['mercado_chacao']; }
+
+function applyEffect(effect){
+  const s = state.stats;
+  if(effect.hambre) s.hambre = Math.min(100, Math.max(0, s.hambre + effect.hambre));
+  if(effect.plata) s.plata = Math.max(0, s.plata + effect.plata);
+  if(effect.bondad) s.bondad = (s.bondad||0) + effect.bondad;
+  if(effect.fuerza) s.fuerza = (s.fuerza||0) + effect.fuerza;
+  if(effect.astucia) s.astucia = (s.astucia||0) + effect.astucia;
+  if(effect.labia) s.labia = (s.labia||0) + effect.labia;
+  if(effect.resistencia) s.resistencia = (s.resistencia||0) + effect.resistencia;
+  if(effect.inventario) state.inventory.push(...effect.inventario.split(',').map(x=>x.trim()));
+}
+
+function render(){
+  const root = document.getElementById('root');
+  if(state.phase === 'intro') root.innerHTML = renderIntro();
+  else if(state.phase === 'charselect') root.innerHTML = renderCharSelect();
+  else root.innerHTML = renderGame();
+  bindEvents();
+}
+
+function renderIntro(){
+  return `
+  <div class="modal-overlay">
+    <div class="modal-box">
+      <div style="font-size:48px;margin-bottom:12px;">🇻🇪</div>
+      <h2>Venezuela: La Gran Aventura</h2>
+      <p>Un RPG de texto inmersivo ambientado en la Venezuela más auténtica. Cultura, gastronomía, música, naturaleza y mucha pana. Tú decides el camino, mijo.</p>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;">
+        <span class="badge badge-red">Gastronomía venezolana</span>
+        <span class="badge badge-blue">Cultura y música</span>
+        <span class="badge badge-yellow">Naturaleza & aventura</span>
+      </div>
+      <button class="btn-primary" data-action="start-charselect">¡Dale que vamos! →</button>
+    </div>
+  </div>`;
+}
+
+function renderCharSelect(){
+  const chars = CHARS.map(c => `
+    <div class="char-card" data-action="select-char" data-char="${c.id}">
+      <div class="char-avatar">${c.avatar}</div>
+      <div class="char-name">${c.name}</div>
+      <div class="char-desc">${c.desc}</div>
+      <div class="char-stats">
+        <span class="char-stat">💪 ${c.stats.fuerza}</span>
+        <span class="char-stat">🧠 ${c.stats.astucia}</span>
+        <span class="char-stat">🗣️ ${c.stats.labia}</span>
+        <span class="char-stat">🏃 ${c.stats.resistencia}</span>
+      </div>
+    </div>
+  `).join('');
+  return `
+  <div class="scene-card">
+    <div style="font-size:15px;font-weight:500;margin-bottom:6px;">Elige tu personaje</div>
+    <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:1rem;">Cada uno tiene sus fortalezas y su propia Venezuela.</div>
+    <div class="char-select">${chars}</div>
+  </div>`;
+}
+
+function renderGame(){
+  const scene = getScene(state.currentScene);
+  const c = state.char;
+  const s = state.stats;
+
+  const hambreColor = s.hambre > 60 ? 'green' : s.hambre > 30 ? 'yellow' : 'red';
+  const plataColor = s.plata > 30 ? 'blue' : 'red';
+
+  const statsBar = `
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-label">Personaje</div>
+      <div class="stat-val" style="font-size:13px;">${c.avatar} ${c.name.split(' ')[1]||c.name.split(' ')[0]}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Hambre</div>
+      <div class="stat-val ${hambreColor}">${Math.round(s.hambre)}%</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Plata (Bs.)</div>
+      <div class="stat-val ${plataColor}">${Math.round(s.plata)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Bondad</div>
+      <div class="stat-val blue">${Math.round(s.bondad)}</div>
+    </div>
+  </div>`;
+
+  const tags = scene.tags.map(t=>`<span class="scene-tag">${t}</span>`).join('');
+  const choices = scene.choices.map((ch,i)=>`
+    <button class="choice-btn" data-action="choice" data-idx="${i}">
+      <i class="ti ${ch.icon} choice-icon" aria-hidden="true"></i>
+      <span>${ch.text}</span>
+    </button>`).join('');
+
+  const invItems = state.inventory.length
+    ? state.inventory.map(it=>`<span class="inv-item">${it}</span>`).join('')
+    : '<span style="font-size:12px;color:var(--color-text-secondary);">Inventario vacío</span>';
+
+  const logItems = state.log.slice(-6).reverse().map(l=>`<div class="log-entry">${l}</div>`).join('');
+
+  return `
+  ${statsBar}
+  <div class="scene-card">
+    <div class="scene-location"><i class="ti ${scene.icon}" aria-hidden="true"></i>${scene.location}</div>
+    <div class="scene-img-row">${tags}</div>
+    <div class="scene-text">${scene.text}</div>
+    <div class="choices-title">¿Qué haces, pana?</div>
+    <div class="choices">${choices}</div>
+  </div>
+  <div class="inventory">
+    <div class="inv-title"><i class="ti ti-backpack" aria-hidden="true"></i> Inventario</div>
+    <div class="inv-grid">${invItems}</div>
+  </div>
+  ${state.log.length ? `<div class="log">${logItems}</div>` : ''}`;
+}
+
+function bindEvents(){
+  document.querySelectorAll('[data-action="start-charselect"]').forEach(b=>{
+    b.addEventListener('click',()=>{ state.phase='charselect'; render(); });
+  });
+  document.querySelectorAll('[data-action="select-char"]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const cid = b.dataset.char;
+      const ch = CHARS.find(c=>c.id===cid);
+      state.char = ch;
+      state.stats = { hambre:70, plata:50, bondad:5, ...ch.stats };
+      state.inventory = [...ch.items];
+      state.phase='game';
+      state.log.push(`Empezaste como ${ch.name} — ¡Que chévere!`);
+      render();
+    });
+  });
+  document.querySelectorAll('[data-action="choice"]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const scene = getScene(state.currentScene);
+      const idx = parseInt(b.dataset.idx);
+      const choice = scene.choices[idx];
+      if(!choice) return;
+      applyEffect(choice.effect||{});
+      state.log.push(`[${scene.location}] → ${choice.text.substring(0,50)}...`);
+      if(choice.next === '__restart__'){
+        state = { phase:'intro', char:null, currentScene:'mercado_chacao', stats:{hambre:60,plata:50,bondad:5,fuerza:5,astucia:5,labia:5,resistencia:5}, inventory:[], log:[] };
+      } else {
+        state.currentScene = choice.next;
+        if(state.stats.hambre < 20) { state.log.push('¡Tienes hambre! Busca algo de comer.'); }
+        if(state.stats.plata < 5) { state.log.push('¡Se te está acabando la plata, pana!'); }
+      }
+      render();
+    });
+  });
+}
+
+render();
+</script>
+</body>
+</html>
