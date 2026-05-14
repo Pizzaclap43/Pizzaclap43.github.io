@@ -51,6 +51,11 @@
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: var(--bg-color);
+            padding: 12px 0;
         }
 
         #search-input {
@@ -172,14 +177,14 @@
         }
 
         .download-btn {
-            display: inline-block;
+            display: block;
             background-color: var(--accent-color);
             color: #000;
             text-decoration: none;
-            padding: 6px 12px;
+            padding: 10px 16px;
             border-radius: 5px;
             font-weight: bold;
-            font-size: 0.8em;
+            font-size: 0.9em;
             transition: background 0.2s;
             text-align: center;
             line-height: normal;
