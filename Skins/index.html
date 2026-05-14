@@ -2,7 +2,20 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="icon" type="image/png" href="https://cdn.classicube.net/face/pizzaclap43.png">
+
+    <!-- SEO & Descripción -->
+    <meta name="description" content="Descarga skins de jugadores de ClassiCube en formato PNG. Busca por nombre de usuario y descarga la skin directamente desde el servidor oficial de ClassiCube.">
+    <meta name="keywords" content="ClassiCube, skins, descargar skin ClassiCube, ClassiCube PNG, skins Minecraft clásico, jugadores ClassiCube, skin download, classicube.net skins">
+    <meta name="author" content="Servidor de Skins ClassiCube">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph (para compartir en redes) -->
+    <meta property="og:title" content="Skins de ClassiCube - Descargas">
+    <meta property="og:description" content="Busca y descarga skins de jugadores de ClassiCube en PNG. Comunidad hispanohablante.">
+    <meta property="og:type" content="website">
+
     <title>Skins de ClassiCube - Descargas</title>
     <style>
         :root {
@@ -30,6 +43,86 @@
             padding-bottom: 10px;
         }
 
+        /* ── Barra de búsqueda ── */
+        .search-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 25px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #search-input {
+            flex: 1;
+            min-width: 0;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 2px solid #333;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1em;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+            /* táctil: evita zoom en iOS al enfocar el input */
+            font-size: 16px;
+        }
+
+        #search-input:focus {
+            border-color: var(--accent-color);
+        }
+
+        #search-input::placeholder {
+            color: #777;
+        }
+
+        #search-btn {
+            padding: 12px 22px;
+            border-radius: 8px;
+            border: none;
+            background-color: var(--accent-color);
+            color: #000;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.2s;
+            /* área táctil mínima recomendada */
+            min-height: 48px;
+            min-width: 48px;
+            touch-action: manipulation;
+        }
+
+        #search-btn:hover {
+            background-color: var(--button-hover);
+        }
+
+        /* Resultado dinámico de búsqueda */
+        #search-result-section {
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 20px;
+        }
+
+        #search-result-section .section-label {
+            font-size: 0.85em;
+            color: #aaa;
+            margin-bottom: 10px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        #not-found-msg {
+            display: none;
+            color: #ff6b6b;
+            background: #2a1a1a;
+            border: 1px solid #ff6b6b44;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 0.95em;
+        }
+
+        /* ── Grid original ── */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -52,6 +145,12 @@
             border-color: var(--accent-color);
         }
 
+        /* Resaltado de coincidencia en búsqueda */
+        .skin-card.match-highlight {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 12px #ffcc0044;
+        }
+
         .skin-preview {
             width: 128px;
             height: 128px;
@@ -60,6 +159,9 @@
             background-color: #2a2a2a;
             border-radius: 5px;
             object-fit: contain;
+            /* táctil: evita comportamiento extraño al mantener pulsado */
+            -webkit-user-drag: none;
+            pointer-events: none;
         }
 
         .username {
@@ -79,6 +181,10 @@
             font-weight: bold;
             font-size: 0.9em;
             transition: background 0.2s;
+            /* área táctil cómoda */
+            min-height: 44px;
+            line-height: 28px;
+            touch-action: manipulation;
         }
 
         .download-btn:hover {
@@ -90,11 +196,64 @@
             font-size: 0.8em;
             color: #777;
         }
+
+        /* ── Responsive táctil ── */
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            h1 {
+                font-size: 1.4em;
+                text-align: center;
+            }
+
+            .grid-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 14px;
+            }
+
+            .skin-preview {
+                width: 96px;
+                height: 96px;
+            }
+
+            .search-wrapper {
+                flex-direction: column;
+            }
+
+            #search-btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
 
     <h1>Descarga de Skins ClassiCube</h1>
+
+    <!-- Barra de búsqueda -->
+    <div class="search-wrapper">
+        <input
+            type="search"
+            id="search-input"
+            placeholder="Buscar jugador de ClassiCube..."
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            enterkeyhint="search"
+        >
+        <button id="search-btn" aria-label="Buscar">🔍 Buscar</button>
+    </div>
+
+    <!-- Zona de resultados de búsqueda -->
+    <div id="search-result-section">
+        <div id="not-found-msg">
+            ⚠️ No se encontró ese jugador en la lista. Puedes intentar descargarlo directamente:
+            <span id="direct-link-wrapper"></span>
+        </div>
+    </div>
 
     <div class="grid-container" id="skin-grid">
         <!-- Las skins se generan aquí -->
@@ -124,11 +283,13 @@
 
         const grid = document.getElementById('skin-grid');
 
+        // ── Generar tarjetas ──
         players.forEach(player => {
             const skinUrl = `https://cdn.classicube.net/skin/${player}.png`;
             
             const card = document.createElement('div');
             card.className = 'skin-card';
+            card.dataset.player = player.toLowerCase();
             
             card.innerHTML = `
                 <img src="${skinUrl}" alt="${player}" class="skin-preview" onerror="this.src='https://www.classicube.net/static/img/skin_placeholder.png'">
@@ -137,6 +298,66 @@
             `;
             
             grid.appendChild(card);
+        });
+
+        // ── Lógica de búsqueda ──
+        const searchInput  = document.getElementById('search-input');
+        const searchBtn    = document.getElementById('search-btn');
+        const notFoundMsg  = document.getElementById('not-found-msg');
+        const directLink   = document.getElementById('direct-link-wrapper');
+        const allCards     = () => document.querySelectorAll('.skin-card');
+
+        function doSearch() {
+            const query = searchInput.value.trim().toLowerCase();
+
+            // Limpiar estado anterior
+            notFoundMsg.style.display = 'none';
+            allCards().forEach(c => {
+                c.classList.remove('match-highlight');
+                c.style.display = '';
+            });
+
+            if (!query) return;
+
+            let found = null;
+
+            allCards().forEach(card => {
+                const name = card.dataset.player;
+                // Coincidencia exacta preferida; fallback a "contiene"
+                if (name === query) {
+                    found = card;
+                } else if (!found && name.includes(query)) {
+                    found = card;
+                }
+            });
+
+            if (found) {
+                found.classList.add('match-highlight');
+                found.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                // No está en la lista → ofrecer enlace directo a ClassiCube CDN
+                const rawName   = searchInput.value.trim();
+                const skinUrl   = `https://cdn.classicube.net/skin/${encodeURIComponent(rawName)}.png`;
+                directLink.innerHTML = `<a href="${skinUrl}" target="_blank" style="color:var(--accent-color);margin-left:6px;">${rawName}_skin.png</a>`;
+                notFoundMsg.style.display = 'block';
+            }
+        }
+
+        searchBtn.addEventListener('click', doSearch);
+
+        searchInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter') doSearch();
+        });
+
+        // Búsqueda en tiempo real (al escribir)
+        searchInput.addEventListener('input', () => {
+            if (searchInput.value.trim() === '') {
+                notFoundMsg.style.display = 'none';
+                allCards().forEach(c => {
+                    c.classList.remove('match-highlight');
+                    c.style.display = '';
+                });
+            }
         });
     </script>
 
