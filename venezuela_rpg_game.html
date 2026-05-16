@@ -1,0 +1,950 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --oro: #CF9A2D;
+    --rojo: #C8102E;
+    --azul: #003087;
+    --verde: #009B4D;
+    --bg: #0a0a14;
+    --card: #111120;
+    --border: rgba(207,154,45,0.3);
+    --text: #f0e6cc;
+    --muted: rgba(240,230,204,0.55);
+  }
+
+  body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; }
+
+  .game-wrapper {
+    background: var(--bg);
+    min-height: 600px;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* HERO HEADER */
+  .hero {
+    background: linear-gradient(180deg, #0d0d1f 0%, #0a0a14 100%);
+    border-bottom: 2px solid var(--oro);
+    padding: 18px 20px 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(207,154,45,0.04) 40px, rgba(207,154,45,0.04) 41px);
+    pointer-events: none;
+  }
+  .hero-top {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .game-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 32px;
+    letter-spacing: 3px;
+    color: var(--oro);
+    text-shadow: 0 0 20px rgba(207,154,45,0.4);
+    line-height: 1;
+  }
+  .game-subtitle {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .flag-strip {
+    display: flex; gap: 3px; align-items: center;
+  }
+  .flag-strip span {
+    display: block; height: 16px; border-radius: 2px;
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: flex; gap: 16px; align-items: center;
+    margin-top: 10px; flex-wrap: wrap;
+  }
+  .stat-pill {
+    display: flex; align-items: center; gap: 5px;
+    background: rgba(255,255,255,0.05);
+    border: 0.5px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+  .stat-pill .stat-val { color: var(--oro); font-weight: 700; }
+  .stat-icon { font-size: 13px; }
+
+  /* MAIN LAYOUT */
+  .main-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 0;
+    min-height: 490px;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    background: #0c0c1a;
+    border-right: 1px solid var(--border);
+    padding: 12px 8px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .sidebar-label {
+    font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); padding: 6px 8px 4px; font-weight: 600;
+  }
+  .mode-btn {
+    display: flex; align-items: center; gap: 8px;
+    background: transparent;
+    border: 0.5px solid transparent;
+    border-radius: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--muted);
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: left;
+    width: 100%;
+  }
+  .mode-btn:hover { background: rgba(207,154,45,0.08); color: var(--oro); border-color: var(--border); }
+  .mode-btn.active { background: rgba(207,154,45,0.15); color: var(--oro); border-color: var(--oro); }
+  .mode-icon { font-size: 16px; width: 20px; text-align: center; }
+  .mode-tag {
+    margin-left: auto; font-size: 9px; padding: 2px 6px;
+    border-radius: 10px; font-weight: 700; letter-spacing: 0.5px;
+  }
+  .tag-accion { background: rgba(200,16,46,0.25); color: #ff4d6d; }
+  .tag-rol { background: rgba(0,48,135,0.35); color: #6699ff; }
+  .tag-sim { background: rgba(0,155,77,0.25); color: #4dff99; }
+  .tag-dep { background: rgba(207,154,45,0.25); color: var(--oro); }
+  .tag-mundo { background: rgba(128,0,255,0.25); color: #cc88ff; }
+
+  /* CONTENT PANEL */
+  .content-panel {
+    padding: 16px;
+    overflow-y: auto;
+    max-height: 490px;
+  }
+
+  .screen { display: none; animation: fadeIn 0.3s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* SCREEN TITLES */
+  .screen-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .screen-title { font-family: 'Bebas Neue', cursive; font-size: 22px; color: var(--oro); letter-spacing: 2px; }
+  .screen-desc { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+
+  /* CARDS GRID */
+  .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .game-card {
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .game-card:hover { border-color: var(--oro); background: #161628; transform: translateY(-1px); }
+  .game-card::after {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 3px; height: 100%;
+    background: transparent; transition: 0.2s;
+  }
+  .game-card:hover::after { background: var(--oro); }
+  .card-emoji { font-size: 22px; margin-bottom: 6px; display: block; }
+  .card-name { font-weight: 700; font-size: 13px; color: var(--text); margin-bottom: 3px; }
+  .card-detail { font-size: 11px; color: var(--muted); line-height: 1.4; }
+  .card-badge {
+    position: absolute; top: 8px; right: 8px;
+    font-size: 9px; font-weight: 700; padding: 2px 6px;
+    border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+
+  /* PROGRESS BARS */
+  .stat-row { margin-bottom: 8px; }
+  .stat-label-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px; }
+  .stat-label-row span:first-child { color: var(--muted); }
+  .stat-label-row span:last-child { color: var(--oro); font-weight: 700; }
+  .bar-bg { height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+  .bar-oro { background: linear-gradient(90deg, #8B6914, #CF9A2D); }
+  .bar-red { background: linear-gradient(90deg, #7a0a1e, #C8102E); }
+  .bar-green { background: linear-gradient(90deg, #005a2e, #009B4D); }
+  .bar-blue { background: linear-gradient(90deg, #001a5c, #003087); }
+  .bar-purple { background: linear-gradient(90deg, #3d0066, #8800cc); }
+
+  /* MAP CONTAINER */
+  .map-container {
+    background: #080816;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .map-svg { width: 100%; height: 100%; }
+  .region-dot {
+    position: absolute;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--oro);
+    box-shadow: 0 0 8px rgba(207,154,45,0.6);
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .region-dot:hover { transform: scale(1.5); }
+  .region-dot.unlocked { background: var(--verde); box-shadow: 0 0 8px rgba(0,155,77,0.6); }
+  .region-dot.locked { background: #333; box-shadow: none; cursor: not-allowed; }
+  .map-label {
+    position: absolute; font-size: 9px; color: var(--oro); font-weight: 700; letter-spacing: 0.5px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+  }
+
+  /* MENU / MISSION ITEMS */
+  .mission-item {
+    background: var(--card);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .mission-item:hover { border-color: var(--oro); background: #161628; }
+  .mission-emoji { font-size: 18px; min-width: 24px; text-align: center; }
+  .mission-text { flex: 1; }
+  .mission-name { font-size: 13px; font-weight: 700; color: var(--text); }
+  .mission-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .mission-reward { font-size: 11px; color: var(--oro); font-weight: 700; white-space: nowrap; }
+
+  /* PLAYER CARD */
+  .player-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .player-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: linear-gradient(135deg, #CF9A2D, #8B6914);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; flex-shrink: 0;
+    border: 2px solid rgba(207,154,45,0.5);
+  }
+  .player-info { flex: 1; }
+  .player-name { font-family: 'Bebas Neue', cursive; font-size: 18px; color: var(--oro); letter-spacing: 1px; }
+  .player-class { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+  .lvl-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(207,154,45,0.15); border: 0.5px solid var(--oro);
+    border-radius: 20px; padding: 2px 8px; font-size: 11px; color: var(--oro); font-weight: 700;
+  }
+
+  /* INVENTORY GRID */
+  .inv-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 8px; }
+  .inv-slot {
+    aspect-ratio: 1;
+    background: rgba(255,255,255,0.04);
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .inv-slot:hover { border-color: var(--oro); background: rgba(207,154,45,0.1); }
+  .inv-slot span { font-size: 9px; color: var(--muted); margin-top: 2px; }
+  .inv-qty {
+    position: absolute; top: 2px; right: 3px;
+    font-size: 9px; color: var(--oro); font-weight: 700;
+  }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); font-weight: 700; margin: 12px 0 7px;
+  }
+
+  /* LEADERBOARD */
+  .lb-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 10px; border-radius: 7px; margin-bottom: 4px;
+    background: var(--card); border: 0.5px solid var(--border);
+  }
+  .lb-rank { font-family: 'Bebas Neue', cursive; font-size: 16px; color: var(--muted); width: 20px; }
+  .lb-rank.gold { color: #FFD700; }
+  .lb-rank.silver { color: #C0C0C0; }
+  .lb-rank.bronze { color: #CD7F32; }
+  .lb-name { flex: 1; font-size: 12px; font-weight: 600; }
+  .lb-score { font-size: 12px; color: var(--oro); font-weight: 700; }
+  .lb-flag { font-size: 14px; }
+
+  /* NEWS TICKER */
+  .ticker {
+    background: rgba(207,154,45,0.12);
+    border-top: 1px solid var(--border);
+    padding: 6px 16px;
+    font-size: 11px; color: var(--oro);
+    overflow: hidden; white-space: nowrap;
+  }
+  .ticker-inner {
+    display: inline-block;
+    animation: tickerMove 30s linear infinite;
+  }
+  @keyframes tickerMove { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+  /* SHOP ITEMS */
+  .shop-item {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--card); border: 0.5px solid var(--border);
+    border-radius: 8px; padding: 9px 12px; margin-bottom: 7px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .shop-item:hover { border-color: var(--oro); }
+  .shop-icon { font-size: 20px; min-width: 24px; text-align: center; }
+  .shop-name { font-size: 12px; font-weight: 700; flex: 1; }
+  .shop-price { font-size: 12px; color: var(--oro); font-weight: 700; }
+  .shop-desc { font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+  /* TWO COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .info-block {
+    background: var(--card); border: 0.5px solid var(--border);
+    border-radius: 8px; padding: 10px 12px;
+  }
+  .info-block-title { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .info-tag {
+    display: inline-block;
+    font-size: 10px; padding: 3px 8px; border-radius: 12px; margin: 2px;
+    background: rgba(207,154,45,0.12); border: 0.5px solid var(--border); color: var(--text);
+  }
+
+  /* CAROUSEL BTN */
+  .action-btn {
+    background: rgba(207,154,45,0.15);
+    border: 1px solid var(--oro);
+    border-radius: 8px;
+    color: var(--oro);
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px; font-weight: 700;
+    padding: 7px 14px; cursor: pointer;
+    transition: all 0.2s; letter-spacing: 0.5px;
+  }
+  .action-btn:hover { background: rgba(207,154,45,0.3); }
+
+  .divider { height: 1px; background: var(--border); margin: 10px 0; }
+
+  /* MINI MAP VENEZUELA SVG */
+</style>
+
+<div class="game-wrapper">
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="game-title">TIERRA DE GRACIA</div>
+        <div class="game-subtitle">El Gran Juego Venezolano &bull; Edición Tricolor</div>
+      </div>
+      <div class="flag-strip">
+        <span style="width:20px;background:#CF9A2D;"></span>
+        <span style="width:20px;background:#003087;"></span>
+        <span style="width:20px;background:#C8102E;"></span>
+      </div>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-pill"><span class="stat-icon">⚡</span><span>Energía</span><span class="stat-val">87/100</span></div>
+      <div class="stat-pill"><span class="stat-icon">🪙</span><span>Bolívares</span><span class="stat-val">12,450</span></div>
+      <div class="stat-pill"><span class="stat-icon">🌟</span><span>Reputación</span><span class="stat-val">Nivel 7</span></div>
+      <div class="stat-pill"><span class="stat-icon">🗺️</span><span>Zonas</span><span class="stat-val">4/23</span></div>
+      <div class="stat-pill"><span class="stat-icon">🏅</span><span>Logros</span><span class="stat-val">31/200</span></div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-label">Modos de Juego</div>
+
+      <button class="mode-btn active" onclick="showScreen('mundo')">
+        <span class="mode-icon">🗺️</span>
+        <span>Mundo Abierto</span>
+        <span class="mode-tag tag-mundo">Libre</span>
+      </button>
+      <button class="mode-btn" onclick="showScreen('accion')">
+        <span class="mode-icon">⚔️</span>
+        <span>Acción</span>
+        <span class="mode-tag tag-accion">PVP</span>
+      </button>
+      <button class="mode-btn" onclick="showScreen('rol')">
+        <span class="mode-icon">🎭</span>
+        <span>Rol &amp; Aventura</span>
+        <span class="mode-tag tag-rol">RPG</span>
+      </button>
+      <button class="mode-btn" onclick="showScreen('estrategia')">
+        <span class="mode-icon">♟️</span>
+        <span>Estrategia</span>
+        <span class="mode-tag tag-accion">RTS</span>
+      </button>
+      <button class="mode-btn" onclick="showScreen('simulacion')">
+        <span class="mode-icon">🍽️</span>
+        <span>Simulación</span>
+        <span class="mode-tag tag-sim">SIM</span>
+      </button>
+      <button class="mode-btn" onclick="showScreen('deportes')">
+        <span class="mode-icon">⚽</span>
+        <span>Deportes</span>
+        <span class="mode-tag tag-dep">Sport</span>
+      </button>
+      <button class="mode-btn" onclick="showScreen('carreras')">
+        <span class="mode-icon">🏎️</span>
+        <span>Carreras</span>
+        <span class="mode-tag tag-accion">Race</span>
+      </button>
+
+      <div class="divider"></div>
+      <div class="sidebar-label">Personaje</div>
+      <button class="mode-btn" onclick="showScreen('personaje')">
+        <span class="mode-icon">👤</span>
+        <span>Mi Perfil</span>
+      </button>
+      <button class="mode-btn" onclick="showScreen('tienda')">
+        <span class="mode-icon">🛒</span>
+        <span>Tienda</span>
+      </button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content-panel">
+
+      <!-- MUNDO ABIERTO -->
+      <div class="screen active" id="screen-mundo">
+        <div class="screen-header">
+          <span style="font-size:24px;">🗺️</span>
+          <div>
+            <div class="screen-title">Venezuela: Mundo Abierto</div>
+            <div class="screen-desc">Explora 23 estados, biomas únicos y ciudades llenas de vida.</div>
+          </div>
+        </div>
+
+        <!-- Mini Map -->
+        <div class="map-container">
+          <svg viewBox="0 0 400 180" class="map-svg">
+            <!-- Venezuela silhouette simplified -->
+            <rect x="0" y="0" width="400" height="180" fill="#080816"/>
+            <!-- Ocean tint -->
+            <ellipse cx="200" cy="30" rx="200" ry="40" fill="rgba(0,48,135,0.15)"/>
+            <!-- Land mass approximate -->
+            <path d="M60,80 Q80,40 140,35 Q200,30 260,38 Q320,45 360,70 Q380,90 370,120 Q350,140 320,145 Q280,155 240,150 Q200,148 160,148 Q120,150 90,140 Q65,130 60,110 Z" fill="#1a2a18" stroke="rgba(207,154,45,0.25)" stroke-width="1"/>
+            <!-- Orinoco river suggestion -->
+            <path d="M100,110 Q160,100 220,105 Q270,108 330,115" fill="none" stroke="rgba(0,48,135,0.5)" stroke-width="2"/>
+            <!-- State labels + dots -->
+            <circle cx="120" cy="55" r="4" fill="#CF9A2D" opacity="0.9"/>
+            <text x="126" y="53" fill="#CF9A2D" font-size="8" font-family="Nunito,sans-serif">Caracas</text>
+            <circle cx="80" cy="95" r="4" fill="#009B4D" opacity="0.9"/>
+            <text x="86" y="93" fill="#CF9A2D" font-size="8" font-family="Nunito,sans-serif">Zulia</text>
+            <circle cx="290" cy="75" r="4" fill="#CF9A2D" opacity="0.9"/>
+            <text x="296" y="73" fill="#CF9A2D" font-size="8" font-family="Nunito,sans-serif">Bolívar</text>
+            <circle cx="180" cy="125" r="4" fill="#003087" opacity="0.9"/>
+            <text x="186" y="123" fill="#CF9A2D" font-size="8" font-family="Nunito,sans-serif">Llanos</text>
+            <circle cx="230" cy="55" r="4" fill="#CF9A2D" opacity="0.5"/>
+            <text x="236" y="53" fill="rgba(207,154,45,0.5)" font-size="8" font-family="Nunito,sans-serif">Mérida 🔒</text>
+            <circle cx="340" cy="105" r="4" fill="#CF9A2D" opacity="0.5"/>
+            <text x="305" y="103" fill="rgba(207,154,45,0.5)" font-size="8" font-family="Nunito,sans-serif">Gran Sabana 🔒</text>
+            <!-- Legend -->
+            <circle cx="20" cy="165" r="4" fill="#CF9A2D"/>
+            <text x="28" y="168" fill="#CF9A2D" font-size="8" font-family="Nunito,sans-serif">Desbloqueado</text>
+            <circle cx="110" cy="165" r="4" fill="rgba(207,154,45,0.3)"/>
+            <text x="118" y="168" fill="rgba(207,154,45,0.5)" font-size="8" font-family="Nunito,sans-serif">Bloqueado</text>
+          </svg>
+        </div>
+
+        <div class="section-title">Zonas Activas</div>
+        <div class="cards-grid">
+          <div class="game-card" onclick="sendPrompt('Cuéntame más sobre la zona de Caracas en Tierra de Gracia')">
+            <span class="card-badge tag-mundo" style="background:rgba(207,154,45,0.2);color:var(--oro);">ACTIVO</span>
+            <span class="card-emoji">🏙️</span>
+            <div class="card-name">Gran Caracas</div>
+            <div class="card-detail">Petare, Sabana Grande, El Ávila. Misiones urbanas, mercado negro y política.</div>
+          </div>
+          <div class="game-card" onclick="sendPrompt('Cuéntame más sobre los Llanos venezolanos en el juego')">
+            <span class="card-badge tag-sim" style="background:rgba(0,155,77,0.2);color:#4dff99;">EXPLORA</span>
+            <span class="card-emoji">🌾</span>
+            <div class="card-name">Los Llanos</div>
+            <div class="card-detail">Apure, Barinas. Doma de caballos, joropo, fauna de río y sabana infinita.</div>
+          </div>
+          <div class="game-card" onclick="sendPrompt('Qué hay para hacer en el Zulia del juego Tierra de Gracia')">
+            <span class="card-badge" style="background:rgba(0,48,135,0.25);color:#6699ff;font-size:9px;padding:2px 6px;border-radius:8px;top:8px;right:8px;position:absolute;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;">ZULIA</span>
+            <span class="card-emoji">🛢️</span>
+            <div class="card-name">Maracaibo &amp; El Lago</div>
+            <div class="card-detail">Puente sobre el lago, pozos petroleros, gaita zuliana y comida caribeña.</div>
+          </div>
+          <div class="game-card" onclick="sendPrompt('Qué secretos tiene el estado Bolívar y la Gran Sabana en el juego')">
+            <span class="card-badge tag-accion" style="background:rgba(200,16,46,0.2);color:#ff4d6d;font-size:9px;padding:2px 6px;border-radius:8px;top:8px;right:8px;position:absolute;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;">🔒 LVL12</span>
+            <span class="card-emoji">⛰️</span>
+            <div class="card-name">Gran Sabana</div>
+            <div class="card-detail">Tepuyes, salto Ángel, pemones, diamantes y ruinas ancestrales.</div>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top:14px;">NPCs Icónicos del Mundo</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <span class="info-tag">🧓 El Viejo del Joropo</span>
+          <span class="info-tag">🔧 El Mecánico de Oriente</span>
+          <span class="info-tag">👩‍🍳 La Señora de las Arepas</span>
+          <span class="info-tag">⛽ El Pran del Barrio</span>
+          <span class="info-tag">🌿 El Curandero Warao</span>
+          <span class="info-tag">🎺 El Músico Caraqueño</span>
+        </div>
+      </div>
+
+      <!-- ACCION -->
+      <div class="screen" id="screen-accion">
+        <div class="screen-header">
+          <span style="font-size:24px;">⚔️</span>
+          <div>
+            <div class="screen-title">Acción &amp; Combate</div>
+            <div class="screen-desc">Peleas callejeras, enfrentamientos en barrios y operaciones tácticas.</div>
+          </div>
+        </div>
+
+        <div class="section-title">Misiones Activas</div>
+        <div class="mission-item" onclick="sendPrompt('Más detalles sobre la misión El Barrio 23 de Enero')">
+          <span class="mission-emoji">🏚️</span>
+          <div class="mission-text">
+            <div class="mission-name">El Barrio: 23 de Enero</div>
+            <div class="mission-sub">Neutraliza la banda del Cayo con tus aliados. Sin bajas civiles.</div>
+          </div>
+          <span class="mission-reward">+800 🪙</span>
+        </div>
+        <div class="mission-item" onclick="sendPrompt('Cómo se juega la misión de la Guardia del Parque en Tierra de Gracia')">
+          <span class="mission-emoji">🌿</span>
+          <div class="mission-text">
+            <div class="mission-name">Operación Ávila</div>
+            <div class="mission-sub">Protege el parque nacional de los traficantes de fauna silvestre.</div>
+          </div>
+          <span class="mission-reward">+1200 🪙</span>
+        </div>
+        <div class="mission-item" onclick="sendPrompt('Cuéntame sobre el Torneo de Lucha Venezolana en el juego')">
+          <span class="mission-emoji">🥊</span>
+          <div class="mission-text">
+            <div class="mission-name">Torneo Criollo de Lucha</div>
+            <div class="mission-sub">Demuestra tu fuerza en el ring de la Plaza Venezuela. Estilo libre.</div>
+          </div>
+          <span class="mission-reward">+2000 🪙</span>
+        </div>
+
+        <div class="section-title">Arsenal Venezolano</div>
+        <div class="cards-grid">
+          <div class="game-card">
+            <span class="card-emoji">🏹</span>
+            <div class="card-name">Arco Indígena</div>
+            <div class="card-detail">Alta precisión. Crafteable con bambú del Orinoco.</div>
+          </div>
+          <div class="game-card">
+            <span class="card-emoji">🔨</span>
+            <div class="card-name">Machete Criollo</div>
+            <div class="card-detail">Arma versátil. Sirve para combate y para limpiar monte.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROL -->
+      <div class="screen" id="screen-rol">
+        <div class="screen-header">
+          <span style="font-size:24px;">🎭</span>
+          <div>
+            <div class="screen-title">Rol &amp; Aventura</div>
+            <div class="screen-desc">Elige tu destino. Cada decisión moldea la Venezuela que construyes.</div>
+          </div>
+        </div>
+
+        <div class="section-title">Clases de Personaje</div>
+        <div class="cards-grid">
+          <div class="game-card" onclick="sendPrompt('Cómo jugar como El Llanero en Tierra de Gracia')">
+            <span class="card-emoji">🤠</span>
+            <div class="card-name">El Llanero</div>
+            <div class="card-detail">Maestro del joropo, doma caballos, control total de los Llanos.</div>
+          </div>
+          <div class="game-card" onclick="sendPrompt('Cómo jugar como La Cocinera en Tierra de Gracia')">
+            <span class="card-emoji">👩‍🍳</span>
+            <div class="card-name">La Cocinera Mayor</div>
+            <div class="card-detail">Buffs con comida. Recetas secretas. Alianzas por pabellón.</div>
+          </div>
+          <div class="game-card" onclick="sendPrompt('Cómo jugar como El Chamán Pemón en el juego')">
+            <span class="card-emoji">🌿</span>
+            <div class="card-name">El Chamán Pemón</div>
+            <div class="card-detail">Poderes ancestrales, comunión con la naturaleza, curación total.</div>
+          </div>
+          <div class="game-card" onclick="sendPrompt('Cómo jugar como El Ingeniero Petrolero en Tierra de Gracia')">
+            <span class="card-emoji">⚙️</span>
+            <div class="card-name">El Ingeniero</div>
+            <div class="card-detail">Construye tecnología, controla el petróleo, domina la economía.</div>
+          </div>
+        </div>
+
+        <div class="section-title">Árbol de Habilidades</div>
+        <div class="stat-row">
+          <div class="stat-label-row"><span>🗣️ Labia Criolla (persuasión)</span><span>72%</span></div>
+          <div class="bar-bg"><div class="bar-fill bar-oro" style="width:72%"></div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-label-row"><span>🍳 Gastronomía</span><span>55%</span></div>
+          <div class="bar-bg"><div class="bar-fill bar-green" style="width:55%"></div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-label-row"><span>🎵 Música Tradicional</span><span>40%</span></div>
+          <div class="bar-bg"><div class="bar-fill bar-purple" style="width:40%"></div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-label-row"><span>⛏️ Oficio Manual</span><span>63%</span></div>
+          <div class="bar-bg"><div class="bar-fill bar-red" style="width:63%"></div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-label-row"><span>🛢️ Conocimiento Petrolero</span><span>28%</span></div>
+          <div class="bar-bg"><div class="bar-fill bar-blue" style="width:28%"></div></div>
+        </div>
+      </div>
+
+      <!-- ESTRATEGIA -->
+      <div class="screen" id="screen-estrategia">
+        <div class="screen-header">
+          <span style="font-size:24px;">♟️</span>
+          <div>
+            <div class="screen-title">Estrategia Nacional</div>
+            <div class="screen-desc">Administra regiones, recursos y alianzas para unificar Venezuela.</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="info-block">
+            <div class="info-block-title">Recursos Estratégicos</div>
+            <div class="stat-row">
+              <div class="stat-label-row"><span>🛢️ Petróleo</span><span>8,200 bbl</span></div>
+              <div class="bar-bg"><div class="bar-fill bar-oro" style="width:82%"></div></div>
+            </div>
+            <div class="stat-row">
+              <div class="stat-label-row"><span>🌾 Cacao</span><span>3,400 kg</span></div>
+              <div class="bar-bg"><div class="bar-fill bar-green" style="width:34%"></div></div>
+            </div>
+            <div class="stat-row">
+              <div class="stat-label-row"><span>💎 Diamantes</span><span>120 ct</span></div>
+              <div class="bar-bg"><div class="bar-fill bar-blue" style="width:12%"></div></div>
+            </div>
+            <div class="stat-row">
+              <div class="stat-label-row"><span>☀️ Energía Solar</span><span>640 MW</span></div>
+              <div class="bar-bg"><div class="bar-fill bar-purple" style="width:64%"></div></div>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-block-title">Alianzas Activas</div>
+            <div style="font-size:11px;line-height:1.8;">
+              <div>🤝 <strong style="color:var(--text)">Tribu Wayuu</strong> <span style="color:var(--verde)">+Estable</span></div>
+              <div>🤝 <strong style="color:var(--text)">Pescadores de Margarita</strong> <span style="color:var(--verde)">+Alta</span></div>
+              <div>⚠️ <strong style="color:var(--text)">Mineros del Caroní</strong> <span style="color:var(--oro)">~Neutral</span></div>
+              <div>❌ <strong style="color:var(--text)">Banda del Puerto</strong> <span style="color:#ff4d6d">-Hostil</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">Acciones de Turno</div>
+        <div class="mission-item" onclick="sendPrompt('Cómo construir la planta de CADIVI en Tierra de Gracia')">
+          <span class="mission-emoji">🏗️</span>
+          <div class="mission-text"><div class="mission-name">Construir Refinería en Anzoátegui</div><div class="mission-sub">+400 bbl/turno · Requiere Lvl Ingeniería 3</div></div>
+          <span class="mission-reward">3 turnos</span>
+        </div>
+        <div class="mission-item" onclick="sendPrompt('Qué pasa si firmo la alianza con los Wayuu en el juego')">
+          <span class="mission-emoji">🕊️</span>
+          <div class="mission-text"><div class="mission-name">Firma del Tratado Wayuu</div><div class="mission-sub">Desbloquea acceso a la Guajira + rutas de cacao.</div></div>
+          <span class="mission-reward">1 turno</span>
+        </div>
+        <div class="mission-item" onclick="sendPrompt('Explícame la campaña electoral de Tierra de Gracia en el modo estrategia')">
+          <span class="mission-emoji">🗳️</span>
+          <div class="mission-text"><div class="mission-name">Campaña Electoral Regional</div><div class="mission-sub">Gana el voto popular en 3 estados clave.</div></div>
+          <span class="mission-reward">5 turnos</span>
+        </div>
+      </div>
+
+      <!-- SIMULACION -->
+      <div class="screen" id="screen-simulacion">
+        <div class="screen-header">
+          <span style="font-size:24px;">🍽️</span>
+          <div>
+            <div class="screen-title">Simulación Criolla</div>
+            <div class="screen-desc">Vive el día a día venezolano: cocina, negocia, construye y sobrevive.</div>
+          </div>
+        </div>
+
+        <div class="section-title">Minijuegos de Simulación</div>
+        <div class="cards-grid">
+          <div class="game-card" onclick="sendPrompt('Cómo funciona el minijuego de La Arepera en Tierra de Gracia')">
+            <span class="card-emoji">🫓</span>
+            <div class="card-name">Mi Arepera</div>
+            <div class="card-detail">Gestiona tu local. Prepara reina pepiada, pelúa, domino. Sirve al barrio.</div>
+          </div>
+          <div class="game-card" onclick="sendPrompt('Cómo jugar el minijuego de la Bodega en el juego venezolano')">
+            <span class="card-emoji">🏪</span>
+            <div class="card-name">La Bodega</div>
+            <div class="card-detail">Administra inventario, compra barato en MERCAL, vende en el mercado.</div>
+          </div>
+          <div class="game-card" onclick="sendPrompt('Cómo funciona la simulación de Hacienda de Cacao en Tierra de Gracia')">
+            <span class="card-emoji">🌿</span>
+            <div class="card-name">Hacienda de Cacao</div>
+            <div class="card-detail">Planta, cosecha y exporta el mejor cacao del mundo. Barlovento.</div>
+          </div>
+          <div class="game-card" onclick="sendPrompt('Qué incluye el minijuego de la Telenovela venezolana en el juego')">
+            <span class="card-emoji">📺</span>
+            <div class="card-name">Producción de Telenovela</div>
+            <div class="card-detail">Dirige actores, escribe guiones, compite con RCTV, Venevisión y Televen.</div>
+          </div>
+        </div>
+
+        <div class="section-title">Recetario Interactivo</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="info-tag" style="cursor:pointer;" onclick="sendPrompt('Dame la receta del pabellón criollo en el juego Tierra de Gracia')">🍚 Pabellón Criollo</span>
+          <span class="info-tag" style="cursor:pointer;" onclick="sendPrompt('Cómo preparar el sancocho en el modo simulación')">🥘 Sancocho de Gallina</span>
+          <span class="info-tag" style="cursor:pointer;" onclick="sendPrompt('Receta de hallacas en el juego Tierra de Gracia')">🌽 Hallacas Navideñas</span>
+          <span class="info-tag" style="cursor:pointer;" onclick="sendPrompt('Cómo hacer el asado negro venezolano en el juego')">🥩 Asado Negro</span>
+          <span class="info-tag" style="cursor:pointer;">🥤 Chicha</span>
+          <span class="info-tag" style="cursor:pointer;">🍫 Chocolate Venezolano</span>
+          <span class="info-tag" style="cursor:pointer;">🫘 Caraotas Negras</span>
+          <span class="info-tag" style="cursor:pointer;">🥟 Tequeños</span>
+        </div>
+
+        <div class="section-title">Marcas Nacionales Desbloqueadas</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="info-tag">🍫 Savoy</span>
+          <span class="info-tag">🧃 Yukery</span>
+          <span class="info-tag">🍺 Polar</span>
+          <span class="info-tag">🧴 Farmatodo</span>
+          <span class="info-tag">🏥 Locatel</span>
+          <span class="info-tag">🛒 CADA</span>
+          <span class="info-tag">⛽ PDVSA</span>
+          <span class="info-tag">📡 CANTV</span>
+          <span class="info-tag">✈️ Avior</span>
+          <span class="info-tag">🍗 Zenú</span>
+        </div>
+      </div>
+
+      <!-- DEPORTES -->
+      <div class="screen" id="screen-deportes">
+        <div class="screen-header">
+          <span style="font-size:24px;">⚽</span>
+          <div>
+            <div class="screen-title">Deportes de Venezuela</div>
+            <div class="screen-desc">Desde la pelota hasta el béisbol. La pasión criolla hecha competencia.</div>
+          </div>
+        </div>
+
+        <div class="section-title">Disciplinas Disponibles</div>
+        <div class="cards-grid">
+          <div class="game-card" onclick="sendPrompt('Cómo jugar béisbol venezolano en Tierra de Gracia')">
+            <span class="card-badge" style="background:rgba(200,16,46,0.2);color:#ff4d6d;font-size:9px;padding:2px 6px;border-radius:8px;top:8px;right:8px;position:absolute;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;">⭐ POPULAR</span>
+            <span class="card-emoji">⚾</span>
+            <div class="card-name">Béisbol Criollo</div>
+            <div class="card-detail">Liga Venezolana de Béisbol. Lleva a tu equipo al campeonato.</div>
+          </div>
+          <div class="game-card" onclick="sendPrompt('Cómo funciona el modo de boxeo en el juego venezolano')">
+            <span class="card-emoji">🥊</span>
+            <div class="card-name">Boxeo Venezolano</div>
+            <div class="card-detail">Edwin Valero, Jorge Linares. Sube al ring y conquista el cinturón.</div>
+          </div>
+          <div class="game-card" onclick="sendPrompt('Cómo jugar al fútbol venezolano con la Vinotinto en Tierra de Gracia')">
+            <span class="card-emoji">⚽</span>
+            <div class="card-name">La Vinotinto</div>
+            <div class="card-detail">Lleva a Venezuela a la Copa América. Tácticas y fichajes reales.</div>
+          </div>
+          <div class="game-card" onclick="sendPrompt('Qué incluye el atletismo en Tierra de Gracia')">
+            <span class="card-emoji">🏃</span>
+            <div class="card-name">Atletismo</div>
+            <div class="card-detail">Yulimar Rojas, salto triple. Bate el récord mundial en París.</div>
+          </div>
+        </div>
+
+        <div class="section-title">Tabla de Posiciones — Liga Criolla</div>
+        <div class="lb-row"><span class="lb-rank gold">1</span><span class="lb-flag">🦅</span><span class="lb-name">Caracas FC</span><span class="lb-score">2,840 pts</span></div>
+        <div class="lb-row"><span class="lb-rank silver">2</span><span class="lb-flag">⭐</span><span class="lb-name">Magallanes</span><span class="lb-score">2,710 pts</span></div>
+        <div class="lb-row"><span class="lb-rank bronze">3</span><span class="lb-flag">🛢️</span><span class="lb-name">Zulia FC</span><span class="lb-score">2,490 pts</span></div>
+        <div class="lb-row"><span class="lb-rank">4</span><span class="lb-flag">⛰️</span><span class="lb-name">Mineros de Guayana</span><span class="lb-score">2,320 pts</span></div>
+        <div class="lb-row"><span class="lb-rank">5</span><span class="lb-flag">🌊</span><span class="lb-name">Margarita Sharks</span><span class="lb-score">2,100 pts</span></div>
+      </div>
+
+      <!-- CARRERAS -->
+      <div class="screen" id="screen-carreras">
+        <div class="screen-header">
+          <span style="font-size:24px;">🏎️</span>
+          <div>
+            <div class="screen-title">Carreras por Venezuela</div>
+            <div class="screen-desc">Pistas urbanas, autopistas, llanos y montañas andinas.</div>
+          </div>
+        </div>
+
+        <div class="section-title">Circuitos Nacionales</div>
+        <div class="mission-item" onclick="sendPrompt('Cómo es la carrera por la autopista Caracas-La Guaira en el juego')">
+          <span class="mission-emoji">🏁</span>
+          <div class="mission-text"><div class="mission-name">Autopista Caracas–La Guaira</div><div class="mission-sub">Curvas peligrosas, 21 km, tráfico real, lluvia nocturna.</div></div>
+          <span class="mission-reward">★★★★☆</span>
+        </div>
+        <div class="mission-item" onclick="sendPrompt('Cómo es el circuito de los Andes venezolanos en Tierra de Gracia')">
+          <span class="mission-emoji">⛰️</span>
+          <div class="mission-text"><div class="mission-name">Circuito Los Andes</div><div class="mission-sub">Mérida a San Cristóbal. Niebla, frío y bajadas de vértigo.</div></div>
+          <span class="mission-reward">★★★★★</span>
+        </div>
+        <div class="mission-item" onclick="sendPrompt('Cómo funciona el Rally de los Llanos en Tierra de Gracia')">
+          <span class="mission-emoji">🌾</span>
+          <div class="mission-text"><div class="mission-name">Rally de los Llanos</div><div class="mission-sub">Tierra suelta, cruce de ríos, fauna esquivable. Apure sin límites.</div></div>
+          <span class="mission-reward">★★★☆☆</span>
+        </div>
+        <div class="mission-item" onclick="sendPrompt('Qué es la carrera del Malecón de Maracaibo en Tierra de Gracia')">
+          <span class="mission-emoji">🌊</span>
+          <div class="mission-text"><div class="mission-name">Noche en Maracaibo</div><div class="mission-sub">Circuito urbano nocturno. Calor, relámpagos del Catatumbo de fondo.</div></div>
+          <span class="mission-reward">★★★★☆</span>
+        </div>
+
+        <div class="section-title">Vehículos Venezolanos</div>
+        <div class="cards-grid">
+          <div class="game-card">
+            <span class="card-emoji">🚐</span>
+            <div class="card-name">Buseta Caraqueña</div>
+            <div class="card-detail">Difícil de manejar. Bocina especial. Favorita del modo caos.</div>
+          </div>
+          <div class="game-card">
+            <span class="card-emoji">🏍️</span>
+            <div class="card-name">Moto Mensajero</div>
+            <div class="card-detail">Veloz en el tráfico. Especialidad: delivery de arepas en tiempo récord.</div>
+          </div>
+          <div class="game-card">
+            <span class="card-emoji">🚙</span>
+            <div class="card-name">Toyota Prado Llanero</div>
+            <div class="card-detail">4x4 definitivo. Ideal para Rally de los Llanos y zonas remotas.</div>
+          </div>
+          <div class="game-card">
+            <span class="card-emoji">⛵</span>
+            <div class="card-name">Lancha Guaireña</div>
+            <div class="card-detail">Carrera acuática desde La Guaira hasta Margarita. Olas y viento.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PERSONAJE -->
+      <div class="screen" id="screen-personaje">
+        <div class="screen-header">
+          <span style="font-size:24px;">👤</span>
+          <div>
+            <div class="screen-title">Mi Personaje</div>
+            <div class="screen-desc">Tu identidad venezolana dentro del mundo de Tierra de Gracia.</div>
+          </div>
+        </div>
+        <div class="player-card">
+          <div class="player-avatar">🤠</div>
+          <div class="player-info">
+            <div class="player-name">El Llanero Mayor</div>
+            <div class="player-class">Clase: Llanero · Región: Apure · Origen: San Fernando</div>
+            <div class="lvl-badge"><span>⭐</span> Nivel 7 · 4,200 XP</div>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-label-row"><span>💪 Fuerza</span><span>68/100</span></div>
+          <div class="bar-bg"><div class="bar-fill bar-red" style="width:68%"></div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-label-row"><span>🧠 Inteligencia</span><span>74/100</span></div>
+          <div class="bar-bg"><div class="bar-fill bar-blue" style="width:74%"></div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-label-row"><span>🗣️ Carisma</span><span>90/100</span></div>
+          <div class="bar-bg"><div class="bar-fill bar-oro" style="width:90%"></div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-label-row"><span>🏃 Agilidad</span><span>55/100</span></div>
+          <div class="bar-bg"><div class="bar-fill bar-green" style="width:55%"></div></div>
+        </div>
+
+        <div class="section-title">Inventario</div>
+        <div class="inv-grid">
+          <div class="inv-slot">🫓<span>Arepa</span><span class="inv-qty">x5</span></div>
+          <div class="inv-slot">🤠<span>Sombrero</span></div>
+          <div class="inv-slot">🔨<span>Machete</span></div>
+          <div class="inv-slot">🎵<span>Arpa</span></div>
+          <div class="inv-slot">🧃<span>Chicha</span><span class="inv-qty">x3</span></div>
+          <div class="inv-slot">💊<span>Hierba</span><span class="inv-qty">x2</span></div>
+          <div class="inv-slot">📜<span>Mapa</span></div>
+          <div class="inv-slot">🛢️<span>Petróleo</span><span class="inv-qty">x1</span></div>
+          <div class="inv-slot" style="border-style:dashed;opacity:0.3;font-size:20px;color:var(--muted);">+</div>
+          <div class="inv-slot" style="border-style:dashed;opacity:0.3;font-size:20px;color:var(--muted);">+</div>
+        </div>
+      </div>
+
+      <!-- TIENDA -->
+      <div class="screen" id="screen-tienda">
+        <div class="screen-header">
+          <span style="font-size:24px;">🛒</span>
+          <div>
+            <div class="screen-title">Tienda Criolla</div>
+            <div class="screen-desc">Productos, atuendos y objetos 100% venezolanos.</div>
+          </div>
+        </div>
+        <div class="section-title">Artículos Destacados</div>
+        <div class="shop-item"><span class="shop-icon">🤠</span><div><div class="shop-name">Sombrero Llanero Auténtico</div><div class="shop-desc">+15 Carisma en Los Llanos. Hecho en Apure.</div></div><span class="shop-price">450 🪙</span></div>
+        <div class="shop-item"><span class="shop-icon">🎸</span><div><div class="shop-name">Cuatro Venezolano</div><div class="shop-desc">Desbloquea misiones de joropo y serenatas.</div></div><span class="shop-price">800 🪙</span></div>
+        <div class="shop-item"><span class="shop-icon">🫓</span><div><div class="shop-name">Receta Secreta de Arepas</div><div class="shop-desc">+25 Cocina. Ingrediente: maíz de P.A.N.</div></div><span class="shop-price">200 🪙</span></div>
+        <div class="shop-item"><span class="shop-icon">🏎️</span><div><div class="shop-name">Kit Turbo Caraqueño</div><div class="shop-desc">+30 Velocidad. Fabricado en Valencia.</div></div><span class="shop-price">2,400 🪙</span></div>
+        <div class="shop-item"><span class="shop-icon">🌿</span><div><div class="shop-name">Pócima del Chamán Pemón</div><div class="shop-desc">Restaura energía completa. Unico.</div></div><span class="shop-price">1,100 🪙</span></div>
+        <div class="shop-item"><span class="shop-icon">🛢️</span><div><div class="shop-name">Concesión Petrolera</div><div class="shop-desc">Genera 80 Bolívares por turno.</div></div><span class="shop-price">5,000 🪙</span></div>
+        <div style="margin-top:10px;font-size:11px;color:var(--muted);text-align:center;">
+          💡 Tip: Usa tus Bolívares con sabiduría. El mercado fluctúa.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <span class="ticker-inner">
+      🗞️ NOTICIA: Yulimar Rojas bate nuevo récord en los llanos &nbsp;|&nbsp; 🛢️ Precio del barril sube 12% — Economía de Caracas en alza &nbsp;|&nbsp; 🎶 Festival de Joropo en Apure: inscripciones abiertas &nbsp;|&nbsp; ⚾ Cardenales de Lara gana la Serie del Caribe &nbsp;|&nbsp; 🌿 Nuevo descubrimiento en el Parque Canaima &nbsp;|&nbsp; 🍫 Savoy lanza edición limitada de cacao de Barlovento &nbsp;|&nbsp; 🏆 Magallanes a la final de la Liga Venezolana &nbsp;|&nbsp; ☁️ Relámpago del Catatumbo visible esta noche &nbsp;|&nbsp; 🎭 Convocatoria de personajes para el carnaval de El Callao &nbsp;|&nbsp;
+    </span>
+  </div>
+</div>
+
+<script>
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  const target = document.getElementById('screen-' + id);
+  if (target) target.classList.add('active');
+  const btns = document.querySelectorAll('.mode-btn');
+  btns.forEach(b => {
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + id + "'")) {
+      b.classList.add('active');
+    }
+  });
+}
+</script>
