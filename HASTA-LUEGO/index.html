@@ -1,176 +1,179 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hasta Luego...</title>
+  <link rel="icon" type="image/png" href="https://pizzaclap43.github.io/avatarHead.png">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    background: #0d0b08;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    font-family: 'Lora', Georgia, serif;
-  }
+    body {
+      background: #0d0b08;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      font-family: 'Lora', Georgia, serif;
+    }
 
-  .stars {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 0;
-  }
+    .stars {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
 
-  .star {
-    position: absolute;
-    background: #fff;
-    border-radius: 50%;
-    animation: twinkle var(--dur, 3s) ease-in-out infinite var(--delay, 0s);
-    opacity: 0;
-  }
+    .star {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      animation: twinkle var(--dur, 3s) ease-in-out infinite var(--delay, 0s);
+      opacity: 0;
+    }
 
-  @keyframes twinkle {
-    0%, 100% { opacity: 0; }
-    50% { opacity: var(--max-op, 0.6); }
-  }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; }
+      50% { opacity: var(--max-op, 0.6); }
+    }
 
-  .card {
-    position: relative;
-    z-index: 1;
-    max-width: 680px;
-    width: 100%;
-    background: linear-gradient(160deg, #1a1410 0%, #120e0b 60%, #0e0c09 100%);
-    border: 1px solid #3a2e22;
-    border-radius: 2px;
-    padding: 3.5rem 4rem 3rem;
-    box-shadow: 0 0 60px rgba(200, 140, 50, 0.08), inset 0 0 80px rgba(0,0,0,0.4);
-    animation: fadeIn 1.2s ease both;
-  }
+    .card {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      width: 100%;
+      background: linear-gradient(160deg, #1a1410 0%, #120e0b 60%, #0e0c09 100%);
+      border: 1px solid #3a2e22;
+      border-radius: 2px;
+      padding: 3.5rem 4rem 3rem;
+      box-shadow: 0 0 60px rgba(200, 140, 50, 0.08), inset 0 0 80px rgba(0,0,0,0.4);
+      animation: fadeIn 1.2s ease both;
+    }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-  .ornament {
-    text-align: center;
-    margin-bottom: 2rem;
-    color: #c8a04a;
-    font-size: 18px;
-    letter-spacing: 0.6em;
-    opacity: 0.7;
-  }
+    .ornament {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #c8a04a;
+      font-size: 18px;
+      letter-spacing: 0.6em;
+      opacity: 0.7;
+    }
 
-  .avatar-logo {
-    display: block;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin: 0 auto 1.5rem;
-    border: 2px solid #3a2e22;
-    object-fit: cover;
-  }
+    .avatar-logo {
+      display: block;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 1.5rem;
+      border: 2px solid #3a2e22;
+      object-fit: cover;
+    }
 
-  h1 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: clamp(1.4rem, 4vw, 2rem);
-    font-weight: 400;
-    font-style: italic;
-    color: #e8d5a0;
-    text-align: center;
-    line-height: 1.4;
-    margin-bottom: 0.4rem;
-    letter-spacing: 0.02em;
-  }
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 400;
+      font-style: italic;
+      color: #e8d5a0;
+      text-align: center;
+      line-height: 1.4;
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.02em;
+    }
 
-  .subtitle {
-    text-align: center;
-    font-size: 0.75rem;
-    letter-spacing: 0.25em;
-    color: #7a6545;
-    text-transform: uppercase;
-    margin-bottom: 2.5rem;
-  }
+    .subtitle {
+      text-align: center;
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      color: #7a6545;
+      text-transform: uppercase;
+      margin-bottom: 2.5rem;
+    }
 
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin: 2rem 0;
-    color: #c8a04a;
-    opacity: 0.4;
-    font-size: 0.7rem;
-    letter-spacing: 0.3em;
-  }
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem 0;
+      color: #c8a04a;
+      opacity: 0.4;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+    }
 
-  .divider::before, .divider::after {
-    content: '';
-    flex: 1;
-    height: 0.5px;
-    background: #c8a04a;
-    opacity: 0.4;
-  }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 0.5px;
+      background: #c8a04a;
+      opacity: 0.4;
+    }
 
-  p {
-    font-size: 1rem;
-    line-height: 1.9;
-    color: #c5b090;
-    margin-bottom: 1.4rem;
-    font-weight: 400;
-  }
+    p {
+      font-size: 1rem;
+      line-height: 1.9;
+      color: #c5b090;
+      margin-bottom: 1.4rem;
+      font-weight: 400;
+    }
 
-  .highlight {
-    color: #e8d5a0;
-    font-style: italic;
-  }
+    .highlight {
+      color: #e8d5a0;
+      font-style: italic;
+    }
 
-  .quote {
-    border-left: 2px solid #c8a04a;
-    padding: 0.6rem 0 0.6rem 1.2rem;
-    margin: 1.5rem 0;
-    color: #b09060;
-    font-style: italic;
-    font-size: 0.95rem;
-  }
+    .quote {
+      border-left: 2px solid #c8a04a;
+      padding: 0.6rem 0 0.6rem 1.2rem;
+      margin: 1.5rem 0;
+      color: #b09060;
+      font-style: italic;
+      font-size: 0.95rem;
+    }
 
-  .closing {
-    margin-top: 2.5rem;
-    text-align: center;
-  }
+    .closing {
+      margin-top: 2.5rem;
+      text-align: center;
+    }
 
-  .closing-main {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    color: #e8d5a0;
-    font-style: italic;
-    margin-bottom: 0.6rem;
-  }
+    .closing-main {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: #e8d5a0;
+      font-style: italic;
+      margin-bottom: 0.6rem;
+    }
 
-  .closing-sub {
-    font-size: 0.85rem;
-    color: #7a6545;
-    letter-spacing: 0.12em;
-  }
+    .closing-sub {
+      font-size: 0.85rem;
+      color: #7a6545;
+      letter-spacing: 0.12em;
+    }
 
-  .stamp {
-    position: absolute;
-    bottom: 1.5rem;
-    right: 2.5rem;
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    color: #4a3a25;
-    text-transform: uppercase;
-    font-family: 'Lora', serif;
-  }
+    .stamp {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 2.5rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: #4a3a25;
+      text-transform: uppercase;
+      font-family: 'Lora', serif;
+    }
 
-  @media (max-width: 520px) {
-    .card { padding: 2.5rem 1.8rem 2rem; }
-  }
-</style>
+    @media (max-width: 520px) {
+      .card { padding: 2.5rem 1.8rem 2rem; }
+    }
+  </style>
 </head>
 <body>
 
