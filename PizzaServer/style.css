@@ -401,3 +401,82 @@ footer {
     .back-btn { font-size: 0.45rem; }
     .pixel-text { font-size: 1rem; }
 }
+
+/* ─── Optimización para dispositivos de gama baja ─── */
+@media (max-width: 768px) and (hover: none) {
+    /* Desactiva background-attachment: fixed (muy costoso en móviles) */
+    body {
+        background-attachment: scroll;
+    }
+
+    /* Elimina el blur de las cards (operación GPU intensiva) */
+    .status-box,
+    .info-box,
+    .step-card {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: rgba(10, 6, 0, 0.92);
+    }
+
+    /* Detiene la animación de las scanlines */
+    .scanlines {
+        animation: none;
+        background: none;
+    }
+
+    /* Detiene la animación del título */
+    header h1 {
+        animation: none;
+        text-shadow: 4px 4px 0 var(--pizza-red);
+    }
+
+    /* Simplifica los box-shadow de los botones */
+    .link-card {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        transition: none;
+    }
+    .link-card::before {
+        display: none;
+    }
+    .link-card:hover {
+        transform: none;
+        filter: none;
+    }
+
+    /* Simplifica hover de cards */
+    .status-box:hover,
+    .info-box:hover,
+    .step-card:hover {
+        transform: none;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+    }
+
+    /* Simplifica el dot de status */
+    .dot-on {
+        box-shadow: 0 0 6px #53FC18;
+    }
+    .dot-off {
+        box-shadow: none;
+    }
+
+    /* Reduce las animaciones de entrada */
+    .fadeInUp {
+        animation-duration: 0.2s;
+        animation-delay: 0s;
+    }
+}
+
+/* Para usuarios que prefieren menos movimiento (accesibilidad) */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+    .fadeInUp {
+        opacity: 1;
+        transform: none;
+    }
+    .scanlines {
+        background: none;
+    }
+}
