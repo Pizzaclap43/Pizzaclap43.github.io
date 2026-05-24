@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0d0b08;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    font-family: 'Lora', Georgia, serif;
+  }
+
+  .stars {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle var(--dur, 3s) ease-in-out infinite var(--delay, 0s);
+    opacity: 0;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; }
+    50% { opacity: var(--max-op, 0.6); }
+  }
+
+  .card {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    width: 100%;
+    background: linear-gradient(160deg, #1a1410 0%, #120e0b 60%, #0e0c09 100%);
+    border: 1px solid #3a2e22;
+    border-radius: 2px;
+    padding: 3.5rem 4rem 3rem;
+    box-shadow: 0 0 60px rgba(200, 140, 50, 0.08), inset 0 0 80px rgba(0,0,0,0.4);
+    animation: fadeIn 1.2s ease both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .ornament {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #c8a04a;
+    font-size: 18px;
+    letter-spacing: 0.6em;
+    opacity: 0.7;
+  }
+
+  .avatar-logo {
+    display: block;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    border: 2px solid #3a2e22;
+    object-fit: cover;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-weight: 400;
+    font-style: italic;
+    color: #e8d5a0;
+    text-align: center;
+    line-height: 1.4;
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.02em;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    color: #7a6545;
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    color: #c8a04a;
+    opacity: 0.4;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 0.5px;
+    background: #c8a04a;
+    opacity: 0.4;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.9;
+    color: #c5b090;
+    margin-bottom: 1.4rem;
+    font-weight: 400;
+  }
+
+  .highlight {
+    color: #e8d5a0;
+    font-style: italic;
+  }
+
+  .quote {
+    border-left: 2px solid #c8a04a;
+    padding: 0.6rem 0 0.6rem 1.2rem;
+    margin: 1.5rem 0;
+    color: #b09060;
+    font-style: italic;
+    font-size: 0.95rem;
+  }
+
+  .closing {
+    margin-top: 2.5rem;
+    text-align: center;
+  }
+
+  .closing-main {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: #e8d5a0;
+    font-style: italic;
+    margin-bottom: 0.6rem;
+  }
+
+  .closing-sub {
+    font-size: 0.85rem;
+    color: #7a6545;
+    letter-spacing: 0.12em;
+  }
+
+  .stamp {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 2.5rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: #4a3a25;
+    text-transform: uppercase;
+    font-family: 'Lora', serif;
+  }
+
+  @media (max-width: 520px) {
+    .card { padding: 2.5rem 1.8rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="card">
+  <div class="ornament">· · ✦ · ·</div>
+
+  <img
+    class="avatar-logo"
+    src="https://pizzaclap43.github.io/avatarHead.png"
+    alt="Logo de pizzaclap43"
+  />
+
+  <h1>No es un adiós, es un hasta luego</h1>
+  <div class="subtitle">Un mensaje desde el corazón · pizzaclap43</div>
+
+  <div class="divider">❧</div>
+
+  <p>
+    <span class="highlight">Holis</span>, espero se encuentren bien. Últimamente he tenido problemas familiares fuertes hasta el punto de abandonar los medios de comunicación digitales por un tiempo. Es una decisión dura la que tomé, pero lo hice por amor; no a las RRSS, sino <span class="highlight">por ustedes</span>, ya que mi deseo es estar y compartir con ustedes con una sonrisa, con una risa, y que ustedes lo aprecien y lo amen mucho.
+  </p>
+
+  <p>
+    Últimamente no he estado muy bien física ni mentalmente por esto que me está pasando, ya que mi vida depende mucho de los medios de comunicación digitales y los videojuegos como <span class="highlight">ClassiCube</span>; dentro de ellos me siento feliz y alegre compartiendo con ustedes, pues por ahí me he dado a conocer, he hecho amigos y hasta he tenido pareja, cosa que me duele mucho no poder estar con ellos por esto mismo que les vengo comentando.
+  </p>
+
+  <p>
+    Con esto no quiero decir que sea un <span class="highlight">ADIÓS</span> así y ya, sino un <span class="highlight">HASTA LUEGO</span>, porque tengo la certeza y la total confianza de que algún día regresaré y ustedes me recibirán con los brazos abiertos.
+  </p>
+
+  <div class="quote">
+    "Un amigo es para siempre" — RCTV
+  </div>
+
+  <p>
+    Siempre estaré con ustedes, porque esto no es un adiós, es un hasta luego. Siempre buscando la <span class="highlight">"Libertad de expresión… ¡Ese es el valor que defendemos!"</span> y la privacidad que tanto nos merecemos.
+  </p>
+
+  <div class="divider">❧</div>
+
+  <div class="closing">
+    <p class="closing-main">Nos vemos pronto… Un abrazo.</p>
+    <p class="closing-sub">Con amor · pizzaclap43</p>
+  </div>
+
+  <div class="stamp">Hasta luego · Con amor</div>
+</div>
+
+<script>
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `
+      width: ${size}px; height: ${size}px;
+      top: ${Math.random()*100}%;
+      left: ${Math.random()*100}%;
+      --dur: ${(Math.random()*4+2).toFixed(1)}s;
+      --delay: ${(Math.random()*5).toFixed(1)}s;
+      --max-op: ${(Math.random()*0.5+0.2).toFixed(2)};
+    `;
+    container.appendChild(s);
+  }
+</script>
+
+</body>
+</html>
