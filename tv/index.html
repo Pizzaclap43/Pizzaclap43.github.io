@@ -3,21 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pizza TV - Tu Canal de Noticias</title>
+    <title>Pizza TV - Tu Canal de Noticias y Deportes</title>
     <style>
         /* --- ESTILOS CSS PRINCIPALES --- */
         
-        /* Variables para el diseño "llamativo" (Tema Oscuro Premium) */
         :root {
-            --bg-color: #121212; /* Fondo casi negro */
-            --card-bg: #1e1e1e; /* Fondo de tarjetas un poco más claro */
-            --accent-color: #ff5722; /* Cambié el color de acento a un tono naranja/rojo tipo Pizza/TV */
-            --text-main: #eeeeee; /* Texto principal casi blanco */
-            --text-sub: #aaaaaa; /* Texto secundario gris claro */
+            --bg-color: #121212; 
+            --card-bg: #1e1e1e; 
+            --accent-color: #ff5722; 
+            --text-main: #eeeeee; 
+            --text-sub: #aaaaaa; 
             --font-family: 'Open Sans', sans-serif;
         }
 
-        /* Importar fuente moderna de Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
 
         body {
@@ -31,7 +29,6 @@
             min-height: 100vh;
         }
 
-        /* Cabecera (Header) */
         header {
             background-color: #000;
             padding: 20px 0;
@@ -52,22 +49,19 @@
             color: var(--accent-color);
         }
 
-        /* Contenido Principal (Main) */
         main {
             flex-grow: 1;
             padding: 40px 20px;
         }
 
-        /* Grícula de Videos (Grid) - Hace la página intuitiva y responsiva */
         .video-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Se ajusta solo */
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
             gap: 30px;
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        /* Tarjeta de Video Individual (Card) */
         .video-item {
             background-color: var(--card-bg);
             border-radius: 12px;
@@ -79,14 +73,13 @@
         }
 
         .video-item:hover {
-            transform: translateY(-5px); /* Efecto al pasar el mouse */
+            transform: translateY(-5px); 
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
         }
 
-        /* Contenedor responsivo para el Iframe */
         .video-wrapper {
             position: relative;
-            padding-bottom: 56.25%; /* Mantiene la relación de aspecto 16:9 */
+            padding-bottom: 56.25%; 
             height: 0;
             overflow: hidden;
         }
@@ -100,7 +93,6 @@
             border: 0;
         }
 
-        /* Detalles debajo del video */
         .video-details {
             padding: 15px;
             flex-grow: 1;
@@ -121,7 +113,6 @@
             color: var(--text-sub);
         }
 
-        /* Pie de página (Footer) */
         footer {
             background-color: #000;
             color: var(--text-sub);
@@ -149,7 +140,7 @@
             <!-- Video 1: Globovisión -->
             <div class="video-item">
                 <div class="video-wrapper">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/1mHwHwSfYbc?si=X6kcuJdpn7j_9y2F" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/1mHwHwSfYbc?si=X6kcuJdpn7j_9y2F" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 </div>
                 <div class="video-details">
                     <h2 class="video-title">Globovisión</h2>
@@ -160,7 +151,7 @@
             <!-- Video 2: CNN en Español -->
             <div class="video-item">
                 <div class="video-wrapper">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/Qr61waJ6AZg?si=c7VA6CuTfmwJFAEd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/Qr61waJ6AZg?si=c7VA6CuTfmwJFAEd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 </div>
                 <div class="video-details">
                     <h2 class="video-title">CNN en Español</h2>
@@ -171,10 +162,32 @@
             <!-- Video 3: NTN24 -->
             <div class="video-item">
                 <div class="video-wrapper">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/htd8gKYYEFM?si=glgoM7bz7njnoD6M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <iframe src="https://www.youtube.com/embed/htd8gKYYEFM?si=glgoM7bz7njnoD6M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 </div>
                 <div class="video-details">
                     <h2 class="video-title">NTN24</h2>
+                    <p class="video-meta">Transmisión en vivo</p>
+                </div>
+            </div>
+
+            <!-- Video 4: VTV -->
+            <div class="video-item">
+                <div class="video-wrapper">
+                    <iframe src="https://geo.dailymotion.com/player.html?video=x930kre" allowfullscreen title="Dailymotion Video Player" allow="web-share"></iframe>
+                </div>
+                <div class="video-details">
+                    <h2 class="video-title">VTV</h2>
+                    <p class="video-meta">Transmisión en vivo</p>
+                </div>
+            </div>
+
+            <!-- Video 5: Meridiano -->
+            <div class="video-item">
+                <div class="video-wrapper">
+                    <iframe src="https://geo.dailymotion.com/player.html?video=x9sxu9y" allowfullscreen title="Dailymotion Video Player" allow="web-share"></iframe>
+                </div>
+                <div class="video-details">
+                    <h2 class="video-title">Meridiano TV</h2>
                     <p class="video-meta">Transmisión en vivo</p>
                 </div>
             </div>
