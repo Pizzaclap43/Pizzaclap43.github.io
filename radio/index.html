@@ -1229,7 +1229,7 @@ function playStation(id) {
   // Update player UI
   player.classList.add('visible');
   document.getElementById('playerName').textContent = s.name + ' ' + s.freq;
-  document.getElementById('playerFreq').textContent = s.genre + ' · ' + s.description;
+  document.getElementById('playerFreq').textContent = s.description;
   document.getElementById('playerAvatar').textContent = s.emoji;
   document.getElementById('playerAvatar').style.background = s.bg;
 
