@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jugar ClassiCube</title>
+    <style>
+        body { 
+            background-color: #121212; 
+            color: #ffffff; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            text-align: center; 
+            margin: 0; 
+            padding: 20px; 
+        }
+        
+        h1 { margin-bottom: 20px; font-weight: 400; letter-spacing: 1px; }
+
+        #canvas { 
+            display: block; 
+            margin: 0 auto; 
+            width: 100%; 
+            max-width: 1000px; 
+            height: auto; 
+            box-shadow: 0 6px 20px rgba(0,0,0,0.7); 
+            border-radius: 8px;
+            background-color: #000000;
+        }
+
+        #logmsg { 
+            color: #ff6677; 
+            font-weight: bold; 
+            margin-top: 20px; 
+            display: block; 
+            font-size: 18px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>ClassiCube Web Client</h1>
+    
+    <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1" width="1000" height="562"></canvas>
+    <span id="logmsg"></span>
+
+    <script type='text/javascript'>
+        function logText(text) {
+            console.log(text);
+            document.getElementById('logmsg').innerHTML = text;
+        }
+
+        var idb = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+        if (!idb) { 
+            alert('IndexedDB no está soportado en este navegador. Las opciones no se guardarán.'); 
+        }
+        
+        function preloadIndexedDB() { 
+            if (typeof _interop_LoadIndexedDB === 'function') {
+                _interop_LoadIndexedDB(); 
+            }
+        }
+
+        function logFatal(event) {
+            Module.setStatus('Error crítico en ClassiCube: ' + event);
+        }
+
+        // --- EL TRUCO NINJA: SIMULAR EL DRAG & DROP AUTOMÁTICO ---
+        function inyectarTexturas() {
+            fetch('texture.zip')
+                .then(function(respuesta) {
+                    if (!respuesta.ok) throw new Error("No se encontró texture.zip en el servidor");
+                    return respuesta.blob();
+                })
+                .then(function(blob) {
+                    // Empaquetamos el zip descargado en un archivo virtual
+                    var archivo = new File([blob], "texture.zip", { type: "application/zip" });
+                    var dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(archivo);
+                    
+                    // Disparamos el evento falso de "soltar" sobre la pantalla del juego
+                    var eventoDrop = new DragEvent('drop', {
+                        bubbles: true,
+                        cancelable: true,
+                        dataTransfer: dataTransfer
+                    });
+                    
+                    document.getElementById('canvas').dispatchEvent(eventoDrop);
+                    console.log("¡Texturas inyectadas automáticamente!");
+                })
+                .catch(function(error) {
+                    console.log("Aviso: El juego cargó, pero las texturas no se aplicaron. Asegúrate de estar en GitHub Pages.");
+                });
+        }
+
+        var Module = {
+            preRun: [ preloadIndexedDB ],
+            postRun: [
+                function() {
+                    // Le damos medio segundo de ventaja al juego para que termine de 
+                    // cargar sus menús internos antes de "lanzarle" las texturas.
+                    setTimeout(inyectarTexturas, 500);
+                }
+            ],
+            arguments: ['pizzaclap43'],
+            print: function(text) { console.log(text); },
+            printErr: function(text) { console.error(text); },
+            canvas: document.getElementById('canvas'),
+            setStatus: logText,
+            totalDependencies: 0,
+            monitorRunDependencies: function(left) {
+                this.totalDependencies = Math.max(this.totalDependencies, left);
+                Module.setStatus(left ? 'Descargando recursos esenciales... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : '¡Todo listo! Iniciando juego...');
+            },
+            onAbort: function(why) { logFatal('Abortado: ' + why); }
+        };
+
+        Module.setStatus('Iniciando descargas...');
+        window.onerror = function(msg, source, lineno, colno, error) { 
+            logFatal(msg + " en la línea " + lineno); 
+        };
+    </script>
+    
+    <script async crossorigin type="text/javascript" src="https://cdn.classicube.net/client/latest/ClassiCube.js"></script>
+
+</body>
+</html>
