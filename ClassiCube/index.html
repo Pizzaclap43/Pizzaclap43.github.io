@@ -4,56 +4,77 @@
   <meta charset="utf-8" />
   <title>ClassiCube — Singleplayer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#1a1a2e">
+  <meta name="theme-color" content="#9873ac">
   <meta name="description" content="ClassiCube Singleplayer — Free sandbox block game">
+
+  <!-- Favicon from provided icon -->
+  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAh1BMVEVHcEwAAAAAAAC9vb3c3NyTk5M/Pz8AAACwsLAAAAAHBwcLCwsAAADa2tq2trZvb28EBAXGxsZWVlbj4+PW19aJiYkAAAAAAABxcXEAAACOjo4yMjKpqalDQkNnZ2eqqqqcnJz39/f4+Pj7+/vKysrNzc309PTS0tL5+fns7Ozw8PD+/v7n5+eWBr2YAAAAIXRSTlMABQ3z/tiiN9ggeFEV8+S2lvSu/v6+QmjYMtiIx2uT6uyD0MnKAAABIklEQVQokXXS2ZKDIBAFULfBLS5RY8weWoQG+f/vG42aiRO8r6e6oeBa1iq2tRU7vN3CDd7FWepm8c5ATn0PvBbL4F5/sX+5JhwpRZ5cL/6KwuiQKAQ6plXJIQr/NsbE5TDREAC+J0dnHiMP3r7pxUhTMg37Qb+iUakK/BnxH4HyxNmIgKrsWPdjQuSlYKIzIYIUzJNKGHA4jHUakBsQkDGhkKIyrAVgzBteA6XhQgAdq/iAegPHtW25gZ1EyrWulkdI+0/UXEssxTwZZl6Pb2RVycETbjE9vH3KG92Ov/m6LUcp3Cb3lzI5xzyViCNWSlb7Z75851yFwpU9AhMDFR9FmHKKDnvaC/bIopOhfj45V25DaufbrLG4BTHWdoq97vsviaw1+NOgGrgAAAAASUVORK5CYII=">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
+    /* ── ClassiCube palette ── */
     :root {
-      --bg:        #0d0d1a;
-      --surface:   #161628;
-      --border:    #2a2a4a;
-      --accent:    #7c5cbf;
-      --accent2:   #4fc3f7;
-      --text:      #e0dff5;
-      --muted:     #7070a0;
-      --glow:      rgba(124, 92, 191, 0.45);
-      --glow2:     rgba(79, 195, 247, 0.3);
+      --cc-purple:     #9873ac;
+      --cc-purple-dk:  #7a5a8f;
+      --cc-purple-lt:  #b899cc;
+      --cc-bg:         #1a1520;
+      --cc-surface:    #231d2e;
+      --cc-surface2:   #2d2540;
+      --cc-border:     #3d3050;
+      --cc-border-lt:  #5a4870;
+      --cc-text:       #ddd6e8;
+      --cc-muted:      #8a7da0;
+      --cc-link:       #c4a8e0;
+      --cc-danger:     #e87070;
+      --cc-glow:       rgba(152,115,172,0.4);
+      --cc-glow-soft:  rgba(152,115,172,0.15);
+      --radius:        6px;
+      --radius-lg:     10px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html, body {
-      height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Nunito', sans-serif;
-      overflow-x: hidden;
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      background: var(--cc-bg);
+      color: var(--cc-text);
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
     }
 
-    /* ── Starfield background ── */
+    /* ── Pixelated block grid background ── */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       background-image:
-        radial-gradient(1px 1px at 10% 20%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 30% 60%, #aaa 0%, transparent 100%),
-        radial-gradient(1px 1px at 50% 10%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 70% 80%, #ccc 0%, transparent 100%),
-        radial-gradient(1px 1px at 85% 35%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 95% 55%, #aaa 0%, transparent 100%),
-        radial-gradient(1px 1px at 15% 90%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 60% 45%, #ccc 0%, transparent 100%),
-        radial-gradient(1px 1px at 40% 75%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 20% 50%, #bbb 0%, transparent 100%);
+        linear-gradient(rgba(152,115,172,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(152,115,172,0.04) 1px, transparent 1px);
+      background-size: 32px 32px;
       pointer-events: none;
       z-index: 0;
-      opacity: 0.6;
     }
 
-    /* ── Layout ── */
+    /* Corner accent blocks — gives a "dirt/grass" feel like Minecraft menus */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 35% at 50% 0%, rgba(152,115,172,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 25% at 0% 100%, rgba(100,75,130,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 25% at 100% 100%, rgba(100,75,130,0.12) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
     #app {
       position: relative;
       z-index: 1;
@@ -62,65 +83,142 @@
       min-height: 100vh;
     }
 
-    /* ── Header ── */
+    /* ══════════════════════════════
+       HEADER — mimics classicube.net
+    ══════════════════════════════ */
     header {
+      background: #2a2040;
+      border-bottom: 3px solid var(--cc-purple);
+      padding: 0 20px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 14px 24px;
-      background: rgba(22, 22, 40, 0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
+      height: 56px;
+      gap: 20px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      image-rendering: pixelated;
+      border-radius: 4px;
       flex-shrink: 0;
     }
 
-    .logo {
+    .logo-text {
       font-family: 'Press Start 2P', monospace;
-      font-size: clamp(9px, 2vw, 14px);
-      color: var(--accent2);
-      text-shadow: 0 0 12px var(--glow2);
-      text-decoration: none;
-      letter-spacing: 1px;
-    }
-
-    .logo span { color: var(--accent); }
-
-    .badge {
-      font-size: 10px;
-      font-weight: 700;
-      background: var(--accent);
+      font-size: clamp(8px, 1.8vw, 12px);
       color: #fff;
-      padding: 3px 9px;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      box-shadow: 0 0 10px var(--glow);
+      text-shadow: 2px 2px 0 var(--cc-purple-dk), 0 0 12px var(--cc-glow);
+      letter-spacing: 0;
+      white-space: nowrap;
     }
 
-    /* ── Main game area ── */
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    .header-nav a {
+      color: var(--cc-text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: var(--radius);
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .header-nav a:hover { background: rgba(152,115,172,0.2); color: #fff; }
+
+    .header-nav a.active {
+      background: var(--cc-purple);
+      color: #fff;
+    }
+
+    /* ══════════════════════════════
+       BREADCRUMB BAR
+    ══════════════════════════════ */
+    .breadcrumb-bar {
+      background: var(--cc-surface);
+      border-bottom: 1px solid var(--cc-border);
+      padding: 8px 20px;
+      font-size: 12px;
+      color: var(--cc-muted);
+      flex-shrink: 0;
+    }
+
+    .breadcrumb-bar span { color: var(--cc-purple-lt); }
+
+    /* ══════════════════════════════
+       MAIN CONTENT
+    ══════════════════════════════ */
     main {
       flex: 1;
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px 16px 28px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: 20px 16px;
-      gap: 16px;
+      gap: 14px;
     }
 
-    /* ── Canvas wrapper ── */
+    /* ── Section title ── */
+    .section-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(8px, 1.5vw, 11px);
+      color: var(--cc-purple-lt);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 2px;
+    }
+
+    /* ══════════════════════════════
+       GAME CANVAS
+    ══════════════════════════════ */
+    #game-section { display: flex; flex-direction: column; gap: 8px; }
+
     #game-wrapper {
       width: 100%;
-      max-width: 1100px;
       background: #000;
-      border-radius: 10px;
+      border-radius: var(--radius-lg);
       overflow: hidden;
-      border: 1px solid var(--border);
+      border: 2px solid var(--cc-border);
       box-shadow:
-        0 0 0 1px rgba(124,92,191,0.15),
-        0 8px 40px rgba(0,0,0,0.6),
-        0 0 60px rgba(124,92,191,0.08);
+        0 0 0 1px rgba(152,115,172,0.2),
+        0 8px 40px rgba(0,0,0,0.7),
+        inset 0 0 0 1px rgba(255,255,255,0.03);
       position: relative;
     }
+
+    /* Pixel-corner decorations */
+    #game-wrapper::before,
+    #game-wrapper::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: var(--cc-purple);
+      z-index: 6;
+    }
+    #game-wrapper::before { top: 0; left: 0; border-bottom-right-radius: 3px; }
+    #game-wrapper::after  { top: 0; right: 0; border-bottom-left-radius: 3px; }
 
     #canvas {
       display: block;
@@ -139,10 +237,10 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: #000;
-      gap: 18px;
-      transition: opacity 0.4s ease;
+      background: #0d0b12;
+      gap: 20px;
       z-index: 10;
+      transition: opacity 0.5s ease;
     }
 
     #loading-overlay.hidden {
@@ -150,222 +248,387 @@
       pointer-events: none;
     }
 
-    .spinner {
-      width: 44px;
-      height: 44px;
-      border: 3px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+    .loading-logo {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(10px, 3vw, 18px);
+      color: #fff;
+      text-shadow: 3px 3px 0 var(--cc-purple-dk), 0 0 20px var(--cc-glow);
+      animation: pulse 2s ease-in-out infinite;
     }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    #logmsg {
-      font-family: 'Nunito', sans-serif;
-      font-size: clamp(12px, 2.5vw, 15px);
-      font-weight: 600;
-      color: var(--accent2);
-      text-align: center;
-      padding: 0 16px;
-      text-shadow: 0 0 8px var(--glow2);
-      white-space: pre-wrap;
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
     }
 
-    /* ── Fullscreen button ── */
-    #fs-btn {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      background: rgba(22, 22, 40, 0.8);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 6px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 18px;
-      line-height: 1;
-      z-index: 5;
-      transition: background 0.2s, transform 0.1s;
-      backdrop-filter: blur(6px);
-    }
-
-    #fs-btn:hover { background: var(--accent); transform: scale(1.1); }
-
-    /* ── Controls info ── */
-    #controls-panel {
-      width: 100%;
-      max-width: 1100px;
-    }
-
-    details {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
+    .progress-bar-wrap {
+      width: min(300px, 60%);
+      height: 8px;
+      background: #1a1520;
+      border: 1px solid var(--cc-border);
+      border-radius: 4px;
       overflow: hidden;
     }
 
-    summary {
-      padding: 12px 18px;
-      cursor: pointer;
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--cc-purple-dk), var(--cc-purple-lt));
+      border-radius: 4px;
+      transition: width 0.3s ease;
+      animation: shimmer 1.5s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%   { filter: brightness(1); }
+      50%  { filter: brightness(1.3); }
+      100% { filter: brightness(1); }
+    }
+
+    #logmsg {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: clamp(11px, 2vw, 13px);
+      font-weight: 600;
+      color: var(--cc-muted);
+      text-align: center;
+      padding: 0 20px;
+      white-space: pre-wrap;
+      max-width: 400px;
+    }
+
+    /* ── Toolbar below canvas ── */
+    .canvas-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .cc-btn {
+      background: var(--cc-surface2);
+      border: 1px solid var(--cc-border);
+      color: var(--cc-text);
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 12px;
       font-weight: 700;
-      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      text-transform: uppercase;
       letter-spacing: 0.5px;
-      color: var(--accent2);
-      user-select: none;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+
+    .cc-btn:hover {
+      background: var(--cc-purple);
+      border-color: var(--cc-purple-lt);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .cc-btn:active { transform: translateY(0); }
+
+    .cc-btn.primary {
+      background: var(--cc-purple);
+      border-color: var(--cc-purple-lt);
+      color: #fff;
+      box-shadow: 0 0 12px var(--cc-glow);
+    }
+
+    .cc-btn.primary:hover {
+      background: var(--cc-purple-lt);
+    }
+
+    /* ══════════════════════════════
+       INFO PANELS
+    ══════════════════════════════ */
+    .panels-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 640px) { .panels-row { grid-template-columns: 1fr; } }
+
+    .cc-panel {
+      background: var(--cc-surface);
+      border: 1px solid var(--cc-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .cc-panel-header {
+      background: var(--cc-surface2);
+      border-bottom: 1px solid var(--cc-border);
+      padding: 10px 16px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: var(--cc-purple-lt);
+      text-transform: uppercase;
+      letter-spacing: 1px;
       display: flex;
       align-items: center;
       gap: 8px;
-      list-style: none;
     }
 
-    summary::before {
-      content: '▶';
-      font-size: 10px;
-      color: var(--muted);
-      transition: transform 0.2s;
+    .cc-panel-header .icon { font-size: 14px; }
+
+    .cc-panel-body {
+      padding: 14px 16px;
     }
 
-    details[open] summary::before { transform: rotate(90deg); }
-
+    /* Controls grid */
     .controls-grid {
-      padding: 16px 18px 18px;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 10px;
-      border-top: 1px solid var(--border);
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 12px;
     }
+
+    @media (max-width: 400px) { .controls-grid { grid-template-columns: 1fr; } }
 
     .ctrl {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       font-size: 12px;
+      font-weight: 600;
     }
 
     kbd {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-bottom-width: 2px;
-      border-radius: 5px;
-      padding: 3px 8px;
+      background: #0d0b12;
+      border: 1px solid var(--cc-border-lt);
+      border-bottom: 3px solid var(--cc-border-lt);
+      border-radius: 4px;
+      padding: 2px 7px;
       font-family: 'Press Start 2P', monospace;
-      font-size: 8px;
-      color: var(--accent);
+      font-size: 7px;
+      color: var(--cc-purple-lt);
       white-space: nowrap;
-      box-shadow: 0 0 6px var(--glow);
+      flex-shrink: 0;
     }
 
-    .ctrl-label { color: var(--muted); }
+    .ctrl-label { color: var(--cc-muted); }
 
-    /* ── Mobile touch notice ── */
+    /* Tips list */
+    .tips-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .tips-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      color: var(--cc-muted);
+      line-height: 1.4;
+    }
+
+    .tips-list li::before {
+      content: '▸';
+      color: var(--cc-purple);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .tips-list strong { color: var(--cc-text); }
+
+    /* Mobile notice */
     #touch-notice {
       display: none;
-      width: 100%;
-      max-width: 1100px;
-      background: rgba(79,195,247,0.08);
-      border: 1px solid rgba(79,195,247,0.25);
-      border-radius: 10px;
-      padding: 12px 18px;
+      background: rgba(152,115,172,0.08);
+      border: 1px solid rgba(152,115,172,0.3);
+      border-radius: var(--radius);
+      padding: 10px 16px;
       font-size: 12px;
-      color: var(--accent2);
+      color: var(--cc-purple-lt);
       text-align: center;
       line-height: 1.6;
     }
 
-    @media (pointer: coarse) {
-      #touch-notice { display: block; }
-    }
+    @media (pointer: coarse) { #touch-notice { display: block; } }
 
-    /* ── Footer ── */
+    /* ══════════════════════════════
+       FOOTER
+    ══════════════════════════════ */
     footer {
-      text-align: center;
-      padding: 16px;
-      font-size: 11px;
-      color: var(--muted);
-      border-top: 1px solid var(--border);
-      background: rgba(22,22,40,0.6);
+      background: #1e1829;
+      border-top: 2px solid var(--cc-border);
+      padding: 16px 20px;
       flex-shrink: 0;
     }
 
-    footer a { color: var(--accent2); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
 
-    /* ── Responsive tweaks ── */
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 16px;
+    }
+
+    .footer-links a {
+      color: var(--cc-muted);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover { color: var(--cc-purple-lt); }
+
+    .footer-copy {
+      font-size: 11px;
+      color: #4a3f5c;
+      text-align: right;
+    }
+
+    /* ── Responsive ── */
     @media (max-width: 500px) {
-      header { padding: 10px 14px; }
-      main { padding: 12px 10px; gap: 12px; }
+      .header-inner { height: 48px; }
+      .header-nav a { padding: 5px 10px; font-size: 13px; }
+      main { padding: 12px 10px 20px; }
+      .footer-copy { text-align: left; }
     }
   </style>
 </head>
 <body>
 <div id="app">
 
-  <!-- Header -->
+  <!-- ── Header ── -->
   <header>
-    <a class="logo" href="#">Classi<span>Cube</span></a>
-    <span class="badge">Singleplayer</span>
+    <div class="header-inner">
+      <a class="logo-wrap" href="#">
+        <img class="logo-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAh1BMVEVHcEwAAAAAAAC9vb3c3NyTk5M/Pz8AAACwsLAAAAAHBwcLCwsAAADa2tq2trZvb28EBAXGxsZWVlbj4+PW19aJiYkAAAAAAABxcXEAAACOjo4yMjKpqalDQkNnZ2eqqqqcnJz39/f4+Pj7+/vKysrNzc309PTS0tL5+fns7Ozw8PD+/v7n5+eWBr2YAAAAIXRSTlMABQ3z/tiiN9ggeFEV8+S2lvSu/v6+QmjYMtiIx2uT6uyD0MnKAAABIklEQVQokXXS2ZKDIBAFULfBLS5RY8weWoQG+f/vG42aiRO8r6e6oeBa1iq2tRU7vN3CDd7FWepm8c5ATn0PvBbL4F5/sX+5JhwpRZ5cL/6KwuiQKAQ6plXJIQr/NsbE5TDREAC+J0dnHiMP3r7pxUhTMg37Qb+iUakK/BnxH4HyxNmIgKrsWPdjQuSlYKIzIYIUzJNKGHA4jHUakBsQkDGhkKIyrAVgzBteA6XhQgAdq/iAegPHtW25gZ1EyrWulkdI+0/UXEssxTwZZl6Pb2RVycETbjE9vH3KG92Ov/m6LUcp3Cb3lzI5xzyViCNWSlb7Z75851yFwpU9AhMDFR9FmHKKDnvaC/bIopOhfj45V25DaufbrLG4BTHWdoq97vsviaw1+NOgGrgAAAAASUVORK5CYII=" alt="ClassiCube icon">
+        <span class="logo-text">ClassiCube</span>
+      </a>
+      <nav class="header-nav">
+        <a href="https://f.classicube.net/" target="_blank" rel="noopener">Foro</a>
+        <a href="https://www.classicube.net/server/list/" target="_blank" rel="noopener">Multijugador</a>
+        <a href="#" class="active">Singleplayer</a>
+      </nav>
+    </div>
   </header>
 
-  <!-- Main -->
+  <!-- ── Breadcrumb ── -->
+  <div class="breadcrumb-bar">
+    <div style="max-width:1100px;margin:0 auto;">
+      <a href="https://www.classicube.net" style="color:var(--cc-muted);text-decoration:none;">classicube.net</a>
+      &nbsp;/&nbsp;
+      <span>Singleplayer</span>
+    </div>
+  </div>
+
+  <!-- ── Main ── -->
   <main>
 
-    <!-- Game canvas -->
-    <div id="game-wrapper">
-      <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+    <!-- Game -->
+    <section id="game-section">
+      <div id="game-wrapper">
+        <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
 
-      <!-- Loading overlay -->
-      <div id="loading-overlay">
-        <div class="spinner"></div>
-        <div id="logmsg">Cargando ClassiCube...</div>
+        <!-- Loading overlay -->
+        <div id="loading-overlay">
+          <div class="loading-logo">ClassiCube</div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="progress-fill"></div>
+          </div>
+          <div id="logmsg">Conectando con el servidor CDN...</div>
+        </div>
       </div>
 
-      <!-- Fullscreen button -->
-      <button id="fs-btn" title="Pantalla completa">⛶</button>
-    </div>
-
-    <!-- Mobile notice -->
-    <div id="touch-notice">
-      📱 <strong>Modo Táctil:</strong> El juego tiene controles táctiles integrados.<br>
-      Toca la pantalla para capturar los controles. Desliza para mover la cámara.
-    </div>
-
-    <!-- Controls -->
-    <div id="controls-panel">
-      <details>
-        <summary>⌨️ Controles por Defecto</summary>
-        <div class="controls-grid">
-          <div class="ctrl"><kbd>W A S D</kbd><span class="ctrl-label">Mover</span></div>
-          <div class="ctrl"><kbd>Mouse</kbd><span class="ctrl-label">Ver alrededor</span></div>
-          <div class="ctrl"><kbd>Click Izq</kbd><span class="ctrl-label">Romper bloque</span></div>
-          <div class="ctrl"><kbd>Click Der</kbd><span class="ctrl-label">Colocar bloque</span></div>
-          <div class="ctrl"><kbd>Space</kbd><span class="ctrl-label">Saltar / Volar</span></div>
-          <div class="ctrl"><kbd>E</kbd><span class="ctrl-label">Inventario</span></div>
-          <div class="ctrl"><kbd>T</kbd><span class="ctrl-label">Chat</span></div>
-          <div class="ctrl"><kbd>Esc</kbd><span class="ctrl-label">Menú / Pausar</span></div>
-          <div class="ctrl"><kbd>F5</kbd><span class="ctrl-label">Cambiar cámara</span></div>
-          <div class="ctrl"><kbd>Scroll</kbd><span class="ctrl-label">Seleccionar bloque</span></div>
+      <!-- Toolbar -->
+      <div class="canvas-toolbar">
+        <div id="touch-notice" style="margin-right:auto;">
+          📱 Toca la pantalla para capturar los controles táctiles
         </div>
-      </details>
+        <button class="cc-btn" id="fs-btn">⛶ Pantalla completa</button>
+      </div>
+    </section>
+
+    <!-- Info panels -->
+    <div class="panels-row">
+
+      <!-- Controls -->
+      <div class="cc-panel">
+        <div class="cc-panel-header"><span class="icon">⌨️</span> Controles</div>
+        <div class="cc-panel-body">
+          <div class="controls-grid">
+            <div class="ctrl"><kbd>W A S D</kbd><span class="ctrl-label">Mover</span></div>
+            <div class="ctrl"><kbd>Mouse</kbd><span class="ctrl-label">Cámara</span></div>
+            <div class="ctrl"><kbd>Clic ←</kbd><span class="ctrl-label">Romper bloque</span></div>
+            <div class="ctrl"><kbd>Clic →</kbd><span class="ctrl-label">Poner bloque</span></div>
+            <div class="ctrl"><kbd>Space</kbd><span class="ctrl-label">Saltar / Volar</span></div>
+            <div class="ctrl"><kbd>E</kbd><span class="ctrl-label">Inventario</span></div>
+            <div class="ctrl"><kbd>T</kbd><span class="ctrl-label">Chat</span></div>
+            <div class="ctrl"><kbd>Esc</kbd><span class="ctrl-label">Menú</span></div>
+            <div class="ctrl"><kbd>F5</kbd><span class="ctrl-label">Cámara 3ª persona</span></div>
+            <div class="ctrl"><kbd>Scroll</kbd><span class="ctrl-label">Cambiar bloque</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tips -->
+      <div class="cc-panel">
+        <div class="cc-panel-header"><span class="icon">💡</span> Consejos</div>
+        <div class="cc-panel-body">
+          <ul class="tips-list">
+            <li>Haz clic en el juego para que <strong>capture el mouse</strong>. Pulsa <kbd style="font-size:7px">Esc</kbd> para soltarlo.</li>
+            <li>En modo <strong>Creativo</strong> puedes volar manteniendo <kbd style="font-size:7px">Space</kbd> dos veces.</li>
+            <li>Cambia el modo de juego desde <strong>Opciones → Modo de juego</strong> en el menú principal.</li>
+            <li>Los mapas se guardan <strong>automáticamente</strong> en tu navegador (IndexedDB).</li>
+          </ul>
+        </div>
+      </div>
+
     </div>
 
   </main>
 
-  <!-- Footer -->
+  <!-- ── Footer ── -->
   <footer>
-    ClassiCube no está afiliado con Mojang AB ni Microsoft. &nbsp;|&nbsp;
-    <a href="https://www.classicube.net" target="_blank" rel="noopener">classicube.net</a> &nbsp;|&nbsp;
-    <a href="https://github.com/UnknownShadow200/ClassiCube" target="_blank" rel="noopener">Código Fuente</a>
+    <div class="footer-inner">
+      <div class="footer-links">
+        <a href="https://www.classicube.net" target="_blank" rel="noopener">classicube.net</a>
+        <a href="https://github.com/UnknownShadow200/ClassiCube" target="_blank" rel="noopener">Código Fuente</a>
+        <a href="https://github.com/UnknownShadow200/ClassiCube/issues" target="_blank" rel="noopener">Reportar Bug</a>
+        <a href="https://www.classicube.net/discord/" target="_blank" rel="noopener">Discord</a>
+        <a href="https://www.classicube.net/privacy/" target="_blank" rel="noopener">Privacidad</a>
+      </div>
+      <div class="footer-copy">
+        ClassiCube no está afiliado con Mojang AB ni Microsoft.
+      </div>
+    </div>
   </footer>
 
 </div><!-- #app -->
 
 <script>
   /* ── Helpers ── */
+  var loadProgress = 0;
+
   function logText(text) {
     var el = document.getElementById('logmsg');
     if (el) el.textContent = text;
     console.log(text);
+  }
+
+  function setProgress(pct) {
+    var fill = document.getElementById('progress-fill');
+    if (fill) fill.style.width = Math.min(100, pct) + '%';
   }
 
   function hideOverlay() {
@@ -376,15 +639,18 @@
   /* ── IndexedDB guard ── */
   var idb = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
   if (!idb) {
-    alert('IndexedDB no está disponible.\nLos mapas y ajustes no se guardarán.');
+    alert('IndexedDB no disponible.\nLos mapas y ajustes no se guardarán.');
     window.mozIndexedDB = {};
   }
 
-  function preloadIndexedDB() { if (typeof _interop_LoadIndexedDB === 'function') _interop_LoadIndexedDB(); }
+  function preloadIndexedDB() {
+    if (typeof _interop_LoadIndexedDB === 'function') _interop_LoadIndexedDB();
+  }
 
-  /* ── Canvas sizing (16:9) ── */
+  /* ── Canvas sizing 16:9 ── */
   function resizeGameCanvas() {
     var cc = document.getElementById('canvas');
+    if (!cc) return;
     var dpi = window.devicePixelRatio || 1;
     var parent = cc.parentNode;
     var w = parent.clientWidth;
@@ -397,55 +663,52 @@
 
   window.addEventListener('resize', resizeGameCanvas);
 
-  /* ── Fatal error handler ── */
+  /* ── Fatal error ── */
   function logFatal(event) {
-    logText('ClassiCube se cayó: ' + event + '\nAbre la Consola del navegador para más detalles.');
-    Module.setStatus = function(t) { if (event) Module.printErr('[post-crash] ' + t); };
+    logText('Error: ' + event + '\nAbre la Consola del navegador para más detalles.');
+    if (Module) Module.setStatus = function(t) { console.error('[post-crash] ' + t); };
   }
 
   /* ── Emscripten Module ── */
   var Module = {
     preRun:  [ preloadIndexedDB, resizeGameCanvas ],
     postRun: [ hideOverlay ],
-    arguments: [],          // sin nombre de usuario → modo offline / guest
-    print: function(t) {
-      if (arguments.length > 1) t = Array.prototype.slice.call(arguments).join(' ');
-      console.log(t);
-    },
-    printErr: function(t) {
-      if (arguments.length > 1) t = Array.prototype.slice.call(arguments).join(' ');
-      console.error(t);
-    },
+    arguments: [],
+    print: function(t) { console.log(Array.prototype.slice.call(arguments).join(' ')); },
+    printErr: function(t) { console.error(Array.prototype.slice.call(arguments).join(' ')); },
     canvas: document.getElementById('canvas'),
     setStatus: function(text) {
-      logText(text);
-      // Hide overlay once fully ready
+      logText(text || '');
       if (text === '' || text === 'All downloads complete.') {
-        setTimeout(hideOverlay, 600);
+        setProgress(100);
+        setTimeout(hideOverlay, 700);
       }
     },
     totalDependencies: 0,
     monitorRunDependencies: function(left) {
       this.totalDependencies = Math.max(this.totalDependencies, left);
       var done = this.totalDependencies - left;
+      var pct = this.totalDependencies > 0 ? (done / this.totalDependencies) * 100 : 0;
+      setProgress(pct);
       Module.setStatus(left
         ? 'Descargando... (' + done + '/' + this.totalDependencies + ')'
-        : 'Listo. Iniciando...');
+        : '');
     },
     onAbort: function(why) { logFatal('abort: ' + why); }
   };
 
-  Module.setStatus('Conectando con ClassiCube CDN...');
+  Module.setStatus('Conectando con el servidor CDN...');
+  setProgress(5);
 
   window.onerror = function(msg, src, line, col) {
-    src = (src || '').replace(/https?:\/\/cdn\.classicube\.net\/client\/latest\//, '');
-    if (src.indexOf('eat-your-yeeties') >= 0) return;
+    if ((src || '').indexOf('eat-your-yeeties') >= 0) return;
+    src = (src || '').replace(/https?:\/\/cdn\.classicube\.net\/client\/latest\//, 'CC.js');
     logFatal(msg + ' (' + src + ':' + line + ')');
   };
 
-  /* ── Load ClassiCube WASM client ── */
+  /* ── Load ClassiCube WASM ── */
   function onDownloadFailed(el) {
-    logText('Reintentando descarga del cliente...');
+    logText('Reintentando descarga...');
     var root = el.parentNode;
     root.removeChild(el);
     var s = document.createElement('script');
@@ -464,27 +727,19 @@
     document.body.appendChild(s);
   })();
 
-  /* ── Fullscreen button ── */
+  /* ── Fullscreen ── */
   document.getElementById('fs-btn').addEventListener('click', function() {
     var wrapper = document.getElementById('game-wrapper');
-    var canvas  = document.getElementById('canvas');
-    var target  = wrapper;
     if (document.fullscreenElement) {
-      document.exitFullscreen();
+      document.exitFullscreen && document.exitFullscreen();
     } else {
-      (target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen).call(target);
+      var fn = wrapper.requestFullscreen || wrapper.webkitRequestFullscreen || wrapper.mozRequestFullScreen;
+      if (fn) fn.call(wrapper);
     }
   });
 
   document.addEventListener('fullscreenchange', function() {
-    if (document.fullscreenElement) {
-      var c = document.getElementById('canvas');
-      var dpi = window.devicePixelRatio || 1;
-      c.width  = Math.round(screen.width  * dpi);
-      c.height = Math.round(screen.height * dpi);
-    } else {
-      resizeGameCanvas();
-    }
+    if (!document.fullscreenElement) resizeGameCanvas();
   });
 </script>
 </body>
