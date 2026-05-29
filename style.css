@@ -365,60 +365,6 @@ body {
     margin-bottom: 20px;
 }
 
-/* ── NEON DASH ────────────────────────── */
-.neon-dash-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 24px 28px;
-    border-radius: var(--radius);
-    background: linear-gradient(135deg, rgba(124,111,255,0.18), rgba(255,107,157,0.12));
-    border: 1px solid rgba(124,111,255,0.3);
-    text-decoration: none;
-    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
-}
-
-.neon-dash-card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(124,111,255,0.6);
-    box-shadow: 0 12px 40px rgba(124,111,255,0.2);
-}
-
-.nd-left {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-}
-
-.nd-emoji {
-    font-size: 2.2rem;
-    line-height: 1;
-}
-
-.nd-title {
-    display: block;
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--text);
-}
-
-.nd-sub {
-    display: block;
-    font-size: 0.82rem;
-    color: rgba(124,111,255,0.85);
-    margin-top: 2px;
-}
-
-.nd-arrow {
-    color: rgba(124,111,255,0.7);
-    font-size: 1.1rem;
-    transition: transform 0.2s;
-}
-
-.neon-dash-card:hover .nd-arrow {
-    transform: translateX(5px);
-}
-
 /* ── VIDEO ────────────────────────────── */
 .video-wrapper {
     position: relative;
@@ -489,36 +435,98 @@ body {
     text-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
-/* ── REDES ────────────────────────────── */
-.redes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 10px;
+/* ── FOOTER ───────────────────────────── */
+.footer {
+    border-top: 1px solid var(--border);
+    padding: 48px 24px 32px;
+    margin-top: 20px;
 }
 
-.red-card {
+.footer-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.footer-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    text-align: center;
+}
+
+.footer-brand-block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+}
+
+.footer-brand {
+    font-size: 1.2rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, #ff6b35, #f7c948);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.footer-tagline {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.footer-mail {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-top: 4px;
+    transition: color 0.2s;
+}
+
+.footer-mail:hover {
+    color: #ff6b9d;
+}
+
+.footer-mail i {
+    color: #ff6b9d;
+}
+
+.footer-redes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+.footer-red {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 13px 16px;
+    gap: 7px;
+    padding: 9px 14px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     text-decoration: none;
     color: var(--text);
-    font-size: 0.875rem;
+    font-size: 0.82rem;
     font-weight: 500;
     transition: background 0.2s, border-color 0.2s, transform 0.15s;
 }
 
-.red-card:hover {
+.footer-red:hover {
     background: var(--surface-hover);
     border-color: var(--border-hover);
     transform: translateY(-2px);
 }
 
-.red-card i {
-    font-size: 1.15rem;
+.footer-red i {
+    font-size: 1rem;
     flex-shrink: 0;
 }
 
@@ -535,78 +543,10 @@ body {
 [data-platform="ytmusic"] i   { color: #ff0000; }
 [data-platform="github"] i    { color: #f0f0f5; }
 
-/* ── CONTACTO ─────────────────────────── */
-.contact-card {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    padding: 22px 26px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    text-decoration: none;
-    color: var(--text);
-    transition: background 0.2s, border-color 0.2s, transform 0.2s;
-}
-
-.contact-card:hover {
-    background: var(--surface-hover);
-    border-color: var(--border-hover);
-    transform: translateY(-2px);
-}
-
-.contact-card > .fa-envelope {
-    font-size: 1.5rem;
-    color: #ff6b9d;
-    flex-shrink: 0;
-}
-
-.contact-title {
-    display: block;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.contact-mail {
-    display: block;
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    margin-top: 2px;
-}
-
-.contact-arrow {
-    margin-left: auto;
-    color: var(--text-muted);
-    transition: transform 0.2s;
-}
-
-.contact-card:hover .contact-arrow {
-    transform: translateX(4px);
-}
-
-/* ── FOOTER ───────────────────────────── */
-.footer {
+.footer-bottom {
+    text-align: center;
+    padding-top: 16px;
     border-top: 1px solid var(--border);
-    padding: 32px 24px;
-}
-
-.footer-inner {
-    max-width: 760px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
-}
-
-.footer-brand {
-    font-size: 0.95rem;
-    font-weight: 700;
-    background: linear-gradient(90deg, #ff6b35, #f7c948);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
 }
 
 .footer-copy {
@@ -635,12 +575,7 @@ body {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .redes-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .footer-inner {
-        flex-direction: column;
-        text-align: center;
+    .footer-redes {
+        gap: 6px;
     }
 }
