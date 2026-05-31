@@ -4,87 +4,213 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pizza Server | ClassiCube</title>
-    <link rel="icon" type="image/png" href="../avatarHead.png">
-    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" type="image/png" href="avatarHead.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="background-overlay"></div>
-    <div class="scanlines"></div>
-    
-    <div class="container">
-        <header>
-            <a href="https://pizzaclap43.github.io" class="back-btn"><i class="fas fa-arrow-left"></i> Volver</a>
-            <h1>PIZZA SERVER</h1>
-            <p class="subtitle-shadow">Servidor de ClassiCube de Pizzaclap43</p>
-        </header>
 
-        <div class="status-box fadeInUp" id="server-monitor" style="--i:1">
-            <h2 class="pixel-title">ESTADO DEL SERVIDOR</h2>
-            <div class="status-content">
-                <span id="status-indicator" class="status-dot dot-off"></span>
-                <span id="status-text" class="pixel-text">Cargando estado...</span>
-            </div>
-            <div id="player-count" class="pixel-text" style="font-size: 0.8rem; margin-top: 5px;"></div>
-            <div id="server-time" class="pixel-text" style="font-size: 0.8rem; margin-top: 5px;"></div>
+    <!-- ░░ WELCOME SPLASH ░░ -->
+    <div id="welcome-splash">
+        <div class="splash-inner">
+            <div class="splash-logo">🍕</div>
+            <h1 class="splash-title">PIZZA SERVER</h1>
+            <p class="splash-sub">Bienvenidos</p>
+            <div class="splash-bar"><div class="splash-fill"></div></div>
         </div>
-
-        <div class="info-box fadeInUp" style="--i:2">
-            <h2 class="pixel-title"><i class="fas fa-info-circle"></i> SOBRE EL SERVIDOR</h2>
-            <p class="pixel-text">Pizza Server es un servidor Venezolano creado el 27 de Diciembre de 2025 por Pizzaclap43 para construir y pasar el rato con la comunidad de ClassiCube.</p>
-            <p class="pixel-text">Actualmente es operado por: <strong>Pizzaclap43, AndresDMC, ElmichiYT, jose_120 y CatMeow98.</strong></p>
-        </div>
-
-        <main class="links">
-            <h2 class="pixel-title fadeInUp" style="--i:3"><i class="fas fa-gamepad"></i> ¿CÓMO UNIRSE?</h2>
-            
-            <div class="step-card fadeInUp" style="--i:4">
-                <p class="pixel-text">1. Abre tu cliente de <strong>ClassiCube</strong>.</p>
-            </div>
-            
-            <div class="step-card fadeInUp" style="--i:5">
-                <p class="pixel-text">2. Busca en la lista: <strong>"[ESP] Pizza Server"</strong>.</p>
-            </div>
-
-            <div class="step-card fadeInUp" style="--i:6">
-                <p class="pixel-text">3. Únete y diviértete con todo lo que te trae <strong>Pizza Server</strong>.</p>
-            </div>
-
-            <div class="step-card fadeInUp" style="--i:7">
-                <p class="pixel-text" style="font-size: 0.8rem;"><strong>Nota:</strong> El servidor solo está online de Lunes a Sábado desde las 3:00 P.M. y los Domingos desde la 1:00 P.M. <strong>Hora Venezolana 🇻🇪</strong>.</p>
-            </div>
-            
-            <a href="http://www.classicube.net/server/play/73a30f1191366a1ac56bc4432bbb0225/" target="_blank" class="link-card pizza-server-btn fadeInUp" style="--i:8">
-                <i class="fas fa-external-link-alt"></i> UNIRSE DESDE WEB
-            </a>
-            
-            <a href="https://discord.com/invite/BhSYNUYrxP" target="_blank" class="link-card discord-btn fadeInUp" style="--i:9">
-                <i class="fab fa-discord"></i> Discord
-            </a>
-
-            <a href="https://instagram.com/pizzaservercc" target="_blank" class="link-card instagram-btn fadeInUp" style="--i:10">
-                <i class="fab fa-instagram"></i> INSTAGRAM
-            </a>
-
-            <a href="https://whatsapp.com/channel/0029Vb89vn1Elagp5bKLa32e" target="_blank" class="link-card whatsapp-btn fadeInUp" style="--i:11">
-                <i class="fab fa-whatsapp"></i> WHATSAPP
-            </a>
-
-            <a href="https://t.me/pizzaservercc" target="_blank" class="link-card telegram-btn fadeInUp" style="--i:12">
-                <i class="fab fa-telegram"></i> TELEGRAM
-            </a>
-
-            <a href="mailto:pizzaserver@hotmail.com" class="link-card contacto-btn fadeInUp" style="--i:13">
-                <i class="fas fa-envelope"></i> CONTACTO
-            </a>
-        </main>
-
-        <footer>
-            <p class="copyright">©PIZZA SERVER - CLASSICUBE 2026</p>
-        </footer>
     </div>
+
+    <!-- ░░ NAVBAR ░░ -->
+    <nav id="navbar">
+        <div class="nav-inner">
+            <a href="#hero" class="nav-brand">
+                <span class="brand-icon">🍕</span>
+                <span class="brand-text">Pizza Server</span>
+            </a>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Menú">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#mas" class="nav-link">Más</a></li>
+                <li><a href="#quienes" class="nav-link">¿Quiénes somos?</a></li>
+                <li><a href="galeria.html" class="nav-link">Galería</a></li>
+                <li><a href="noticias.html" class="nav-link">Noticias</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ░░ HERO ░░ -->
+    <section id="hero">
+        <div class="hero-bg">
+            <img src="pizzaserver.png" alt="Pizza Server world" class="hero-img">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge">ClassiCube · Venezuela 🇻🇪</div>
+            <h1 class="hero-title">PIZZA<br><span>SERVER</span></h1>
+            <p class="hero-desc">El servidor venezolano donde construyes, exploras y te diviertes con la comunidad.</p>
+            <div class="hero-actions">
+                <a href="http://www.classicube.net/server/play/73a30f1191366a1ac56bc4432bbb0225/" target="_blank" class="btn-primary">
+                    <i class="fas fa-play"></i> Unirse ahora
+                </a>
+                <a href="#quienes" class="btn-ghost">Saber más</a>
+            </div>
+        </div>
+        <div class="hero-scroll-hint">
+            <span>Scroll</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- ░░ STATUS BAR ░░ -->
+    <div id="status-bar">
+        <div class="status-bar-inner">
+            <div class="sb-item">
+                <span class="sb-dot" id="status-dot"></span>
+                <span id="status-text">Cargando...</span>
+            </div>
+            <div class="sb-divider"></div>
+            <div class="sb-item">
+                <i class="fas fa-users"></i>
+                <span id="player-count">— jugadores</span>
+            </div>
+            <div class="sb-divider"></div>
+            <div class="sb-item">
+                <i class="fas fa-clock"></i>
+                <span id="server-time">—</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ░░ MÁS (CÓMO UNIRSE) ░░ -->
+    <section id="mas">
+        <div class="section-inner">
+            <div class="section-label">Guía de acceso</div>
+            <h2 class="section-title">¿Cómo unirse?</h2>
+            <div class="steps-grid">
+                <div class="step-item" style="--d:0">
+                    <div class="step-num">01</div>
+                    <div class="step-body">
+                        <h3>Abre ClassiCube</h3>
+                        <p>Descarga e instala el cliente oficial de ClassiCube en tu dispositivo.</p>
+                    </div>
+                </div>
+                <div class="step-item" style="--d:1">
+                    <div class="step-num">02</div>
+                    <div class="step-body">
+                        <h3>Busca el servidor</h3>
+                        <p>En la lista de servidores busca <strong>[ESP] Pizza Server</strong>.</p>
+                    </div>
+                </div>
+                <div class="step-item" style="--d:2">
+                    <div class="step-num">03</div>
+                    <div class="step-body">
+                        <h3>¡Únete!</h3>
+                        <p>Entra y disfruta de todo lo que Pizza Server tiene para ofrecerte.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="schedule-card">
+                <i class="fas fa-calendar-alt"></i>
+                <div>
+                    <strong>Horario de operación</strong>
+                    <p>Lunes a Sábado desde las <strong>3:00 P.M.</strong> · Domingos desde la <strong>1:00 P.M.</strong> — Hora Venezolana 🇻🇪</p>
+                </div>
+            </div>
+            <div class="join-cta">
+                <a href="http://www.classicube.net/server/play/73a30f1191366a1ac56bc4432bbb0225/" target="_blank" class="btn-primary">
+                    <i class="fas fa-external-link-alt"></i> Unirse desde el navegador
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ░░ QUIÉNES SOMOS ░░ -->
+    <section id="quienes">
+        <div class="section-inner split-layout">
+            <div class="split-text reveal">
+                <div class="section-label">El equipo</div>
+                <h2 class="section-title">¿Quiénes somos?</h2>
+                <p class="split-desc">Pizza Server es un servidor venezolano creado el <strong>27 de Diciembre de 2025</strong> por <strong>Pizzaclap43</strong> para construir y pasar el rato con la comunidad de ClassiCube.</p>
+                <p class="split-desc">Un espacio donde la creatividad no tiene límites y cada bloque cuenta una historia.</p>
+                <div class="team-chips">
+                    <span class="chip chip-owner">👑 Pizzaclap43</span>
+                    <span class="chip">AndresDMC</span>
+                    <span class="chip">ElmichiYT</span>
+                    <span class="chip">jose_120</span>
+                    <span class="chip">CatMeow98</span>
+                </div>
+            </div>
+            <div class="split-visual reveal">
+                <div class="visual-frame">
+                    <img src="pizzaserver.png" alt="Pizza Server" class="visual-img">
+                    <div class="visual-tag">Est. Diciembre 2025</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ░░ GALERÍA PREVIEW ░░ -->
+    <section id="galeria-preview">
+        <div class="section-inner">
+            <div class="section-label">Capturas</div>
+            <h2 class="section-title">Galería</h2>
+            <div class="gallery-coming">
+                <div class="gallery-placeholder">
+                    <i class="fas fa-images"></i>
+                    <p>Las fotos estarán disponibles pronto</p>
+                    <a href="galeria.html" class="btn-ghost">Ver galería completa</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ░░ NOTICIAS PREVIEW ░░ -->
+    <section id="noticias-preview">
+        <div class="section-inner">
+            <div class="section-label">Últimas novedades</div>
+            <h2 class="section-title">Noticias</h2>
+            <div class="news-coming">
+                <div class="news-placeholder">
+                    <i class="fas fa-newspaper"></i>
+                    <p>Las noticias estarán disponibles pronto</p>
+                    <a href="noticias.html" class="btn-ghost">Ver todas las noticias</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ░░ FOOTER ░░ -->
+    <footer id="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="brand-icon">🍕</span>
+                <span class="brand-text">Pizza Server</span>
+                <p class="footer-tagline">El servidor venezolano de ClassiCube</p>
+            </div>
+            <div class="footer-socials">
+                <a href="https://discord.com/invite/BhSYNUYrxP" target="_blank" class="social-btn discord" title="Discord">
+                    <i class="fab fa-discord"></i><span>Discord</span>
+                </a>
+                <a href="https://instagram.com/pizzaservercc" target="_blank" class="social-btn instagram" title="Instagram">
+                    <i class="fab fa-instagram"></i><span>Instagram</span>
+                </a>
+                <a href="https://whatsapp.com/channel/0029Vb89vn1Elagp5bKLa32e" target="_blank" class="social-btn whatsapp" title="WhatsApp">
+                    <i class="fab fa-whatsapp"></i><span>WhatsApp</span>
+                </a>
+                <a href="https://t.me/pizzaservercc" target="_blank" class="social-btn telegram" title="Telegram">
+                    <i class="fab fa-telegram"></i><span>Telegram</span>
+                </a>
+                <a href="mailto:pizzaserver@hotmail.com" class="social-btn contacto" title="Contacto">
+                    <i class="fas fa-envelope"></i><span>Contacto</span>
+                </a>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 Pizza Server · ClassiCube · Venezuela 🇻🇪</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>
