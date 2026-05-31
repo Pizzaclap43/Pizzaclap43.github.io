@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería | Pizza Server</title>
+    <link rel="icon" type="image/png" href="avatarHead.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .subpage-hero {
+            min-height: 38vh;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 48px;
+            background: linear-gradient(to bottom, var(--dark) 0%, var(--dark-2) 100%);
+            border-bottom: 1px solid var(--border);
+            padding-top: var(--nav-h);
+        }
+        .subpage-content { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .subpage-body { max-width: 1100px; margin: 0 auto; padding: 80px 24px; }
+        .coming-soon-big {
+            text-align: center;
+            padding: 80px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .coming-soon-big i { font-size: 4rem; color: var(--text-dim); }
+        .coming-soon-big h3 { font-family: var(--bebas); font-size: 2.2rem; color: var(--text-muted); letter-spacing: 2px; }
+        .coming-soon-big p { font-size: 0.9rem; color: var(--text-dim); }
+    </style>
+</head>
+<body>
+    <nav id="navbar" class="scrolled">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <span class="brand-icon">🍕</span>
+                <span class="brand-text">Pizza Server</span>
+            </a>
+            <button class="nav-toggle" id="nav-toggle"><span></span><span></span><span></span></button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html#mas" class="nav-link">Más</a></li>
+                <li><a href="index.html#quienes" class="nav-link">¿Quiénes somos?</a></li>
+                <li><a href="galeria.html" class="nav-link active">Galería</a></li>
+                <li><a href="noticias.html" class="nav-link">Noticias</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="subpage-hero">
+        <div class="subpage-content">
+            <div class="section-label">Capturas del servidor</div>
+            <h1 class="section-title" style="margin-bottom:0">Galería</h1>
+        </div>
+    </div>
+
+    <div class="subpage-body">
+        <div class="coming-soon-big">
+            <i class="fas fa-images"></i>
+            <h3>Próximamente</h3>
+            <p>Las fotos del servidor estarán disponibles muy pronto.</p>
+            <a href="index.html" class="btn-ghost"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+        </div>
+    </div>
+
+    <footer id="footer">
+        <div class="footer-inner">
+            <div class="footer-socials">
+                <a href="https://discord.com/invite/BhSYNUYrxP" target="_blank" class="social-btn discord"><i class="fab fa-discord"></i><span>Discord</span></a>
+                <a href="https://instagram.com/pizzaservercc" target="_blank" class="social-btn instagram"><i class="fab fa-instagram"></i><span>Instagram</span></a>
+                <a href="https://whatsapp.com/channel/0029Vb89vn1Elagp5bKLa32e" target="_blank" class="social-btn whatsapp"><i class="fab fa-whatsapp"></i><span>WhatsApp</span></a>
+                <a href="https://t.me/pizzaservercc" target="_blank" class="social-btn telegram"><i class="fab fa-telegram"></i><span>Telegram</span></a>
+                <a href="mailto:pizzaserver@hotmail.com" class="social-btn contacto"><i class="fas fa-envelope"></i><span>Contacto</span></a>
+            </div>
+            <div class="footer-bottom"><p>© 2026 Pizza Server · ClassiCube · Venezuela 🇻🇪</p></div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
