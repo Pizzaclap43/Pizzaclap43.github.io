@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="description" content="Neon Dash – Juego de plataformas rítmico Synthwave" />
+  <title>NEON DASH</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="ui-overlay">
+    <div id="hud">
+      <span id="score-label">SCORE</span>
+      <span id="score-value">0</span>
+    </div>
+    <div id="best-label">BEST: <span id="best-value">0</span></div>
+  </div>
+
+  <canvas id="gameCanvas"></canvas>
+
+  <!-- Pantalla de Game Over -->
+  <div id="death-screen" class="hidden">
+    <div id="death-inner">
+      <p id="death-title">SYSTEM FAILURE</p>
+      <p id="death-sub">REINICIANDO<span id="dots"></span></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
