@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radio Pizza 🍕</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">🍕</div>
+    <div>
+      <div class="logo-text">Radio Pizza</div>
+      <div class="logo-sub">Tu señal favorita</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      STREAMING
+    </div>
+  </div>
+</header>
+
+<!-- APP LAYOUT -->
+<div class="app-layout">
+
+  <!-- SEARCH -->
+  <div class="search-area">
+    <div class="search-wrapper">
+      <span class="search-icon">🔍</span>
+      <input
+        class="search-input"
+        type="text"
+        id="searchInput"
+        placeholder="Buscar emisora, frecuencia o género..."
+        autocomplete="off"
+      />
+      <span class="search-count" id="searchCount"></span>
+    </div>
+  </div>
+
+  <!-- STATIONS -->
+  <div class="stations-area">
+    <div class="section-header">
+      <div style="display:flex; flex-direction:column; gap:10px">
+        <div class="tabs" id="tabsBar">
+          <button class="tab active" data-tab="all">Todas</button>
+          <button class="tab" data-tab="favs">★ Favoritos</button>
+        </div>
+        <div class="section-title" id="sectionTitle">EMISORAS</div>
+      </div>
+      <div class="section-count" id="sectionCount"></div>
+    </div>
+    <div class="stations-grid" id="stationsGrid"></div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="sidebar-card">
+      <div class="sidebar-title">📊 <span>Estadísticas</span></div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-value" id="statTotal">10</div>
+          <div class="stat-label">Emisoras</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="statFavs">0</div>
+          <div class="stat-label">Favoritos</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="statPlayed">0</div>
+          <div class="stat-label">Escuchadas</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="statTime">0m</div>
+          <div class="stat-label">Tiempo</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-title">⭐ <span>Mis Favoritos</span></div>
+      <div class="fav-list" id="favList">
+        <div class="empty-favs">
+          <div class="empty-favs-icon">🌟</div>
+          <div>Aún no tienes favoritos.<br>Toca ★ en una emisora.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ADVANCED PLAYER -->
+<div id="player">
+  <div class="player-glow"></div>
+  <div class="player-inner">
+
+    <!-- INFO -->
+    <div class="player-info">
+      <div class="player-avatar" id="playerAvatar">🍕</div>
+      <div>
+        <div class="player-station-name" id="playerName">—</div>
+        <div class="player-freq" id="playerFreq">Selecciona una emisora</div>
+        <div class="player-status">
+          <div class="status-dot" id="statusDot"></div>
+          <span id="statusText" style="color:var(--text-muted);font-size:10px;letter-spacing:1px">INACTIVO</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="player-controls">
+      <div class="controls-row">
+        <button class="ctrl-btn" id="btnShuffle" title="Aleatoria" onclick="shuffleStation()">🔀</button>
+        <button class="ctrl-btn" id="btnPrev" title="Anterior" onclick="prevStation()">⏮</button>
+        <button class="btn-play-main" id="btnPlayMain" onclick="togglePlay()">▶</button>
+        <button class="ctrl-btn" id="btnNext" title="Siguiente" onclick="nextStation()">⏭</button>
+        <button class="ctrl-btn" id="btnRecord" title="Grabando" onclick="toggleRecord()">⏺</button>
+      </div>
+      <div class="viz-row">
+        <canvas id="vizCanvas"></canvas>
+        <div class="time-display" id="timeDisplay">00:00</div>
+      </div>
+    </div>
+
+    <!-- RIGHT CONTROLS -->
+    <div class="player-right">
+      <div class="volume-row">
+        <span class="vol-icon" id="volIcon" onclick="toggleMute()">🔊</span>
+        <input type="range" id="volumeSlider" min="0" max="100" value="80" oninput="setVolume(this.value)">
+        <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;width:30px;text-align:right" id="volValue">80</span>
+      </div>
+      <div class="equalizer-row">
+        <span class="eq-label">EQ</span>
+        <div class="eq-sliders" id="eqSliders"></div>
+      </div>
+      <div class="right-btns">
+        <button class="ctrl-btn" id="btnSleep" title="Temporizador" onclick="toggleSleep()">😴</button>
+        <button class="ctrl-btn" id="btnShare" title="Compartir" onclick="shareStation()">📤</button>
+        <button class="ctrl-btn" id="btnFavPlayer" title="Favorito" onclick="favCurrentStation()">♡</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<audio id="audioEl" crossorigin="anonymous"></audio>
+
+<script src="script.js"></script>
+</body>
+</html>
