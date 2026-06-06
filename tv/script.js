@@ -1,4 +1,6 @@
-// Lista de canales con los enlaces suministrados
+// Lista de canales
+const PROXY_URL = 'https://pizza-proxy.adibabouakar.workers.dev/?url=';
+
 const channels = [
     { id: 'vtv', name: 'VTV', url: 'https://live.eu-north-1b.cf.dmcdn.net/sec2(yNatH3KJwxePubIbqUTQtGUN8vgbuuJjWdd7WKa1S7sbeh7euRVazXXxk5tn8Di5SXaosqYr935pOlCheir9R5oBIkfr8TpzXSx6fIMLsmjyBceIL9g3V636yxKRg6tB)/dm/3/x930kre/d/live-720@60.m3u8#cell=lcf-eu-north-1b' },
     { id: 'venevision', name: 'Venevisión', url: 'https://venevision-blocked-cdn.encoders.immergo.tv/3/streamPlaylist.m3u8' },
@@ -8,11 +10,9 @@ const channels = [
     { id: 'tvs', name: 'TVS Maracay', url: 'https://vcp10.myplaytv.com/tvs/tvs/chunklist_w188594279.m3u8' }
 ];
 
-// Cargar favoritos guardados en el navegador
 let favorites = JSON.parse(localStorage.getItem('pizzatv_favs')) || [];
-let hlsInstance; // Variable para controlar el reproductor
+let hlsInstance;
 
-// Elementos del DOM
 const mainView = document.getElementById('main-view');
 const playerView = document.getElementById('player-view');
 const channelsGrid = document.getElementById('channels-grid');
@@ -23,94 +23,64 @@ const tvPlayer = document.getElementById('tv-player');
 const nowPlaying = document.getElementById('now-playing');
 const backBtn = document.getElementById('back-btn');
 
-// Función para renderizar las tarjetas
 function renderChannels(filterText = '') {
     channelsGrid.innerHTML = '';
     favoritesGrid.innerHTML = '';
     let hasFavs = false;
 
     channels.forEach(channel => {
-        // Filtrado de búsqueda
         if (channel.name.toLowerCase().includes(filterText.toLowerCase())) {
             const isFav = favorites.includes(channel.id);
             const cardHTML = `
                 <div class="channel-card">
                     <div class="channel-name" onclick="playChannel('${channel.id}')">${channel.name}</div>
-                    <button class="fav-btn" onclick="toggleFavorite('${channel.id}', event)">
-                        ${isFav ? '★' : '☆'}
-                    </button>
+                    <button class="fav-btn" onclick="toggleFavorite('${channel.id}', event)">${isFav ? '★' : '☆'}</button>
                 </div>
             `;
-
-            // Si es favorito y no estamos buscando, lo metemos en la sección superior también
             if (isFav && filterText === '') {
                 hasFavs = true;
                 favoritesGrid.insertAdjacentHTML('beforeend', cardHTML);
             }
-            // Agregamos a la lista general
             channelsGrid.insertAdjacentHTML('beforeend', cardHTML);
         }
     });
-
     favoritesSection.style.display = (hasFavs && filterText === '') ? 'block' : 'none';
 }
 
-// Lógica de Favoritos
 window.toggleFavorite = function(id, event) {
-    event.stopPropagation(); // Evita que se abra el reproductor al tocar la estrella
-    if (favorites.includes(id)) {
-        favorites = favorites.filter(favId => favId !== id);
-    } else {
-        favorites.push(id);
-    }
+    event.stopPropagation();
+    favorites = favorites.includes(id) ? favorites.filter(f => f !== id) : [...favorites, id];
     localStorage.setItem('pizzatv_favs', JSON.stringify(favorites));
     renderChannels(searchBar.value);
 };
 
-// Lógica del Reproductor
 window.playChannel = function(id) {
     const channel = channels.find(c => c.id === id);
-    
-    // Cambiar vista
     mainView.style.display = 'none';
     playerView.style.display = 'flex';
     nowPlaying.innerText = `📺 ${channel.name}`;
 
-    // Configurar HLS
+    // Si es VTV, forzamos el uso del proxy
+    const finalUrl = (channel.id === 'vtv') ? PROXY_URL + encodeURIComponent(channel.url) : channel.url;
+
     if (Hls.isSupported()) {
-        if (hlsInstance) {
-            hlsInstance.destroy(); // Limpiar canal anterior
-        }
+        if (hlsInstance) hlsInstance.destroy();
         hlsInstance = new Hls();
-        hlsInstance.loadSource(channel.url);
+        hlsInstance.loadSource(finalUrl);
         hlsInstance.attachMedia(tvPlayer);
-        hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
-            tvPlayer.play();
-        });
-    } 
-    // Alternativa nativa para navegadores como Safari
-    else if (tvPlayer.canPlayType('application/vnd.apple.mpegurl')) {
-        tvPlayer.src = channel.url;
-        tvPlayer.addEventListener('loadedmetadata', function() {
-            tvPlayer.play();
-        });
+        hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => tvPlayer.play());
+    } else if (tvPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+        tvPlayer.src = finalUrl;
+        tvPlayer.addEventListener('loadedmetadata', () => tvPlayer.play());
     }
 };
 
-// Botón de Regresar
 backBtn.onclick = () => {
     playerView.style.display = 'none';
     mainView.style.display = 'block';
     tvPlayer.pause();
-    if (hlsInstance) {
-        hlsInstance.destroy(); // Detiene la descarga de video al regresar al menú
-    }
+    if (hlsInstance) hlsInstance.destroy();
 };
 
-// Escuchador de búsqueda
-searchBar.addEventListener('input', (e) => {
-    renderChannels(e.target.value);
-});
-
-// Inicializar la interfaz al cargar
+searchBar.addEventListener('input', (e) => renderChannels(e.target.value));
 renderChannels();
