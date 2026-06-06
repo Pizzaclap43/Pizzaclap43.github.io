@@ -5,7 +5,7 @@ const channels = [
     { id: 'televen', name: 'Televen', url: 'https://mediablocks-ve.global.ssl.fastly.net/10255/live/hls/televen/index.m3u8?hdnts=data%3Dip%3D190.6.33.224%2Cid%3DTLV-GUEST%2Cpid%3D255%2Cdid%3DN%2FA%2Csid%3DWBS%7Eacl%3D%2F10255%2Flive%2Fhls%2Fteleven%2F*%7Eexp%3D1780790615%7Ehmac%3D36ebbbe345a4c75352acfc46ac58337de6bf7524317b75f73514908fdf79ea60' },
     { id: 'canali', name: 'Canal I', url: 'https://streaming.canal-i.com/canal-i/live/primary/1080.m3u8' },
     { id: 'lateletuya', name: 'La Tele Tuya', url: 'https://live2.eu-north-1a.cf.dmcdn.net/sec2(fw8eQKdQErRuVA3Wh2QB1jnIBqHn3jaHzh8SA5iP5kYTtbxbRiB4tNWWhosxSDTrZdFR6fEWqAIAhxlobLEV2LvCaAgkxPPU4mF7GxqJpT89d_lirGNGULRAD6iMInit)/cloud/3/x8z1lwk/s/live-1080@60.m3u8#cell=lcf2-eu-north-1a' },
-    { id: 'tvs', name: 'TVS Maracay', url: 'https://vcp10.myplaytv.com/tvs/tvs/media_w929144024_11591.ts' }
+    { id: 'tvs', name: 'TVS Maracay', url: 'https://vcp10.myplaytv.com/tvs/tvs/chunklist_w188594279.m3u8' }
 ];
 
 // Cargar favoritos guardados en el navegador
