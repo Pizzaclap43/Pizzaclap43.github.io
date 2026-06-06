@@ -1,6 +1,6 @@
 // Lista de canales con los enlaces suministrados
 const channels = [
-    { id: 'vtv', name: 'VTV', url: 'https://live.eu-north-1b.cf.dmcdn.net/sec2(f0NCr7KrgYI-jowdeCumI4QncII8VdeqMsFcBH86Fju9KmCPF5-2MzJ9hjQY7Fk0yKMjmcNvPEhdbcwMneerGmAF8SDnEy5WoyJiLz_SMX7jLNUA2Bn7cjHRUSMg9HqX)/dm/3/x930kre/d/live-720@60.m3u8#cell=lcf-eu-north-1b' },
+    { id: 'vtv', name: 'VTV', url: 'https://live.eu-north-1b.cf.dmcdn.net/sec2(yNatH3KJwxePubIbqUTQtGUN8vgbuuJjWdd7WKa1S7sbeh7euRVazXXxk5tn8Di5SXaosqYr935pOlCheir9R5oBIkfr8TpzXSx6fIMLsmjyBceIL9g3V636yxKRg6tB)/dm/3/x930kre/d/live-720@60.m3u8#cell=lcf-eu-north-1b' },
     { id: 'venevision', name: 'Venevisión', url: 'https://venevision-blocked-cdn.encoders.immergo.tv/3/streamPlaylist.m3u8' },
     { id: 'televen', name: 'Televen', url: 'https://mediablocks-ve.global.ssl.fastly.net/10255/live/hls/televen/index.m3u8?hdnts=data%3Dip%3D190.6.33.224%2Cid%3DTLV-GUEST%2Cpid%3D255%2Cdid%3DN%2FA%2Csid%3DWBS%7Eacl%3D%2F10255%2Flive%2Fhls%2Fteleven%2F*%7Eexp%3D1780790615%7Ehmac%3D36ebbbe345a4c75352acfc46ac58337de6bf7524317b75f73514908fdf79ea60' },
     { id: 'canali', name: 'Canal I', url: 'https://streaming.canal-i.com/canal-i/live/primary/1080.m3u8' },
