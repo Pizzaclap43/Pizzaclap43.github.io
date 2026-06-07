@@ -8,6 +8,7 @@ const channels = [
     { id: 'canali', name: 'Canal I', url: 'https://streaming.canal-i.com/canal-i/live/primary/1080.m3u8' },
     { id: 'lateletuya', name: 'La Tele Tuya', url: 'https://live2.eu-north-1a.cf.dmcdn.net/sec2(mGyFSoVlB4J9HsK84d_eYKlhDQW_2a-2kP3oUKmffHC4nHBoAV_AM7XGqVwe4h3wzkP8cMkpksMEVFWprchKY7HjFAaiQAgUiqChHRmRaPhn0310D-SXMGqADwMO6O-I)/cloud/3/x8z1lwk/s/live-1080@60.m3u8#cell=lcf2-eu-north-1a' },
     { id: 'tvs', name: 'TVS Maracay', url: 'https://vcp10.myplaytv.com/tvs/tvs/chunklist_w188594279.m3u8' }
+    { id: 'telearagua', name: 'Telearagua', url: 'http://45.173.198.59:8080/hls/nginx3.m3u8' }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('pizzatv_favs')) || [];
