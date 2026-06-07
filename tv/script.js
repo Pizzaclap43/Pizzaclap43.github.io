@@ -11,7 +11,7 @@ const channels = [
     { id: 'telearagua', name: 'Telearagua', url: 'http://45.173.198.59:8080/hls/nginx3.m3u8' },
     { id: 'trv', name: 'TRV Maracay', url: 'https://streaming5.globalhostla.com/rtplive/trvnetve/chunklist_w1585023675.m3u8' },
     { id: 'meridiano', name: 'Meridiano TV', url: 'https://live.eu-north-1a.cf.dmcdn.net/sec2(YxMRgx-4I1QkMV0b2BK6ABGJ1Rtv-yMLzZk8sfWhQkN-4DmExYSJFTrApnHK0b1xtuHfU5DQVhU_X6S2prNO3zCFa2ugxwAbNkPWoSBBw_PsEF2g_W0UMKhoizkict7g)/dm/3/x9sxu9y/d/live-720.m3u8#cell=lcf-eu-north-1a' },
-    { id: 'latinanoticias', name: 'Latina Noticias Peru', url: 'https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latinanoticias/latinanoticias.smil/playlist.m3u8?did=r1us539206592f9464dfc502f675a1611d0374450d96c&ndvc=0'
+    { id: 'latinanoticias', name: 'Latina Noticias Perú', url: 'https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latinanoticias/latinanoticias.smil/playlist.m3u8?did=r1us539206592f9464dfc502f675a1611d0374450d96c&ndvc=0' }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('pizzatv_favs')) || [];
