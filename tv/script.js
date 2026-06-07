@@ -9,7 +9,8 @@ const channels = [
     { id: 'lateletuya', name: 'La Tele Tuya', url: 'https://live2.eu-north-1a.cf.dmcdn.net/sec2(mGyFSoVlB4J9HsK84d_eYKlhDQW_2a-2kP3oUKmffHC4nHBoAV_AM7XGqVwe4h3wzkP8cMkpksMEVFWprchKY7HjFAaiQAgUiqChHRmRaPhn0310D-SXMGqADwMO6O-I)/cloud/3/x8z1lwk/s/live-1080@60.m3u8#cell=lcf2-eu-north-1a' },
     { id: 'tvs', name: 'TVS Maracay', url: 'https://vcp10.myplaytv.com/tvs/tvs/chunklist_w188594279.m3u8' },
     { id: 'telearagua', name: 'Telearagua', url: 'http://45.173.198.59:8080/hls/nginx3.m3u8' },
-    { id: 'trv', name: 'TRV Maracay', url: 'https://streaming5.globalhostla.com/rtplive/trvnetve/chunklist_w1585023675.m3u8' }
+    { id: 'trv', name: 'TRV Maracay', url: 'https://streaming5.globalhostla.com/rtplive/trvnetve/chunklist_w1585023675.m3u8' },
+    { id: 'meridiano', name: 'Meridiano TV', url: 'https://live.eu-north-1a.cf.dmcdn.net/sec2(YxMRgx-4I1QkMV0b2BK6ABGJ1Rtv-yMLzZk8sfWhQkN-4DmExYSJFTrApnHK0b1xtuHfU5DQVhU_X6S2prNO3zCFa2ugxwAbNkPWoSBBw_PsEF2g_W0UMKhoizkict7g)/dm/3/x9sxu9y/d/live-720.m3u8#cell=lcf-eu-north-1a' }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('pizzatv_favs')) || [];
