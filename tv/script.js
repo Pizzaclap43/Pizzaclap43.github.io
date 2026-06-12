@@ -12,7 +12,8 @@ const channels = [
     { id: 'trv', name: 'TRV Maracay', url: 'https://streaming5.globalhostla.com/rtplive/trvnetve/chunklist_w1585023675.m3u8' },
     { id: 'meridiano', name: 'Meridiano TV', url: 'https://live.eu-north-1a.cf.dmcdn.net/sec2(YxMRgx-4I1QkMV0b2BK6ABGJ1Rtv-yMLzZk8sfWhQkN-4DmExYSJFTrApnHK0b1xtuHfU5DQVhU_X6S2prNO3zCFa2ugxwAbNkPWoSBBw_PsEF2g_W0UMKhoizkict7g)/dm/3/x9sxu9y/d/live-720.m3u8#cell=lcf-eu-north-1a' },
     { id: 'latina', name: 'Latina', url: 'https://dai.google.com/linear/hls/pa/event/oYQGDqEGTmGdHE_fz9oLlg/stream/c5abb342-ae3c-49e5-8c14-8c264e3e2eb4:DLS/master.m3u8' },
-    { id: 'latinanoticias', name: 'Latina Noticias', url: 'https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latinanoticias/latinanoticias.smil/playlist.m3u8?did=r1us539206592f9464dfc502f675a1611d0374450d96c&ndvc=0' }
+    { id: 'latinanoticias', name: 'Latina Noticias', url: 'https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latinanoticias/latinanoticias.smil/playlist.m3u8?did=r1us539206592f9464dfc502f675a1611d0374450d96c&ndvc=0' },
+    { id: 'nmasforo', name: 'N+ Foro', url: 'https://channel02dai-notusa.akamaized.net/linear/hls/pa/event/02DzjYAJRCeAE9uB8o3ivg/stream/702217f3-7b28-405c-8ed5-d4219251e768:TUL/variant/ea6e216659b50f4032de9a13dc877b7f/bandwidth/14180324.m3u8?hdntl=exp=1781375761~acl=*~id=d259990c-efbd-4548-943a-bde934717c28~data=hdntl~hmac=af14265855b08ff1974a946017ab152899462528a2911a04fe1d2f08916035db&' }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('pizzatv_favs')) || [];
