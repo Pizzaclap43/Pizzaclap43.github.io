@@ -11,7 +11,7 @@ const channels = [
     { id: 'telearagua', name: 'Telearagua', url: 'http://45.173.198.59:8080/hls/nginx3.m3u8' },
     { id: 'trv', name: 'TRV Maracay', url: 'https://streaming5.globalhostla.com/rtplive/trvnetve/chunklist_w1585023675.m3u8' },
     { id: 'meridiano', name: 'Meridiano TV', url: 'https://live.eu-north-1a.cf.dmcdn.net/sec2(YxMRgx-4I1QkMV0b2BK6ABGJ1Rtv-yMLzZk8sfWhQkN-4DmExYSJFTrApnHK0b1xtuHfU5DQVhU_X6S2prNO3zCFa2ugxwAbNkPWoSBBw_PsEF2g_W0UMKhoizkict7g)/dm/3/x9sxu9y/d/live-720.m3u8#cell=lcf-eu-north-1a' },
-    { id: 'latina', name: 'Latina', url: 'https://jireh-hls-live-video.dpsgo.com/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/latina/livestream2/l_5845_1994775000_388963.ts?dpssid=r1us1679049018562569d6578643688e4b924dd9c0b546&sid=b1usr1us21273157930286087632ff0832d2431194102fc912&ref=www.latina.pe&ndvc=0&platform=' },
+    { id: 'latina', name: 'Latina', url: 'https://dai.google.com/linear/hls/pa/event/oYQGDqEGTmGdHE_fz9oLlg/stream/c5abb342-ae3c-49e5-8c14-8c264e3e2eb4:DLS/master.m3u8' },
     { id: 'latinanoticias', name: 'Latina Noticias', url: 'https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latinanoticias/latinanoticias.smil/playlist.m3u8?did=r1us539206592f9464dfc502f675a1611d0374450d96c&ndvc=0' }
 ];
 
