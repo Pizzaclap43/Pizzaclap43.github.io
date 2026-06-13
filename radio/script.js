@@ -12,8 +12,11 @@ const stationsData = [
     { id: 10, name: "La Mega (Maracay) 96.5 FM", url: "https://acp4.lorini.net:15010/stream" },
     { id: 11, name: "Exitos (Maracay) 93.1 FM", url: "https://acp4.lorini.net:15012/stream" },
     { id: 12, name: "Radio Alegria 102.7 FM", url: "https://streamingned.com:7102/stream?1781374331297" },
-    { id: 13, name: "RQ 910 AM", url: "https://acp2.lorini.net:58500//stream" }
-];
+    { id: 13, name: "RQ 910 AM", url: "https://acp2.lorini.net:58500//stream" },
+    { id: 14, name: "La Romantica 88.9 FM", url: "https://acp2.lorini.net:58100/stream" },
+    { id: 15, name: "Fiesta 106.5 FM", url: "https://acp2.lorini.net:58200/stream" },
+    { id: 16, name: "Candela Pura 91.9 FM", url: "https://acp2.lorini.net:58400/stream" },
+    { id: 17, name: "Hot 94.1 FM", url: "https://acp2.lorini.net:58300/stream" }
 
 // Estado de la app
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
