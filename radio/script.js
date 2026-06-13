@@ -11,7 +11,8 @@ const stationsData = [
     { id: 9, name: "Radio Rumbos 670 AM", url: "https://stream-285.zeno.fm/c3q3w8zfe18uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJjM3Ezdzh6ZmUxOHV2IiwiaG9zdCI6InN0cmVhbS0yODUuemVuby5mbSIsInJ0dGwiOjUsImp0aSI6ImxmQ2lkekYyVFQ2QldlNmdFSlhBV1EiLCJpYXQiOjE3ODA4NTQ3NDMsImV4cCI6MTc4MDg1NDgwM30.Zu3EEko5icuknBL_pEtNubt9XTfev2cNqVX_rKfW7pE" },
     { id: 10, name: "La Mega (Maracay) 96.5 FM", url: "https://acp4.lorini.net:15010/stream" },
     { id: 11, name: "Exitos (Maracay) 93.1 FM", url: "https://acp4.lorini.net:15012/stream" },
-    { id: 12, name: "Radio Alegria 102.7 FM", url: "https://streamingned.com:7102/stream?1781374331297" }
+    { id: 12, name: "Radio Alegria 102.7 FM", url: "https://streamingned.com:7102/stream?1781374331297" },
+    { id: 13, name: "RQ 910 AM", url: "https://acp2.lorini.net:58500//stream" }
 ];
 
 // Estado de la app
