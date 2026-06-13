@@ -17,6 +17,7 @@ const stationsData = [
     { id: 15, name: "Fiesta 106.5 FM", url: "https://acp2.lorini.net:58200/stream" },
     { id: 16, name: "Candela Pura 91.9 FM", url: "https://acp2.lorini.net:58400/stream" },
     { id: 17, name: "Hot 94.1 FM", url: "https://acp2.lorini.net:58300/stream" }
+];
 
 // Estado de la app
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
