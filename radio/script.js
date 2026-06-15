@@ -1,4 +1,4 @@
-// Lista de Emisoras Proporcionadas
+// --- 1. DATOS DE LAS EMISORAS ---
 const stationsData = [
     { id: 1, name: "Aragueña 99.5 FM", url: "https://cloudstream2036.conectarhosting.com/8060/stream" },
     { id: 2, name: "Positiva 92.7 FM", url: "https://stream-176.zeno.fm/zptsvda6fd0uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ6cHRzdmRhNmZkMHV2IiwiaG9zdCI6InN0cmVhbS0xNzYuemVuby5mbSIsInJ0dGwiOjUsImp0aSI6IjVXdTRybEhVVDBXUktVYnlhY3Z2bUEiLCJpYXQiOjE3ODA4NTQ0NzIsImV4cCI6MTc4MDg1NDUzMn0.9JdBaAuZxxvhE57kpjST6WH_hHdy2-Wl_Q2Gg3vufnA&adtonosListenerId=01HG6CKJKK2N4PESGSQR728VHT&aw_0_req_lsid=a73b93b4a361b1b74689f98df91c7c0c&acu-uid=856841341346&an-uid=9072685044421090607&mm-uid=657a6563-879f-4a00-8364-1f46175de940&dot-uid=09d8220400ff6773733290ac&amb-uid=2654924301368664169&dbm-uid=CAESENpW9w2DvDhRMIuRcx8yRQA&cto-uid=2e3d537f-d45f-4fa1-8c77-abe908bae5f0-6563879e-5645&bsw-uid=e4c56c24-32be-47a2-8015-909eed2c0adb&dyn-uid=2940798897331886011&ttd-uid=f23e4a03-2239-4e97-95f9-9ff58a23724c&triton-uid=cookie%3A25a0b549-c8b9-4b1c-8a70-95e9dfab29ef&adt-uid=cuid_9d23eb64-8c85-11ee-94b0-121a6d1d7927&1779752060716" },
@@ -19,16 +19,16 @@ const stationsData = [
     { id: 17, name: "Hot 94.1 FM", url: "https://acp2.lorini.net:58300/stream" }
 ];
 
-// Estado de la app
+// --- 2. ESTADO DE LA APP ---
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
-let currentTab = 'all'; // 'all' o 'fav'
+let currentTab = 'all'; 
 let currentStation = null;
-let currentPlaylist = []; // NUEVO: Guarda la lista actual que se está mostrando en pantalla
+let currentPlaylist = []; 
 let isPlaying = false;
 let isMuted = false;
 let previousVolume = 0.8;
 
-// Elementos del DOM
+// --- 3. ELEMENTOS DEL DOM ---
 const stationListEl = document.getElementById('station-list');
 const searchInput = document.getElementById('searchInput');
 const audio = document.getElementById('audioElement');
@@ -44,12 +44,38 @@ const muteIcon = document.getElementById('muteIcon');
 // Inicializar volumen
 audio.volume = 0.8;
 
-// Búsqueda
-searchInput.addEventListener('input', () => {
-    renderStations();
-});
+// --- 4. FUNCIONES DE RELOJ Y CLIMA ---
+function updateClock() {
+    const now = new Date();
+    document.getElementById('clock').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+}
+setInterval(updateClock, 1000);
+updateClock();
 
-// Cambiar pestaña
+function getWeather() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('weather').textContent = `🌡️ ${Math.round(data.current.temperature_2m)}°C`;
+                })
+                .catch(() => document.getElementById('weather').textContent = "🌡️ --°C");
+        }, () => {
+            document.getElementById('weather').textContent = "📍 Ubicación bloqueada";
+        });
+    }
+}
+getWeather();
+
+// --- AJUSTE: Actualización automática del clima cada 30 minutos ---
+setInterval(getWeather, 30 * 60 * 1000);
+
+// --- 5. FUNCIONES DE INTERFAZ ---
+searchInput.addEventListener('input', () => renderStations());
+
 function setTab(tab) {
     currentTab = tab;
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -57,7 +83,6 @@ function setTab(tab) {
     renderStations();
 }
 
-// Renderizar Cuadrícula
 function renderStations() {
     const query = searchInput.value.toLowerCase();
     stationListEl.innerHTML = '';
@@ -68,7 +93,7 @@ function renderStations() {
         filtered = filtered.filter(station => favorites.includes(station.id));
     }
 
-    currentPlaylist = filtered; // Guardamos la lista actual para poder usar Anterior/Siguiente
+    currentPlaylist = filtered; 
 
     if (filtered.length === 0) {
         stationListEl.innerHTML = `<div class="empty-message">No se encontraron emisoras 😔</div>`;
@@ -93,50 +118,31 @@ function renderStations() {
     });
 }
 
-// Seleccionar Emisora para reproducir
+// --- 6. FUNCIONES DE REPRODUCTOR Y NAVEGACIÓN ---
 function selectStation(station) {
     currentStation = station;
     currentStationNameEl.textContent = station.name;
     playerUI.classList.add('show');
     updatePlayerFavIcon();
 
-    // Configurar Audio
     audio.src = station.url;
     playAudio();
 }
 
-// ---- NUEVO: Funciones de Anterior y Siguiente ----
 function nextStation() {
     if (!currentStation || currentPlaylist.length === 0) return;
-    
-    // Buscar la posición de la emisora actual en la lista que estamos viendo
     let currentIndex = currentPlaylist.findIndex(s => s.id === currentStation.id);
-    let nextIndex = currentIndex + 1;
-
-    // Si llega al final de la lista, vuelve al principio
-    if (nextIndex >= currentPlaylist.length) {
-        nextIndex = 0; 
-    }
-    
+    let nextIndex = (currentIndex + 1 >= currentPlaylist.length) ? 0 : currentIndex + 1;
     selectStation(currentPlaylist[nextIndex]);
 }
 
 function prevStation() {
     if (!currentStation || currentPlaylist.length === 0) return;
-    
     let currentIndex = currentPlaylist.findIndex(s => s.id === currentStation.id);
-    let prevIndex = currentIndex - 1;
-
-    // Si está en la primera emisora, retrocede al final de la lista
-    if (prevIndex < 0) {
-        prevIndex = currentPlaylist.length - 1; 
-    }
-    
+    let prevIndex = (currentIndex - 1 < 0) ? currentPlaylist.length - 1 : currentIndex - 1;
     selectStation(currentPlaylist[prevIndex]);
 }
-// -------------------------------------------------
 
-// Controles de Audio
 function playAudio() {
     audio.play().then(() => {
         isPlaying = true;
@@ -144,8 +150,8 @@ function playAudio() {
         vinyl.classList.add('playing');
         visualizer.classList.add('active');
     }).catch(error => {
-        console.error("Error al reproducir:", error);
-        alert("Error al conectar con la emisora. Puede estar temporalmente fuera de línea.");
+        console.error("Error:", error);
+        alert("Error de conexión");
         stopAudio();
     });
 }
@@ -160,11 +166,7 @@ function pauseAudio() {
 
 function togglePlayPause() {
     if (!currentStation) return;
-    if (isPlaying) {
-        pauseAudio();
-    } else {
-        playAudio();
-    }
+    isPlaying ? pauseAudio() : playAudio();
 }
 
 function stopAudio() {
@@ -178,7 +180,6 @@ function updatePlayPauseIcon() {
     playPauseBtn.innerHTML = isPlaying ? '<i class="fas fa-pause-circle"></i>' : '<i class="fas fa-play-circle"></i>';
 }
 
-// Controles de Volumen
 function setVolume(val) {
     audio.volume = val;
     isMuted = val == 0;
@@ -200,31 +201,21 @@ function toggleMute() {
 }
 
 function updateMuteIcon() {
-    if (audio.volume === 0) {
-        muteIcon.className = "fas fa-volume-mute";
-        muteIcon.style.color = "var(--primary)";
-    } else {
-        muteIcon.className = "fas fa-volume-down";
-        muteIcon.style.color = "var(--text-light)";
-    }
+    muteIcon.className = (audio.volume === 0) ? "fas fa-volume-mute" : "fas fa-volume-down";
+    muteIcon.style.color = (audio.volume === 0) ? "var(--primary)" : "var(--text-light)";
 }
 
-// Sistema de Favoritos
+// --- 7. SISTEMA DE FAVORITOS ---
 function toggleFavorite(event, stationId) {
-    event.stopPropagation(); // Evita que se reproduzca al hacer clic en el corazón
-    
+    event.stopPropagation();
     if (favorites.includes(stationId)) {
         favorites = favorites.filter(id => id !== stationId);
     } else {
         favorites.push(stationId);
     }
-    
     localStorage.setItem('radioPizzaFavs', JSON.stringify(favorites));
     renderStations();
-
-    if (currentStation && currentStation.id === stationId) {
-        updatePlayerFavIcon();
-    }
+    if (currentStation && currentStation.id === stationId) updatePlayerFavIcon();
 }
 
 function toggleFavoriteFromPlayer() {
@@ -245,13 +236,9 @@ function updatePlayerFavIcon() {
     playerFavBtn.innerHTML = `<i class="${isFav ? 'fas' : 'far'} fa-heart" style="color: ${isFav ? 'var(--primary)' : 'var(--text-light)'}"></i>`;
 }
 
-// Eventos del Audio HTML5
-audio.addEventListener('waiting', () => {
-     visualizer.classList.remove('active'); // Pausar visualizador mientras carga (buffering)
-});
-audio.addEventListener('playing', () => {
-     visualizer.classList.add('active'); // Reanudar visualizador
-});
+// Eventos del Audio
+audio.addEventListener('waiting', () => visualizer.classList.remove('active'));
+audio.addEventListener('playing', () => visualizer.classList.add('active'));
 
 // Inicio
 renderStations();
