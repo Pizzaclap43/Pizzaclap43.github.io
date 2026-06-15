@@ -185,10 +185,11 @@ header h1 {
     color: var(--secondary);
 }
 
+/* MODIFICADO: Ajuste del gap (espaciado) de 25px a 15px para que quepan 5 botones */
 .player-controls {
     display: flex;
     align-items: center;
-    gap: 25px;
+    gap: 15px; 
     width: 40%;
     justify-content: center;
 }
@@ -197,13 +198,14 @@ header h1 {
     background: none;
     border: none;
     color: var(--text-light);
-    font-size: 2rem;
+    font-size: 1.8rem;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: color 0.2s, transform 0.2s;
 }
 
 .control-btn:hover {
     color: var(--primary);
+    transform: scale(1.1);
 }
 
 .play-pause-btn {
