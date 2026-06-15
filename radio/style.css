@@ -37,6 +37,24 @@ header h1 {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
+/* Widget de Reloj y Clima integrado */
+.user-info {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.4); 
+    padding: 10px 15px;
+    border-radius: 15px;
+    border: 1px solid var(--primary); 
+    color: var(--text-light);
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
 .search-container {
     max-width: 600px;
     margin: 0 auto;
@@ -185,7 +203,6 @@ header h1 {
     color: var(--secondary);
 }
 
-/* MODIFICADO: Ajuste del gap (espaciado) de 25px a 15px para que quepan 5 botones */
 .player-controls {
     display: flex;
     align-items: center;
@@ -270,6 +287,12 @@ header h1 {
 }
 
 @media (max-width: 768px) {
+    .user-info { 
+        position: static; 
+        margin: 10px auto; 
+        width: fit-content;
+        text-align: center;
+    }
     .player-container { flex-direction: column; gap: 15px; padding: 15px; }
     .player-info, .player-controls, .volume-container { width: 100%; justify-content: center; }
     body { padding-bottom: 200px; }
