@@ -10,6 +10,11 @@
 <body>
 
     <header>
+        <div class="user-info">
+            <span id="clock">00:00</span>
+            <span id="weather">📍 Cargando...</span>
+        </div>
+
         <h1>🍕 Radio Pizza</h1>
         <div class="search-container">
             <i class="fas fa-search"></i>
@@ -23,7 +28,7 @@
     </div>
 
     <main class="grid-container" id="station-list">
-        </main>
+    </main>
 
     <audio id="audioElement" preload="none"></audio>
 
@@ -41,11 +46,9 @@
         <div class="player-controls">
             <button class="control-btn" onclick="stopAudio()" title="Detener"><i class="fas fa-stop"></i></button>
             <button class="control-btn" onclick="prevStation()" title="Anterior"><i class="fas fa-step-backward"></i></button>
-            
             <button class="control-btn play-pause-btn" id="playPauseBtn" onclick="togglePlayPause()"><i class="fas fa-play-circle"></i></button>
-            
             <button class="control-btn" onclick="nextStation()" title="Siguiente"><i class="fas fa-step-forward"></i></button>
-            <button class="control-btn" id="playerFavBtn" onclick="toggleFavoriteFromPlayer()" title="Añadir a Favoritos"><i class="far fa-heart"></i></button>
+            <button class="control-btn" id="playerFavBtn" onclick="toggleFavoriteFromPlayer()" title="Favoritos"><i class="far fa-heart"></i></button>
         </div>
 
         <div class="volume-container">
