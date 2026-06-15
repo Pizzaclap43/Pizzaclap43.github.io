@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tablero - Neon Dash</title>
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        .contenedor-principal {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            max-width: 80%;
+        }
+
+        #reloj-neon {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+        }
+
+        #clima-neon {
+            font-size: 1.5rem;
+            color: #00ffff;
+            text-shadow: 0 0 5px #00ffff;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="contenedor-principal">
+        <div id="reloj-neon">00:00:00</div>
+        <div id="clima-neon">Localizando...</div>
+    </div>
+
+    <script>
+        // --- LÓGICA DEL RELOJ ---
+        function actualizarReloj() {
+            const ahora = new Date();
+            const horas = String(ahora.getHours()).padStart(2, '0');
+            const minutos = String(ahora.getMinutes()).padStart(2, '0');
+            const segundos = String(ahora.getSeconds()).padStart(2, '0');
+            document.getElementById('reloj-neon').textContent = `${horas}:${minutos}:${segundos}`;
+        }
+        setInterval(actualizarReloj, 1000);
+        actualizarReloj();
+
+        // --- LÓGICA DEL CLIMA ---
+        function obtenerDescripcionClima(codigo) {
+            if (codigo === 0) return "Despejado";
+            if (codigo >= 1 && codigo <= 3) return "Parcialmente nublado";
+            if (codigo >= 45 && codigo <= 48) return "Niebla";
+            if (codigo >= 51 && codigo <= 67) return "Lloviendo";
+            if (codigo >= 71 && codigo <= 77) return "Nevando";
+            if (codigo >= 80 && codigo <= 82) return "Chubascos";
+            if (codigo >= 95 && codigo <= 99) return "Tormenta";
+            return "Nublado";
+        }
+
+        async function obtenerClima() {
+            const display = document.getElementById('clima-neon');
+            
+            if (!navigator.geolocation) {
+                display.textContent = "Geolocalización no soportada";
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(async (posicion) => {
+                const lat = posicion.coords.latitude;
+                const lon = posicion.coords.longitude;
+
+                try {
+                    // 1. Buscamos el nombre de la zona (Nominatim)
+                    const urlGeo = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
+                    const resGeo = await fetch(urlGeo);
+                    const datosGeo = await resGeo.json();
+                    
+                    // Tratamos de buscar ciudad, pueblo o villa
+                    const ciudad = datosGeo.address.city || datosGeo.address.town || datosGeo.address.village || "Tu ubicación";
+
+                    // 2. Buscamos el clima (Open-Meteo)
+                    const urlClima = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`;
+                    const resClima = await fetch(urlClima);
+                    const datosClima = await resClima.json();
+                    
+                    const temp = Math.round(datosClima.current.temperature_2m);
+                    const codigo = datosClima.current.weather_code;
+                    const desc = obtenerDescripcionClima(codigo);
+
+                    // 3. Imprimimos el resultado
+                    display.textContent = `${ciudad}: ${desc} - ${temp}°C`;
+
+                } catch (error) {
+                    display.textContent = "Error al cargar datos";
+                    console.error(error);
+                }
+
+            }, () => {
+                display.textContent = "Activa la ubicación para ver clima y zona";
+            });
+        }
+
+        obtenerClima();
+    </script>
+</body>
+</html>
