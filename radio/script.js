@@ -19,7 +19,6 @@ const stationsData = [
     { id: 17, name: "Hot 94.1 FM", url: "https://acp2.lorini.net:58300/stream" }
 ];
 
-// --- 2. ESTADO DE LA APP ---
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
 let currentTab = 'all'; 
 let currentStation = null;
@@ -28,7 +27,6 @@ let isPlaying = false;
 let isMuted = false;
 let previousVolume = 0.8;
 
-// --- 3. ELEMENTOS DEL DOM ---
 const stationListEl = document.getElementById('station-list');
 const searchInput = document.getElementById('searchInput');
 const audio = document.getElementById('audioElement');
@@ -40,11 +38,20 @@ const vinyl = document.getElementById('vinyl');
 const visualizer = document.getElementById('visualizer');
 const volumeSlider = document.getElementById('volumeSlider');
 const muteIcon = document.getElementById('muteIcon');
+const toastContainer = document.getElementById('toast-container');
 
-// Inicializar volumen
 audio.volume = 0.8;
 
-// --- 4. FUNCIONES DE RELOJ Y CLIMA ---
+// --- FUNCIONES DE NOTIFICACIÓN ---
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    toastContainer.appendChild(toast);
+    setTimeout(() => { toast.remove(); }, 3000);
+}
+
+// --- RELOJ Y CLIMA ---
 function updateClock() {
     const now = new Date();
     document.getElementById('clock').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
@@ -62,18 +69,20 @@ function getWeather() {
                 .then(data => {
                     document.getElementById('weather').textContent = `🌡️ ${Math.round(data.current.temperature_2m)}°C`;
                 })
-                .catch(() => document.getElementById('weather').textContent = "🌡️ --°C");
+                .catch(() => {
+                    document.getElementById('weather').textContent = "🌡️ --°C";
+                    showToast("No se pudo actualizar el clima");
+                });
         }, () => {
             document.getElementById('weather').textContent = "📍 Ubicación bloqueada";
+            showToast("Activa tu ubicación para ver el clima");
         });
     }
 }
 getWeather();
-
-// --- AJUSTE: Actualización automática del clima cada 30 minutos ---
 setInterval(getWeather, 30 * 60 * 1000);
 
-// --- 5. FUNCIONES DE INTERFAZ ---
+// --- INTERFAZ ---
 searchInput.addEventListener('input', () => renderStations());
 
 function setTab(tab) {
@@ -86,13 +95,8 @@ function setTab(tab) {
 function renderStations() {
     const query = searchInput.value.toLowerCase();
     stationListEl.innerHTML = '';
-
     let filtered = stationsData.filter(station => station.name.toLowerCase().includes(query));
-
-    if (currentTab === 'fav') {
-        filtered = filtered.filter(station => favorites.includes(station.id));
-    }
-
+    if (currentTab === 'fav') filtered = filtered.filter(station => favorites.includes(station.id));
     currentPlaylist = filtered; 
 
     if (filtered.length === 0) {
@@ -105,7 +109,6 @@ function renderStations() {
         const card = document.createElement('div');
         card.className = 'station-card';
         card.onclick = () => selectStation(station);
-
         card.innerHTML = `
             <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, ${station.id})">
                 <i class="${isFav ? 'fas' : 'far'} fa-heart"></i>
@@ -118,13 +121,12 @@ function renderStations() {
     });
 }
 
-// --- 6. FUNCIONES DE REPRODUCTOR Y NAVEGACIÓN ---
+// --- REPRODUCTOR ---
 function selectStation(station) {
     currentStation = station;
     currentStationNameEl.textContent = station.name;
     playerUI.classList.add('show');
     updatePlayerFavIcon();
-
     audio.src = station.url;
     playAudio();
 }
@@ -151,7 +153,7 @@ function playAudio() {
         visualizer.classList.add('active');
     }).catch(error => {
         console.error("Error:", error);
-        alert("Error de conexión");
+        showToast("Error de conexión: No se pudo reproducir la emisora");
         stopAudio();
     });
 }
@@ -205,7 +207,7 @@ function updateMuteIcon() {
     muteIcon.style.color = (audio.volume === 0) ? "var(--primary)" : "var(--text-light)";
 }
 
-// --- 7. SISTEMA DE FAVORITOS ---
+// --- FAVORITOS ---
 function toggleFavorite(event, stationId) {
     event.stopPropagation();
     if (favorites.includes(stationId)) {
@@ -236,9 +238,6 @@ function updatePlayerFavIcon() {
     playerFavBtn.innerHTML = `<i class="${isFav ? 'fas' : 'far'} fa-heart" style="color: ${isFav ? 'var(--primary)' : 'var(--text-light)'}"></i>`;
 }
 
-// Eventos del Audio
 audio.addEventListener('waiting', () => visualizer.classList.remove('active'));
 audio.addEventListener('playing', () => visualizer.classList.add('active'));
-
-// Inicio
 renderStations();
