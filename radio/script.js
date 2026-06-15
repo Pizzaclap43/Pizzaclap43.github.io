@@ -23,6 +23,7 @@ const stationsData = [
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
 let currentTab = 'all'; // 'all' o 'fav'
 let currentStation = null;
+let currentPlaylist = []; // NUEVO: Guarda la lista actual que se está mostrando en pantalla
 let isPlaying = false;
 let isMuted = false;
 let previousVolume = 0.8;
@@ -67,6 +68,8 @@ function renderStations() {
         filtered = filtered.filter(station => favorites.includes(station.id));
     }
 
+    currentPlaylist = filtered; // Guardamos la lista actual para poder usar Anterior/Siguiente
+
     if (filtered.length === 0) {
         stationListEl.innerHTML = `<div class="empty-message">No se encontraron emisoras 😔</div>`;
         return;
@@ -101,6 +104,37 @@ function selectStation(station) {
     audio.src = station.url;
     playAudio();
 }
+
+// ---- NUEVO: Funciones de Anterior y Siguiente ----
+function nextStation() {
+    if (!currentStation || currentPlaylist.length === 0) return;
+    
+    // Buscar la posición de la emisora actual en la lista que estamos viendo
+    let currentIndex = currentPlaylist.findIndex(s => s.id === currentStation.id);
+    let nextIndex = currentIndex + 1;
+
+    // Si llega al final de la lista, vuelve al principio
+    if (nextIndex >= currentPlaylist.length) {
+        nextIndex = 0; 
+    }
+    
+    selectStation(currentPlaylist[nextIndex]);
+}
+
+function prevStation() {
+    if (!currentStation || currentPlaylist.length === 0) return;
+    
+    let currentIndex = currentPlaylist.findIndex(s => s.id === currentStation.id);
+    let prevIndex = currentIndex - 1;
+
+    // Si está en la primera emisora, retrocede al final de la lista
+    if (prevIndex < 0) {
+        prevIndex = currentPlaylist.length - 1; 
+    }
+    
+    selectStation(currentPlaylist[prevIndex]);
+}
+// -------------------------------------------------
 
 // Controles de Audio
 function playAudio() {
