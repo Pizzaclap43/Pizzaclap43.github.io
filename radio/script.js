@@ -60,15 +60,35 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
+// Función traductora de códigos del clima a español
+function getWeatherDescription(code) {
+    if (code === 0) return "Despejado ☀️";
+    if (code === 1) return "Mayormente despejado 🌤️";
+    if (code === 2) return "Parcialmente nublado ⛅";
+    if (code === 3) return "Nublado ☁️";
+    if (code === 45 || code === 48) return "Niebla 🌫️";
+    if (code >= 51 && code <= 57) return "Llovizna 🌧️";
+    if (code >= 61 && code <= 67) return "Lluvia 🌧️";
+    if (code >= 71 && code <= 77) return "Nieve ❄️";
+    if (code >= 80 && code <= 82) return "Chubascos 🌦️";
+    if (code >= 85 && code <= 86) return "Chubascos de nieve 🌨️";
+    if (code === 95) return "Tormenta ⛈️";
+    if (code === 96 || code === 99) return "Tormenta con granizo ⛈️🧊";
+    return ""; // Por si no reconoce el código
+}
+
 function getWeather() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
-            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m`)
+            // Modificamos la URL para que también devuelva el weather_code
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code`)
                 .then(res => res.json())
                 .then(data => {
-                    document.getElementById('weather').textContent = `🌡️ ${Math.round(data.current.temperature_2m)}°C`;
+                    const temp = Math.round(data.current.temperature_2m);
+                    const desc = getWeatherDescription(data.current.weather_code);
+                    document.getElementById('weather').textContent = `🌡️ ${temp}°C | ${desc}`;
                 })
                 .catch(() => {
                     document.getElementById('weather').textContent = "🌡️ --°C";
