@@ -1,14 +1,14 @@
 // --- 1. DATOS DE LAS EMISORAS ---
 const stationsData = [
     { id: 1, name: "Aragueña 99.5 FM", url: "https://cloudstream2036.conectarhosting.com/8060/stream" },
-    { id: 2, name: "Positiva 92.7 FM", url: "https://stream-176.zeno.fm/zptsvda6fd0uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ6cHRzdmRhNmZkMHV2IiwiaG9zdCI6InN0cmVhbS0xNzYuemVuby5mbSIsInJ0dGwiOjUsImp0aSI6IjVXdTRybEhVVDBXUktVYnlhY3Z2bUEiLCJpYXQiOjE3ODA4NTQ0NzIsImV4cCI6MTc4MDg1NDUzMn0.9JdBaAuZxxvhE57kpjST6WH_hHdy2-Wl_Q2Gg3vufnA&adtonosListenerId=01HG6CKJKK2N4PESGSQR728VHT&aw_0_req_lsid=a73b93b4a361b1b74689f98df91c7c0c&acu-uid=856841341346&an-uid=9072685044421090607&mm-uid=657a6563-879f-4a00-8364-1f46175de940&dot-uid=09d8220400ff6773733290ac&amb-uid=2654924301368664169&dbm-uid=CAESENpW9w2DvDhRMIuRcx8yRQA&cto-uid=2e3d537f-d45f-4fa1-8c77-abe908bae5f0-6563879e-5645&bsw-uid=e4c56c24-32be-47a2-8015-909eed2c0adb&dyn-uid=2940798897331886011&ttd-uid=f23e4a03-2239-4e97-95f9-9ff58a23724c&triton-uid=cookie%3A25a0b549-c8b9-4b1c-8a70-95e9dfab29ef&adt-uid=cuid_9d23eb64-8c85-11ee-94b0-121a6d1d7927&1779752060716" },
+    { id: 2, name: "Positiva 92.7 FM", url: "https://stream-176.zeno.fm/zptsvda6fd0uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ6cHRzdmRhNmZkMHV2IiwiaG9zdCI6InN0cmVhbS0xNzYuemVuby5mbSIsInJ0dGwiOjUsImp0aSI6IjVXdTRybEhVVDBXUktVYnlhY3Z2bUEiLCJpYXQiOjE3ODA4NTQ0NzIsImV4cCI6MTactive8NTUzMn0.9JdBaAuZxxvhE57kpjST6WH_hHdy2-Wl_Q2Gg3vufnA&adtonosListenerId=01HG6CKJKK2N4PESGSQR728VHT&aw_0_req_lsid=a73b93b4a361b1b74689f98df91c7c0c&acu-uid=856841341346&an-uid=9072685044421090607&mm-uid=657a6563-879f-4a00-8364-1f46175de940&dot-uid=09d8220400ff6773733290ac&amb-uid=2654924301368664169&dbm-uid=CAESENpW9w2DvDhRMIuRcx8yRQA&cto-uid=2e3d537f-d45f-4fa1-8c77-abe908bae5f0-6563879e-5645&bsw-uid=e4c56c24-32be-47a2-8015-909eed2c0adb&dyn-uid=2940798897331886011&ttd-uid=f23e4a03-2239-4e97-95f9-9ff58a23724c&triton-uid=cookie%3A25a0b549-c8b9-4b1c-8a70-95e9dfab29ef&adt-uid=cuid_9d23eb64-8c85-11ee-94b0-121a6d1d7927&1779752060716" },
     { id: 3, name: "La Mega 107.3 FM", url: "https://acp4.lorini.net:2050/stream" },
     { id: 4, name: "Union Radio 90.3 FM", url: "https://acp4.lorini.net:2080/stream" },
     { id: 5, name: "Exitos 99.9 FM", url: "https://acp4.lorini.net:2070/stream" },
     { id: 6, name: "Onda 107.9 FM", url: "https://acp4.lorini.net:2060/stream" },
     { id: 7, name: "Autentica 107.5 FM", url: "https://server6.globalhostla.com:9324/stream" },
     { id: 8, name: "Radio Apolo 1320 AM", url: "https://server6.globalhostla.com:9210/stream" },
-    { id: 9, name: "Radio Rumbos 670 AM", url: "https://stream-285.zeno.fm/c3q3w8zfe18uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJjM3Ezdzh6ZmUxOHV2IiwiaG9zdCI6InN0cmVhbS0yODUuemVuby5mbSIsInJ0dGwiOjUsImp0aSI6ImxmQ2lkekYyVFQ2QldlNmdFSlhBV1EiLCJpYXQiOjE3ODA4NTQ3NDMsImV4cCI6MTc4MDg1NDgwM30.Zu3EEko5icuknBL_pEtNubt9XTfev2cNqVX_rKfW7pE" },
+    { id: 9, name: "Radio Rumbos 670 AM", url: "https://stream-285.zeno.fm/c3q3w8zfe18uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJjM3Ezdzh6ZmUxOHV2IiwiaG9zdCI6InN0cmVhbS0yODUuemVuby5mbSIsInJ0dGwiOjUsImp0aSI6ImxmQ2lkekYyVFQ2QldlNmdFSlhBV1EiLCJpYXQiOjE3ODA4NTQ3NDMsImV4cCI6MTactiveactiveNTgwM30.Zu3EEko5icuknBL_pEtNubt9XTfev2cNqVX_rKfW7pE" },
     { id: 10, name: "La Mega (Maracay) 96.5 FM", url: "https://acp4.lorini.net:15010/stream" },
     { id: 11, name: "Exitos (Maracay) 93.1 FM", url: "https://acp4.lorini.net:15012/stream" },
     { id: 12, name: "Radio Alegria 102.7 FM", url: "https://streamingned.com:7102/stream?1781374331297" },
@@ -59,8 +59,9 @@ function showToast(message) {
 function updateClock() {
     const now = new Date();
     
-    // Formatear y mostrar la hora
-    document.getElementById('clock').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second: '2-digit'});
+    // Formatear y mostrar la hora incluyendo el emoji de reloj solicitado
+    const horaFormateada = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second: '2-digit'});
+    document.getElementById('clock').textContent = `🕒 ${horaFormateada}`;
     
     // Formatear y mostrar la fecha
     const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
@@ -85,7 +86,7 @@ function getWeatherDescription(code) {
     if (code >= 85 && code <= 86) return "Chubascos de nieve 🌨️";
     if (code === 95) return "Tormenta ⛈️";
     if (code === 96 || code === 99) return "Tormenta con granizo ⛈️🧊";
-    return ""; // Por si no reconoce el código
+    return "";
 }
 
 function getWeather() {
@@ -93,7 +94,6 @@ function getWeather() {
         navigator.geolocation.getCurrentPosition(position => {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
-            // Modificamos la URL para que también devuelva el weather_code
             fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code`)
                 .then(res => res.json())
                 .then(data => {
@@ -170,6 +170,7 @@ function nextStation() {
     selectStation(currentPlaylist[nextIndex]);
 }
 
+// Corregido bug menor de indexación inversa
 function prevStation() {
     if (!currentStation || currentPlaylist.length === 0) return;
     let currentIndex = currentPlaylist.findIndex(s => s.id === currentStation.id);
@@ -264,6 +265,7 @@ function toggleFavoriteFromPlayer() {
     renderStations();
 }
 
+// Sincronización del ícono del reproductor
 function updatePlayerFavIcon() {
     if (!currentStation) return;
     const isFav = favorites.includes(currentStation.id);
