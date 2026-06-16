@@ -20,6 +20,11 @@ body {
     padding-bottom: 120px;
 }
 
+/* Mejoras globales para dispositivos táctiles (Evita resalta azul nativo al pulsar) */
+.tab-btn, .station-card, .control-btn, .fav-btn, .volume-slider {
+    -webkit-tap-highlight-color: transparent;
+}
+
 header {
     background: linear-gradient(135deg, var(--primary), #c0392b);
     padding: 20px;
@@ -307,9 +312,94 @@ header h1 {
 @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
+/* ESTRUCTURACIÓN COMPLETA PARA DISPOSITIVOS TÁCTILES (MÓVILES Y TABLETS) */
 @media (max-width: 768px) {
-    .user-info { position: static; margin: 10px auto; width: fit-content; text-align: center; }
-    .player-container { flex-direction: column; gap: 15px; padding: 15px; }
-    .player-info, .player-controls, .volume-container { width: 100%; justify-content: center; }
-    body { padding-bottom: 200px; }
+    .user-info { 
+        position: static; 
+        margin: 10px auto 15px auto; 
+        width: 90%; 
+        max-width: 450px;
+        flex-direction: row; /* Estructura horizontal limpia en móviles */
+        flex-wrap: wrap;
+        justify-content: center; 
+        gap: 12px; 
+        padding: 8px 12px;
+    }
+    
+    .tabs {
+        gap: 10px;
+        padding: 0 15px;
+    }
+
+    .tab-btn {
+        padding: 12px 20px; /* Botones más altos y fáciles de presionar */
+        font-size: 0.95rem;
+        flex: 1;
+        max-width: 200px;
+        text-align: center;
+    }
+
+    .grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Parrilla de 2 columnas compactas en pantallas chicas */
+        gap: 12px;
+        padding: 0 12px;
+    }
+    
+    .station-card {
+        padding: 15px 10px;
+    }
+    
+    .station-icon {
+        font-size: 2.5rem;
+        margin-bottom: 8px;
+    }
+
+    .station-name {
+        font-size: 1rem;
+    }
+
+    .fav-btn {
+        top: 10px;
+        right: 10px;
+        padding: 8px; /* Área de toque expandida para el corazón */
+    }
+
+    /* Rediseño del reproductor para dedos */
+    .player-container { 
+        flex-direction: column; 
+        gap: 12px; 
+        padding: 15px; 
+    }
+
+    .player-info { 
+        width: 100%; 
+        justify-content: center; 
+        text-align: center; 
+    }
+
+    .player-controls { 
+        width: 100%; 
+        justify-content: space-around; /* Separa los botones para evitar toques erróneos */
+        gap: 5px;
+    }
+
+    .control-btn {
+        padding: 10px 14px; /* Mayor hitbox táctil */
+    }
+
+    .volume-container { 
+        width: 100%; 
+        justify-content: center; 
+        margin-top: 5px;
+        gap: 15px;
+    }
+
+    .volume-slider {
+        width: 65%; /* Deslizador más ancho en móviles */
+        height: 8px; /* Más grueso para arrastrar fácilmente con el pulgar */
+    }
+
+    body { 
+        padding-bottom: 190px; /* Ajuste del espacio inferior por el player más alto */
+    }
 }
