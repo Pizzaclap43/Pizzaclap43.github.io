@@ -1,7 +1,3 @@
-// ── Splash: bloquear scroll mientras carga
-document.body.style.overflow = 'hidden';
-setTimeout(() => { document.body.style.overflow = ''; }, 3400);
-
 // ── Navbar: clase scrolled al bajar
 window.addEventListener('scroll', () => {
     document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
@@ -13,13 +9,31 @@ document.getElementById('navToggle').addEventListener('click', () => {
 });
 
 // ── Cerrar menu mobile al hacer click en un link
-document.querySelectorAll('.nav-link:not(.nav-soon)').forEach(link => {
+document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', () => {
         document.getElementById('navLinks').classList.remove('open');
     });
 });
 
-// ── YouTube: cargar último video automáticamente
+// ── Reproductor de Radio Pizza
+const btnPlay = document.getElementById('playRadio');
+const audioRadio = document.getElementById('audioRadio');
+
+if (btnPlay && audioRadio) {
+    const iconPlay = btnPlay.querySelector('i');
+    
+    btnPlay.addEventListener('click', () => {
+        if (audioRadio.paused) {
+            audioRadio.play();
+            iconPlay.classList.replace('fa-play', 'fa-pause');
+        } else {
+            audioRadio.pause();
+            iconPlay.classList.replace('fa-pause', 'fa-play');
+        }
+    });
+}
+
+// ── YouTube API (Asegurado por dominio)
 const YT_API_KEY   = 'AIzaSyAp9QRBNfxQcq3ldn-NMzzeKxJzDpWsvzs';
 const YT_CHANNEL_ID = 'UCAHqT9NOnooeGQO6xVCuf3g';
 
@@ -32,22 +46,18 @@ async function cargarUltimoVideo() {
         const res  = await fetch(url);
         const data = await res.json();
 
-        if (data.error) {
-            console.warn('YouTube API error:', data.error.message);
-            return;
-        }
+        if (data.error) return;
 
         const video = data.items?.[0];
         if (!video) return;
 
-        const videoId    = video.id.videoId;
-        const iframe     = wrapper.querySelector('iframe');
+        const videoId = video.id.videoId;
+        const iframe = wrapper.querySelector('iframe');
         if (iframe) {
             iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0`;
         }
-
     } catch (err) {
-        console.warn('No se pudo cargar el último video:', err);
+        console.warn('No se pudo cargar el último video', err);
     }
 }
 
