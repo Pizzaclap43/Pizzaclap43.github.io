@@ -17,7 +17,8 @@ const stationsData = [
     { id: 15, name: "Fiesta 106.5 FM", url: "https://acp2.lorini.net:58200/stream" },
     { id: 16, name: "Candela Pura 91.9 FM", url: "https://acp2.lorini.net:58400/stream" },
     { id: 17, name: "Hot 94.1 FM", url: "https://acp2.lorini.net:58300/stream" },
-    { id: 18, name: "Rumbera Network (Barquisimeto) 106.7 FM", url: "https://stream-178.surfernetwork.com/9sakldmmzc7vv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiI5c2FrbGRtbXpjN3Z2IiwiaG9zdCI6InN0cmVhbS0xNzguc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJyOUozWFZlSVJJT3BJNzA3bmNsN2xRIiwiaWF0IjoxNzgxNTY3NjE2LCJleHAiOjE3ODE1Njc2NzZ9.74y8wNdJ5GUCqEcEGzCLk8HOB1pG-Udtic0YqTRcnQM" }
+    { id: 18, name: "Rumbera Network (Barquisimeto) 106.7 FM", url: "https://stream-178.surfernetwork.com/9sakldmmzc7vv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiI5c2FrbGRtbXpjN3Z2IiwiaG9zdCI6InN0cmVhbS0xNzguc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJyOUozWFZlSVJJT3BJNzA3bmNsN2xRIiwiaWF0IjoxNzgxNTY3NjE2LCJleHAiOjE3ODE1Njc2NzZ9.74y8wNdJ5GUCqEcEGzCLk8HOB1pG-Udtic0YqTRcnQM" },
+    { id: 19, name: "Rumbera Network (Barcelona) 94.5 FM", url: "https://server6.globalhostla.com:8012/stream" }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
