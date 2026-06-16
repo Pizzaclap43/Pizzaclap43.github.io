@@ -4,134 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 - Página no encontrada | Pizzaclap43</title>
-    <link rel="icon" type="image/png" href="https://pizzaclap43.github.io/avatarHead.png">
+    <link rel="icon" type="image/png" href="avatarHead.png">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-            --bg: #0a0a0f;
-            --surface: rgba(255,255,255,0.04);
-            --border: rgba(255,255,255,0.08);
-            --border-hover: rgba(255,255,255,0.18);
-            --text-primary: #f0f0f5;
-            --text-secondary: rgba(240,240,245,0.5);
-            --accent: #7c6fff;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            overflow: hidden;
-        }
-
-        .glow {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(120px);
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.3;
-        }
-
-        .glow-1 {
-            width: 450px; height: 450px;
-            background: radial-gradient(circle, #7c6fff55, transparent 70%);
-            top: -100px; left: -100px;
-        }
-
-        .glow-2 {
-            width: 350px; height: 350px;
-            background: radial-gradient(circle, #ff6b9d44, transparent 70%);
-            bottom: 0; right: -80px;
-        }
-
-        .error-container {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            max-width: 420px;
-            width: 100%;
-            padding: 48px 36px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            backdrop-filter: blur(12px);
-        }
-
-        .error-code {
-            font-size: 5rem;
-            font-weight: 700;
-            line-height: 1;
-            background: linear-gradient(135deg, #f0f0f5 30%, #7c6fff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 16px;
-            letter-spacing: -2px;
-        }
-
-        h1 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: var(--text-primary);
-        }
-
-        p {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-bottom: 32px;
-            line-height: 1.6;
-        }
-
-        .btn-home {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            background: linear-gradient(135deg, rgba(124,111,255,0.2), rgba(255,107,157,0.1));
-            border: 1px solid rgba(124,111,255,0.35);
-            border-radius: 10px;
-            color: var(--text-primary);
-            text-decoration: none;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: transform 0.2s, border-color 0.2s, background 0.2s;
-        }
-
-        .btn-home:hover {
-            transform: translateY(-2px);
-            border-color: rgba(124,111,255,0.6);
-            background: linear-gradient(135deg, rgba(124,111,255,0.28), rgba(255,107,157,0.15));
-        }
-
-        .btn-home i {
-            font-size: 0.9rem;
-        }
+        .error-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px; position: relative; }
+        .error-code { font-size: 6rem; font-weight: 800; background: linear-gradient(135deg, #fafafa 30%, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; margin-bottom: 16px; }
+        .error-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); text-decoration: none; font-weight: 500; margin-top: 24px; transition: background 0.2s; }
+        .error-btn:hover { background: var(--surface-hover); }
     </style>
 </head>
 <body>
-
-    <div class="glow glow-1"></div>
-    <div class="glow glow-2"></div>
-
-    <div class="error-container">
-        <div class="error-code">404</div>
-        <h1>Página no encontrada</h1>
-        <p>Esta página se perdió en el servidor o nunca existió.<br>Vuelve al inicio.</p>
-        <a href="https://pizzaclap43.github.io" class="btn-home">
-            <i class="fas fa-arrow-left"></i> Volver al inicio
-        </a>
+    <div class="error-section">
+        <div class="hero-glow hero-glow-1"></div>
+        <div class="error-content" style="z-index: 1;">
+            <div class="error-code">404</div>
+            <h2>¡Uy! Te perdiste</h2>
+            <p style="color: var(--text-muted); margin-top: 8px;">Esta página se perdió en el servidor o nunca existió.</p>
+            <a href="index.html" class="error-btn"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+        </div>
     </div>
-
 </body>
 </html>
