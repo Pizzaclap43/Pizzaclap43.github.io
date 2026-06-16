@@ -55,10 +55,18 @@ function showToast(message) {
     setTimeout(() => { toast.remove(); }, 3000);
 }
 
-// --- RELOJ Y CLIMA ---
+// --- FECHA, RELOJ Y CLIMA ---
 function updateClock() {
     const now = new Date();
+    
+    // Formatear y mostrar la hora
     document.getElementById('clock').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second: '2-digit'});
+    
+    // Formatear y mostrar la fecha
+    const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+    let fechaFormateada = now.toLocaleDateString('es-ES', opcionesFecha);
+    fechaFormateada = fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1); // Capitaliza la primera letra
+    document.getElementById('date').textContent = `📅 ${fechaFormateada}`;
 }
 setInterval(updateClock, 1000);
 updateClock();
