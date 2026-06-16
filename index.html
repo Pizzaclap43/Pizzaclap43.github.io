@@ -3,17 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Pizza Web | Pizzaclap43</title>
-    <meta name="description" content="Página oficial de Pizzaclap43. Encuentra mis redes sociales, proyectos, blog y más contenido.">
-    <meta name="keywords" content="Pizzaclap43, Neon Dash, ClassiCube, Pizza Server, Creador de contenido, Venezuela">
-    <meta name="author" content="Pizzaclap43">
-
-    <meta property="og:title" content="Pizza Web - Pizzaclap43">
-    <meta property="og:description" content="La página web oficial de Pizzaclap43.">
-    <meta property="og:image" content="https://pizzaclap43.github.io/perfil.png">
-    <meta property="og:url" content="https://pizzaclap43.github.io">
-
+    <meta name="description" content="Página oficial de Pizzaclap43. Encuentra mis redes sociales, proyectos, blog y mas contenido.">
     <link rel="icon" type="image/png" href="avatarHead.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -21,151 +12,112 @@
 </head>
 <body>
 
-    <!-- SPLASH SCREEN -->
-    <div class="splash" id="splash">
-        <div class="splash-bg"></div>
-        <div class="splash-content">
-            <div class="splash-logo">🍕</div>
-            <h1 class="splash-title">Pizza Web</h1>
-            <p class="splash-msg">Bienvenidos a Pizza Web, la página web oficial de Pizzaclap43</p>
-            <div class="splash-bar"><div class="splash-bar-fill"></div></div>
-        </div>
-    </div>
-
-    <!-- NAVBAR -->
+    <!-- NAVBAR ACTUALIZADO -->
     <nav class="navbar" id="navbar">
-        <a href="#hero" class="nav-brand">🍕 Pizza Web</a>
+        <a href="index.html" class="nav-brand">
+            <img src="perfil.png" alt="Logo Pizzaclap43" class="nav-logo">
+            <span class="nav-title">Pizzaclap43</span>
+        </a>
         <button class="nav-toggle" id="navToggle" aria-label="Menú">
             <i class="fas fa-bars"></i>
         </button>
         <ul class="nav-links" id="navLinks">
             <li><a href="#mas" class="nav-link">Más</a></li>
-            <li><a href="#" class="nav-link nav-soon" data-tooltip="Próximamente">¿Quién soy?</a></li>
-            <li><a href="#" class="nav-link nav-soon" data-tooltip="Próximamente">Galería</a></li>
+            <li><a href="quien-soy.html" class="nav-link">¿Quién soy?</a></li>
+            <li><a href="galeria.html" class="nav-link">Galería</a></li>
             <li><a href="https://pizzaclap43net.blogspot.com" target="_blank" class="nav-link">Blog</a></li>
         </ul>
     </nav>
 
-    <!-- HERO -->
+    <!-- HERO CON BIENVENIDA Y BADGE ABAJO -->
     <section class="hero" id="hero">
         <div class="hero-glow hero-glow-1"></div>
         <div class="hero-glow hero-glow-2"></div>
-        <div class="hero-glow hero-glow-3"></div>
         <div class="hero-content">
-            <div class="hero-avatar-wrap">
-                <img src="perfil.png" alt="Pizzaclap43" class="hero-avatar">
-                <div class="hero-avatar-ring"></div>
-            </div>
-            <div class="hero-badge">🇻🇪 Venezuela</div>
-            <h1 class="hero-title">Pizzaclap43</h1>
-            <p class="hero-sub">Creador de Contenido &amp; Desarrollador</p>
-            <div class="hero-chips">
-                <span class="chip">🎮 Gaming</span>
-                <span class="chip">💻 Dev</span>
-                <span class="chip">🎵 Música</span>
-                <span class="chip">📺 Streaming</span>
-            </div>
+            <h1 class="hero-title">¡Hola y bienvenidos!</h1>
+            <p class="hero-sub">Página oficial de Pizzaclap43 donde podras ver actualizaciones, contenido unico y muchas cosas mas...</p>
+            <div class="hero-badge" style="margin-top: 10px;">🇻🇪 Hecho en Venezuela</div>
         </div>
-        <div class="hero-scroll-hint">
-            <i class="fas fa-chevron-down"></i>
-        </div>
+        <div class="hero-scroll-hint"><i class="fas fa-chevron-down"></i></div>
     </section>
     
     <!-- ÚLTIMO VIDEO -->
-<section class="section" id="video">
-    <div class="section-inner">
-        <p class="section-label">🎬 Último video</p>
-        <div class="video-wrapper" id="videoWrapper">
-            <iframe
-                src="https://www.youtube.com/embed/rdKisMpCmzI?si=mDrRXaTHS-rsA2oI"
-                title="Último video de Pizzaclap43"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allowfullscreen>
-            </iframe>
+    <section class="section" id="video">
+        <div class="section-inner">
+            <p class="section-label">🎬 Último video</p>
+            <div class="video-wrapper" id="videoWrapper">
+                <iframe src="https://www.youtube.com/embed/rdKisMpCmzI?si=mDrRXaTHS-rsA2oI" title="Último video" frameborder="0" allowfullscreen></iframe>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
-    <!-- MÁS -->
+    <!-- MÁS (Con las tarjetas de Venezuela, CatWeb y Hasta Luego) -->
     <section class="section" id="mas">
         <div class="section-inner">
             <p class="section-label">🗂️ Más contenido</p>
             <div class="mas-grid">
-                <a href="https://pizzaclap43.github.io/Neon-Dash" target="_blank" class="mas-card" style="--c1:#7c6fff;--c2:#ff6b9d;">
-                    <i class="fas fa-bolt"></i>
-                    <span>Neon Dash</span>
-                </a>
-                <a href="https://pizzaclap43.github.io/PizzaServer" class="mas-card" style="--c1:#ff6b35;--c2:#f7c948;">
-                    <i class="fas fa-cube"></i>
-                    <span>Pizza Server</span>
-                </a>
-                <a href="https://pizzaclap43.github.io/ClassiCube" target="_blank" class="mas-card" style="--c1:#43cea2;--c2:#185a9d;">
-                    <i class="fas fa-cubes"></i>
-                    <span>ClassiCube</span>
-                </a>
-                <a href="https://pizzaclap43.github.io/skins" target="_blank" class="mas-card" style="--c1:#a18cd1;--c2:#fbc2eb;">
-                    <i class="fas fa-shirt"></i>
-                    <span>Skins</span>
-                </a>
-                <a href="https://pizzaclap43.github.io/radio" target="_blank" class="mas-card" style="--c1:#f953c6;--c2:#b91d73;">
-                    <i class="fas fa-radio"></i>
-                    <span>Radio Pizza</span>
-                </a>
-                <a href="https://pizzaclap43.github.io/tv" target="_blank" class="mas-card" style="--c1:#4facfe;--c2:#00f2fe;">
-                    <i class="fas fa-tv"></i>
-                    <span>Pizza TV</span>
-                </a>
-                <a href="https://pizzaclap43.github.io/venezuela" target="_blank" class="mas-card" style="--c1:#f7971e;--c2:#ffd200;">
-                    <i class="fas fa-flag"></i>
-                    <span>Venezuela</span>
-                </a>
-                <a href="https://icat-87.github.io/CatWeb.github.io/" target="_blank" class="mas-card" style="--c1:#ff9a9e;--c2:#fad0c4;">
-                    <i class="fas fa-cat"></i>
-                    <span>CatWeb</span>
-                </a>
-                <a href="https://pizzaclap43.github.io/HASTA-LUEGO/" target="_blank" class="mas-card" style="--c1:#667eea;--c2:#764ba2;">
-                    <i class="fas fa-door-open"></i>
-                    <span>Hasta Luego...</span>
-                </a>
+                <a href="https://pizzaclap43.github.io/Neon-Dash" target="_blank" class="mas-card" style="--c1:#7c6fff;--c2:#ff6b9d;"><i class="fas fa-bolt"></i><span>Neon Dash</span></a>
+                <a href="https://pizzaclap43.github.io/PizzaServer" class="mas-card" style="--c1:#ff6b35;--c2:#f7c948;"><i class="fas fa-cube"></i><span>Pizza Server</span></a>
+                <a href="https://pizzaclap43.github.io/ClassiCube" target="_blank" class="mas-card" style="--c1:#43cea2;--c2:#185a9d;"><i class="fas fa-cubes"></i><span>ClassiCube</span></a>
+                <a href="https://pizzaclap43.github.io/skins" target="_blank" class="mas-card" style="--c1:#a18cd1;--c2:#fbc2eb;"><i class="fas fa-shirt"></i><span>Skins</span></a>
+                <a href="https://pizzaclap43.github.io/radio" target="_blank" class="mas-card" style="--c1:#f953c6;--c2:#b91d73;"><i class="fas fa-radio"></i><span>Radio Pizza</span></a>
+                <a href="https://pizzaclap43.github.io/tv" target="_blank" class="mas-card" style="--c1:#4facfe;--c2:#00f2fe;"><i class="fas fa-tv"></i><span>Pizza TV</span></a>
+                <a href="https://pizzaclap43.github.io/venezuela" target="_blank" class="mas-card" style="--c1:#f7971e;--c2:#ffd200;"><i class="fas fa-flag"></i><span>Venezuela</span></a>
+                <a href="https://icat-87.github.io/CatWeb.github.io/" target="_blank" class="mas-card" style="--c1:#ff9a9e;--c2:#fad0c4;"><i class="fas fa-cat"></i><span>CatWeb</span></a>
+                <a href="https://pizzaclap43.github.io/HASTA-LUEGO/" target="_blank" class="mas-card" style="--c1:#667eea;--c2:#764ba2;"><i class="fas fa-door-open"></i><span>Hasta Luego...</span></a>
             </div>
         </div>
     </section>
 
-    <!-- FOOTER -->
+    <!-- REPRODUCTOR FLOTANTE RADIO PIZZA -->
+    <div class="radio-widget">
+        <div class="radio-info">
+            <i class="fas fa-broadcast-tower"></i>
+            <div class="radio-text">
+                <span class="radio-title">Radio Pizza</span>
+                <span class="radio-status">En vivo</span>
+            </div>
+        </div>
+        <button id="playRadio" class="radio-btn"><i class="fas fa-play"></i></button>
+        <!-- ¡MÉTELE AQUÍ EL LINK DE TU STREAMING! -->
+        <audio id="audioRadio" src="https://acp4.lorini.net:15010/stream"></audio> 
+    </div>
+
+    <!-- FOOTER REORGANIZADO -->
     <footer class="footer">
         <div class="footer-inner">
+            <div class="footer-col brand-col">
+                <img src="perfil.png" alt="Logo" class="footer-logo">
+                <p class="footer-tagline">Creador de Contenido &amp; Desarrollador</p>
+                <a href="mailto:pizzaclapyt@gmail.com" class="footer-mail"><i class="fas fa-envelope"></i> pizzaclapyt@gmail.com</a>
+            </div>
+            
+            <div class="footer-col links-col">
+                <h4 class="footer-title">Legal</h4>
+                <a href="terminos.html" class="footer-link">Términos de Uso</a>
+                <a href="privacidad.html" class="footer-link">Política de Privacidad</a>
+            </div>
 
-            <div class="footer-top">
-                <div class="footer-brand-block">
-                    <span class="footer-brand">🍕 Pizza Web</span>
-                    <span class="footer-tagline">Creador de Contenido &amp; Desarrollador · 🇻🇪 Venezuela</span>
-                    <a href="mailto:pizzaclapyt@gmail.com" class="footer-mail">
-                        <i class="fas fa-envelope"></i> pizzaclapyt@gmail.com
-                    </a>
+            <div class="footer-col redes-col">
+                <h4 class="footer-title">Redes Sociales</h4>
+                <div class="footer-redes">
+                    <a href="https://instagram.com/pizzaclap43" target="_blank" class="footer-red" data-platform="instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://tiktok.com/@pizzaclap43" target="_blank" class="footer-red" data-platform="tiktok" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://youtube.com/@Pizzaclap43" target="_blank" class="footer-red" data-platform="youtube" title="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://twitch.tv/pizzaclap43" target="_blank" class="footer-red" data-platform="twitch" title="Twitch"><i class="fab fa-twitch"></i></a>
+                    <a href="https://kick.com/pizzaclap43" target="_blank" class="footer-red" data-platform="kick" title="Kick"><i class="fas fa-bolt"></i></a>
+                    <a href="https://discord.com/invite/BhSYNUYrxP" target="_blank" class="footer-red" data-platform="discord" title="Discord"><i class="fab fa-discord"></i></a>
+                    <a href="https://twitter.com/Pizzaclap43" target="_blank" class="footer-red" data-platform="twitter" title="Twitter / X"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://facebook.com/pizzaclap43" target="_blank" class="footer-red" data-platform="facebook" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="https://t.me/pizzaclap43" target="_blank" class="footer-red" data-platform="telegram" title="Telegram"><i class="fab fa-telegram"></i></a>
+                    <a href="https://open.spotify.com/user/3167cgabjecc74nd7xf6yadlryc4?si=3571e122a64d4df4" target="_blank" class="footer-red" data-platform="spotify" title="Spotify"><i class="fab fa-spotify"></i></a>
+                    <a href="https://music.youtube.com/channel/UCK2QmDn8eU70eSQcYndJIfg" target="_blank" class="footer-red" data-platform="ytmusic" title="YT Music"><i class="fab fa-youtube"></i></a>
+                    <a href="https://github.com/Pizzaclap43" target="_blank" class="footer-red" data-platform="github" title="GitHub"><i class="fab fa-github"></i></a>
                 </div>
             </div>
-
-            <div class="footer-redes">
-                <a href="https://instagram.com/pizzaclap43" target="_blank" class="footer-red" data-platform="instagram"><i class="fab fa-instagram"></i><span>Instagram</span></a>
-                <a href="https://tiktok.com/@pizzaclap43" target="_blank" class="footer-red" data-platform="tiktok"><i class="fab fa-tiktok"></i><span>TikTok</span></a>
-                <a href="https://youtube.com/@Pizzaclap43" target="_blank" class="footer-red" data-platform="youtube"><i class="fab fa-youtube"></i><span>YouTube</span></a>
-                <a href="https://twitch.tv/pizzaclap43" target="_blank" class="footer-red" data-platform="twitch"><i class="fab fa-twitch"></i><span>Twitch</span></a>
-                <a href="https://kick.com/pizzaclap43" target="_blank" class="footer-red" data-platform="kick"><i class="fas fa-bolt"></i><span>Kick</span></a>
-                <a href="https://discord.com/invite/BhSYNUYrxP" target="_blank" class="footer-red" data-platform="discord"><i class="fab fa-discord"></i><span>Discord</span></a>
-                <a href="https://twitter.com/Pizzaclap43" target="_blank" class="footer-red" data-platform="twitter"><i class="fab fa-x-twitter"></i><span>Twitter / X</span></a>
-                <a href="https://facebook.com/pizzaclap43" target="_blank" class="footer-red" data-platform="facebook"><i class="fab fa-facebook"></i><span>Facebook</span></a>
-                <a href="https://t.me/pizzaclap43" target="_blank" class="footer-red" data-platform="telegram"><i class="fab fa-telegram"></i><span>Telegram</span></a>
-                <a href="https://open.spotify.com/user/3167cgabjecc74nd7xf6yadlryc4?si=3571e122a64d4df4" target="_blank" class="footer-red" data-platform="spotify"><i class="fab fa-spotify"></i><span>Spotify</span></a>
-                <a href="https://music.youtube.com/channel/UCK2QmDn8eU70eSQcYndJIfg" target="_blank" class="footer-red" data-platform="ytmusic"><i class="fab fa-youtube"></i><span>YT Music</span></a>
-                <a href="https://github.com/Pizzaclap43" target="_blank" class="footer-red" data-platform="github"><i class="fab fa-github"></i><span>GitHub</span></a>
-            </div>
-
-            <div class="footer-bottom">
-                <span class="footer-copy">© 2026 Pizzaclap43 · Todos los derechos reservados</span>
-            </div>
-
+        </div>
+        <div class="footer-bottom">
+            <span class="footer-copy">© 2026 Pizzaclap43 · Todos los derechos reservados</span>
         </div>
     </footer>
 
