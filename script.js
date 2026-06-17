@@ -15,19 +15,19 @@ document.querySelectorAll('.nav-link').forEach(link => {
     });
 });
 
-// ── Reproductor de Radio Pizza
-const btnPlay = document.getElementById('playRadio');
-const audioRadio = document.getElementById('audioRadio');
+// ── Reproductor de Música
+const btnMusic = document.getElementById('playMusic');
+const audioMusic = document.getElementById('audioMusic');
 
-if (btnPlay && audioRadio) {
-    const iconPlay = btnPlay.querySelector('i');
+if (btnMusic && audioMusic) {
+    const iconPlay = btnMusic.querySelector('i');
     
-    btnPlay.addEventListener('click', () => {
-        if (audioRadio.paused) {
-            audioRadio.play();
+    btnMusic.addEventListener('click', () => {
+        if (audioMusic.paused) {
+            audioMusic.play();
             iconPlay.classList.replace('fa-play', 'fa-pause');
         } else {
-            audioRadio.pause();
+            audioMusic.pause();
             iconPlay.classList.replace('fa-pause', 'fa-play');
         }
     });
