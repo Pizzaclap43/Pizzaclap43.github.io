@@ -5,7 +5,7 @@
 }
 
 :root {
-    --bg: #09090b; /* Fondo más limpio y oscuro moderno */
+    --bg: #09090b; 
     --surface: rgba(255,255,255,0.04);
     --surface-hover: rgba(255,255,255,0.08);
     --border: rgba(255,255,255,0.1);
@@ -248,8 +248,8 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
 }
 
-/* ── RADIO WIDGET ─────────────────────────── */
-.radio-widget {
+/* ── MUSIC WIDGET ─────────────────────────── */
+.music-widget {
     position: fixed; 
     bottom: 24px; right: 24px; 
     background: rgba(9, 9, 11, 0.85);
@@ -265,13 +265,13 @@ body {
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
 }
 
-.radio-info { display: flex; align-items: center; gap: 12px; }
-.radio-info i { color: #ff6b9d; font-size: 1.2rem; animation: pulse 2s infinite; }
-.radio-text { display: flex; flex-direction: column; }
-.radio-title { font-weight: 600; font-size: 0.9rem; }
-.radio-status { font-size: 0.75rem; color: #4ade80; }
+.music-info { display: flex; align-items: center; gap: 12px; }
+.music-info i { color: #ff6b9d; font-size: 1.2rem; }
+.music-text { display: flex; flex-direction: column; }
+.music-title { font-weight: 600; font-size: 0.9rem; }
+.music-status { font-size: 0.75rem; color: #4ade80; }
 
-.radio-btn { 
+.music-btn { 
     background: #fafafa; 
     color: #09090b; 
     border: none; 
@@ -285,13 +285,7 @@ body {
     transition: transform 0.2s; 
 }
 
-.radio-btn:hover { transform: scale(1.1); }
-
-@keyframes pulse { 
-    0% { opacity: 1; } 
-    50% { opacity: 0.5; } 
-    100% { opacity: 1; } 
-}
+.music-btn:hover { transform: scale(1.1); }
 
 /* ── FOOTER ───────────────────────────── */
 .footer { 
@@ -342,7 +336,6 @@ body {
     text-decoration: none;
 }
 
-/* Colores en Hover para las Redes del Footer */
 .footer-red:hover { background: var(--surface-hover); transform: translateY(-3px); }
 .footer-red[data-platform="instagram"]:hover { color: #e1306c; border-color: #e1306c; }
 .footer-red[data-platform="tiktok"]:hover { color: #ff0050; border-color: #ff0050; }
@@ -368,7 +361,6 @@ body {
     color: var(--text-muted); 
 }
 
-/* ── RESPONSIVE ───────────────────────── */
 @media (max-width: 768px) {
     .nav-links { 
         display: none; 
@@ -392,7 +384,7 @@ body {
     
     .footer-redes { justify-content: center; }
     
-    .radio-widget { 
+    .music-widget { 
         bottom: 16px; right: 16px; left: 16px; 
         justify-content: space-between; 
     }
