@@ -66,13 +66,16 @@
 
             <div id="uploadPanel" class="glass-card" style="display: none;">
                 <h3>Lanzamiento</h3>
-                <p class="card-desc">Sube tu track a Catbox y pega el link</p>
+                <p class="card-desc">Sube tu track a Catbox y pega los links</p>
                 <form id="uploadForm">
                     <div class="field">
                         <input type="text" id="songTitle" required placeholder="Título del Track">
                     </div>
                     <div class="field">
                         <input type="url" id="catboxUrl" required placeholder="Link .mp3 (Catbox)">
+                    </div>
+                    <div class="field">
+                        <input type="url" id="coverUrl" placeholder="Link de portada .jpg o .png (Opcional)">
                     </div>
                     <button type="submit" class="btn-glow btn-success">Lanzar Track</button>
                 </form>
