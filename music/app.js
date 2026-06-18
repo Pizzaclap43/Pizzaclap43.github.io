@@ -29,8 +29,9 @@ let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
 let isMuted = false;
 let previousVolume = 0.8;
 
-// Web Audio API Context (Para el Ecualizador Maestro)
-let audioCtx, source, bassFilter, midFilter, trebleFilter;
+// Web Audio API Context (Para el Ecualizador Profesional de 5 Bandas)
+let audioCtx, source;
+let eqBands = [];
 let isAudioSetup = false;
 
 // Componentes del DOM del Reproductor Fusionado
@@ -101,30 +102,37 @@ function getWeather() {
     }
 }
 getWeather();
-setInterval(getWeather, 15 * 60 * 1000); // Cada 15 min
+setInterval(getWeather, 15 * 60 * 1000);
 
 
-// --- CONFIGURACIÓN DE AUDIO CON ECUALIZADOR ---
+// --- CONFIGURACIÓN DE AUDIO CON ECUALIZADOR (5 BANDAS PRO) ---
 function setupAudioContext() {
     if (isAudioSetup) return;
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     audioCtx = new AudioContext();
     source = audioCtx.createMediaElementSource(mainAudio);
 
-    bassFilter = audioCtx.createBiquadFilter();
-    bassFilter.type = "lowshelf";
-    bassFilter.frequency.value = 200;
+    // Frecuencias: Sub, Mid-Low, Mid, Mid-High, High
+    const frequencies = [60, 230, 910, 3600, 14000];
+    const types = ['lowshelf', 'peaking', 'peaking', 'peaking', 'highshelf'];
 
-    midFilter = audioCtx.createBiquadFilter();
-    midFilter.type = "peaking";
-    midFilter.frequency.value = 1000;
-    midFilter.Q.value = 1;
+    // Creación dinámica de las 5 bandas
+    eqBands = frequencies.map((freq, index) => {
+        let filter = audioCtx.createBiquadFilter();
+        filter.type = types[index];
+        filter.frequency.value = freq;
+        filter.Q.value = 1.2; // Rango más estrecho para mayor precisión de banda
+        filter.gain.value = 0;
+        return filter;
+    });
 
-    trebleFilter = audioCtx.createBiquadFilter();
-    trebleFilter.type = "highshelf";
-    trebleFilter.frequency.value = 4500;
-
-    source.connect(bassFilter).connect(midFilter).connect(trebleFilter).connect(audioCtx.destination);
+    // Conectar en cadena: Fuente -> Banda 1 -> Banda 2 -> ... -> Destino
+    source.connect(eqBands[0]);
+    for (let i = 0; i < eqBands.length - 1; i++) {
+        eqBands[i].connect(eqBands[i + 1]);
+    }
+    eqBands[eqBands.length - 1].connect(audioCtx.destination);
+    
     isAudioSetup = true;
 }
 
@@ -169,6 +177,7 @@ btnPlayPause.addEventListener('click', () => {
     if (!mainAudio.src) return;
     if (mainAudio.paused) {
         setupAudioContext();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
         mainAudio.play();
         updatePlayStatus(true);
     } else {
@@ -273,15 +282,35 @@ function updateFavIconState() {
     playerFavBtn.innerHTML = `<i class="${isFav ? 'fas' : 'far'} fa-heart" style="color: ${isFav ? 'var(--pizza-red)' : 'inherit'}"></i>`;
 }
 
-// Control del Panel del Ecualizador
+// Control de los Deslizadores del Ecualizador
 btnEqToggle.addEventListener('click', () => {
     eqPanel.classList.toggle('show');
     btnEqToggle.classList.toggle('active');
 });
 
-document.getElementById('eqBass').addEventListener('input', (e) => { if(bassFilter) bassFilter.gain.value = e.target.value; });
-document.getElementById('eqMid').addEventListener('input', (e) => { if(midFilter) midFilter.gain.value = e.target.value; });
-document.getElementById('eqTreble').addEventListener('input', (e) => { if(trebleFilter) trebleFilter.gain.value = e.target.value; });
+const eqSliders = [
+    document.getElementById('eq60'),
+    document.getElementById('eq230'),
+    document.getElementById('eq910'),
+    document.getElementById('eq3k'),
+    document.getElementById('eq14k')
+];
+
+// Asignar el valor de cada slider a su respectiva banda del ecualizador
+eqSliders.forEach((slider, index) => {
+    slider.addEventListener('input', (e) => {
+        if (eqBands[index]) eqBands[index].gain.value = e.target.value;
+    });
+});
+
+// Botón de Reset para el EQ
+document.getElementById('btnEqReset').addEventListener('click', () => {
+    eqSliders.forEach((slider, index) => {
+        slider.value = 0; // Resetear la UI
+        if (eqBands[index]) eqBands[index].gain.value = 0; // Resetear el audio
+    });
+    showToast("Ecualizador reiniciado");
+});
 
 
 // --- RENDERS DE BASE DE DATOS Y ENLACES (INTACTOS) ---
