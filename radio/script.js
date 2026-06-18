@@ -26,7 +26,12 @@ const stationsData = [
     { id: 24, name: "Onda (Barcelona) 91.5 FM", url: "https://acp4.lorini.net:10006/stream" },
     { id: 25, name: "Union Radio (Barcelona) 93.7 FM", url: "https://acp4.lorini.net:10002/stream" },
     { id: 26, name: "La Mega (Valencia) 95.7 FM", url: "https://acp4.lorini.net:15004/stream" },
-    { id: 27, name: "Exitos (Valencia) 99.1 FM", url: "https://acp4.lorini.net:15002/stream" }
+    { id: 27, name: "Exitos (Valencia) 99.1 FM", url: "https://acp4.lorini.net:15002/stream" },
+    { id: 28, name: "La Mega (Barquisimeto) 103.3 FM", url: "https://acp4.lorini.net:35000/stream" },
+    { id: 29, name: "Exitos (Barquisimeto) 98.1 FM", url: "https://acp4.lorini.net:2070/stream" },
+    { id: 30, name: "Onda (Barquisimeto) 104.5 FM", url: "https://acp4.lorini.net:35002/stream" },
+    { id: 31, name: "Union Radio (Barquisimeto) 102.3 FM", url: "https://acp4.lorini.net:2080/stream" },
+    { id: 32, name: "Union Radio (Barquisimeto) 870 AM", url: "https://acp4.lorini.net:35004/stream" }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
