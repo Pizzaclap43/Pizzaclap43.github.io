@@ -17,6 +17,11 @@ body {
     overflow-x: hidden;
 }
 
+/* Toasts / Notificaciones */
+#toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+.toast { background: var(--pizza-red); color: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); animation: slideIn 0.3s ease; font-size: 14px; font-weight: bold; }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
 /* Efectos de fondo elegantes */
 .bg-glow {
     position: fixed;
@@ -63,7 +68,10 @@ body {
 }
 
 .brand span { color: var(--pizza-red); }
-.spin-slow { animation: spin 4s linear infinite; color: var(--text-main); }
+
+/* Animación del vinilo controlada por JS */
+.spin-slow { animation: spin 4s linear infinite; animation-play-state: paused; color: var(--text-main); transition: color 0.3s; }
+.spin-slow.playing { animation-play-state: running; color: var(--pizza-red); }
 @keyframes spin { 100% { transform: rotate(360deg); } }
 
 .search-bar {
@@ -172,13 +180,13 @@ input:focus { border-color: var(--pizza-red); outline: none; }
 .toggle-text span { color: var(--pizza-red); font-weight: bold; cursor: pointer; }
 
 /* ========================================= */
-/* REPRODUCTOR AVANZADO (MAGIA PURA)         */
+/* REPRODUCTOR AVANZADO                      */
 /* ========================================= */
 .advanced-player {
     position: fixed; bottom: 0; left: 0; width: 100%;
     background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(25px);
     border-top: 1px solid var(--glass-border); z-index: 2000;
-    transform: translateY(100%); /* Oculto al inicio */
+    transform: translateY(100%);
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -188,9 +196,12 @@ input:focus { border-color: var(--pizza-red); outline: none; }
     display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; height: 90px;
 }
 
-/* Info del track actual */
+/* Info del track actual y Visualizador */
 .track-info { display: flex; align-items: center; gap: 15px; width: 25%; }
-.track-art { width: 50px; height: 50px; background: linear-gradient(135deg, #333, #111); border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+.track-art { width: 50px; height: 50px; background: linear-gradient(135deg, #333, #111); border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: all 0.3s; }
+.track-art.active { box-shadow: 0 0 15px var(--pizza-glow); background: linear-gradient(135deg, var(--pizza-red), #9c1b1b); animation: pulse 1s infinite alternate; }
+@keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
+
 .track-details { display: flex; flex-direction: column; }
 .track-title { font-weight: 700; font-size: 15px; color: #fff; }
 .track-artist { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
