@@ -3,36 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pizza Music - La Radio de los Emergentes</title>
+    <title>Pizza Music | Premium</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Iconos para el buscador y el reproductor -->
+    <!-- Iconos de alta calidad -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 
+    <!-- FONDO ANIMADO -->
+    <div class="bg-glow"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
     <header class="main-header">
-        <div class="brand">🍕 Pizza<span>Music</span></div>
+        <div class="brand"><i class="fa-solid fa-compact-disc spin-slow"></i> Pizza<span>Music</span></div>
         <div class="search-bar">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="searchInput" placeholder="¿Qué quieres escuchar hoy, chamo?">
+            <i class="fa-solid fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Busca tu vibra hoy...">
         </div>
-        <div class="user-area" id="userStatusText">Invitado</div>
+        <div class="user-area">
+            <i class="fa-regular fa-user-circle"></i> <span id="userStatusText">Invitado</span>
+        </div>
     </header>
 
     <main class="app-container">
         <!-- ZONA DEL FEED MUSICAL -->
         <section class="music-feed">
-            <h2>Novedades Recientes</h2>
+            <h2 class="section-title">Tendencias Emergentes</h2>
             <div class="songs-grid" id="songsGrid">
-                <p class="status-msg">Cargando el horno musical...</p>
+                <div class="loader">Cargando la magia...</div>
             </div>
         </section>
 
         <!-- PANEL LATERAL (LOGIN Y SUBIDA) -->
         <aside class="side-panel">
-            <div id="authPanel" class="pizza-card">
-                <h3 id="authTitle">Zona de Artistas</h3>
-                <p class="card-desc">Únete a la familia de Pizza Music</p>
+            <div id="authPanel" class="glass-card">
+                <h3 id="authTitle">Studio Access</h3>
+                <p class="card-desc">Conecta y sube tu arte</p>
                 
                 <form id="authForm">
                     <div class="field" id="nameField" style="display: none;">
@@ -44,40 +50,89 @@
                     <div class="field">
                         <input type="password" id="password" required placeholder="Contraseña">
                     </div>
-                    <button type="submit" id="btnAuthSubmit" class="btn-main">Entrar</button>
+                    <button type="submit" id="btnAuthSubmit" class="btn-glow">Ingresar al Studio</button>
                 </form>
                 
-                <p class="toggle-text">¿Nuevo por aquí? <span id="toggleAuthMode">Regístrate</span></p>
+                <p class="toggle-text">¿No tienes acceso? <span id="toggleAuthMode">Crea tu cuenta</span></p>
             </div>
 
-            <div id="uploadPanel" class="pizza-card" style="display: none;">
-                <h3>Subir a la Pizza</h3>
+            <div id="uploadPanel" class="glass-card" style="display: none;">
+                <h3>Lanzamiento</h3>
+                <p class="card-desc">Sube tu track a Catbox y pega el link</p>
                 <form id="uploadForm">
                     <div class="field">
-                        <input type="text" id="songTitle" required placeholder="Título del Tema">
+                        <input type="text" id="songTitle" required placeholder="Título del Track">
                     </div>
                     <div class="field">
-                        <input type="url" id="catboxUrl" required placeholder="Enlace Catbox (.mp3)">
+                        <input type="url" id="catboxUrl" required placeholder="Link .mp3 (Catbox)">
                     </div>
-                    <button type="submit" class="btn-success">Publicar Tema</button>
+                    <button type="submit" class="btn-glow btn-success">Lanzar Track</button>
                 </form>
-                <button id="btnLogout" class="btn-outline">Salir de la cuenta</button>
+                <button id="btnLogout" class="btn-outline">Desconectar</button>
             </div>
         </aside>
     </main>
 
-    <!-- REPRODUCTOR GLOBAL FIJO -->
-    <footer class="player-bar" id="globalPlayer" style="display: none;">
-        <div class="now-playing">
-            <div class="song-meta">
-                <span id="playerTitle" class="player-title">Título</span>
-                <span id="playerArtist" class="player-artist">Artista</span>
+    <!-- REPRODUCTOR AVANZADO -->
+    <footer class="advanced-player" id="globalPlayer">
+        <!-- NOTA: crossorigin="anonymous" es vital para que el Ecualizador funcione con Catbox -->
+        <audio id="mainAudio" crossorigin="anonymous"></audio>
+        
+        <div class="player-content">
+            <!-- Info de Canción -->
+            <div class="track-info">
+                <div class="track-art">
+                    <i class="fa-solid fa-music"></i>
+                </div>
+                <div class="track-details">
+                    <span id="playerTitle" class="track-title">Selecciona un track</span>
+                    <span id="playerArtist" class="track-artist">...</span>
+                </div>
+            </div>
+
+            <!-- Controles Principales -->
+            <div class="player-core">
+                <div class="controls-buttons">
+                    <button id="btnPrev" class="ctrl-btn"><i class="fa-solid fa-backward-step"></i></button>
+                    <button id="btnStop" class="ctrl-btn"><i class="fa-solid fa-stop"></i></button>
+                    <button id="btnPlayPause" class="ctrl-btn play-btn"><i class="fa-solid fa-play"></i></button>
+                    <button id="btnNext" class="ctrl-btn"><i class="fa-solid fa-forward-step"></i></button>
+                </div>
+                <div class="progress-container">
+                    <span id="timeCurrent">0:00</span>
+                    <input type="range" id="progressBar" class="slider" value="0" min="0" max="100" step="0.1">
+                    <span id="timeTotal">0:00</span>
+                </div>
+            </div>
+
+            <!-- Controles Extra (EQ y Volumen) -->
+            <div class="player-extras">
+                <div class="volume-control">
+                    <i class="fa-solid fa-volume-high"></i>
+                    <input type="range" id="volBar" class="slider" value="1" min="0" max="1" step="0.01">
+                </div>
+                <button id="btnEqToggle" class="ctrl-btn eq-btn"><i class="fa-solid fa-sliders"></i> EQ</button>
             </div>
         </div>
-        <div class="player-controls">
-            <audio id="mainAudio" controls autoplay></audio>
+
+        <!-- Panel de Ecualizador (Oculto por defecto) -->
+        <div class="eq-panel" id="eqPanel">
+            <h4>Ecualizador Maestro</h4>
+            <div class="eq-sliders">
+                <div class="eq-band">
+                    <input type="range" id="eqBass" class="slider-vertical" value="0" min="-15" max="15" step="1">
+                    <span>Bajos</span>
+                </div>
+                <div class="eq-band">
+                    <input type="range" id="eqMid" class="slider-vertical" value="0" min="-15" max="15" step="1">
+                    <span>Medios</span>
+                </div>
+                <div class="eq-band">
+                    <input type="range" id="eqTreble" class="slider-vertical" value="0" min="-15" max="15" step="1">
+                    <span>Brillos</span>
+                </div>
+            </div>
         </div>
-        <div class="player-spacer"></div>
     </footer>
 
     <script type="module" src="app.js"></script>
