@@ -317,7 +317,7 @@ document.getElementById('btnEqReset').addEventListener('click', () => {
 });
 
 
-// --- RENDERS DE BASE DE DATOS Y ENLACES (INTACTOS) ---
+// --- RENDERS DE BASE DE DATOS Y ENLACES ---
 function renderSongs(songs) {
     songsGrid.innerHTML = "";
     if (songs.length === 0) {
@@ -327,13 +327,20 @@ function renderSongs(songs) {
     songs.forEach((s, index) => {
         const div = document.createElement('div');
         div.className = 'song-card';
+        
+        // Verifica si la canción tiene URL de portada y la aplica, si no usa el ícono predeterminado
+        const coverHtml = s.portadaUrl 
+            ? `<img src="${s.portadaUrl}" class="cover-img" alt="Portada">` 
+            : `<i class="fa-solid fa-music" style="font-size:40px; color:#222;"></i>`;
+
         div.innerHTML = `
             <div class="cover-placeholder">
-                <i class="fa-solid fa-music" style="font-size:40px; color:#222;"></i>
+                ${coverHtml}
             </div>
             <h4>${s.titulo}</h4>
             <p>${s.nombreArtista}</p>
         `;
+        
         div.onclick = () => {
             currentPlaylist = songs;
             currentSongIndex = index;
@@ -434,11 +441,13 @@ uploadForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const title = document.getElementById('songTitle').value;
     const url = document.getElementById('catboxUrl').value;
+    const cover = document.getElementById('coverUrl').value; // Recupera el valor de la portada
     
     try {
         await addDoc(collection(db, "canciones"), {
             titulo: title,
             urlCatbox: url,
+            portadaUrl: cover, // Lo guarda en la base de datos de Firebase
             artistaId: auth.currentUser.uid,
             nombreArtista: currentArtistName,
             fecha: new Date()
