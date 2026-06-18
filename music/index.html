@@ -10,12 +10,15 @@
 </head>
 <body>
 
+    <!-- CONTENEDOR DE TOASTS -->
+    <div id="toast-container"></div>
+
     <!-- FONDO ANIMADO -->
     <div class="bg-glow"></div>
     <div class="bg-glow bg-glow-2"></div>
 
     <header class="main-header">
-        <div class="brand"><i class="fa-solid fa-compact-disc spin-slow"></i> Pizza<span>Music</span></div>
+        <div class="brand"><i class="fa-solid fa-compact-disc spin-slow" id="vinyl"></i> Pizza<span>Music</span></div>
         <div class="search-bar">
             <i class="fa-solid fa-search"></i>
             <input type="text" id="searchInput" placeholder="Busca tu vibra hoy...">
@@ -81,7 +84,7 @@
         <div class="player-content">
             <!-- Info de Canción -->
             <div class="track-info">
-                <div class="track-art">
+                <div class="track-art" id="visualizer">
                     <i class="fa-solid fa-music"></i>
                 </div>
                 <div class="track-details">
@@ -108,7 +111,7 @@
             <!-- Controles Extra (EQ y Volumen) -->
             <div class="player-extras">
                 <div class="volume-control">
-                    <i class="fa-solid fa-volume-high"></i>
+                    <i class="fa-solid fa-volume-high" id="muteIcon" style="cursor: pointer;"></i>
                     <input type="range" id="volBar" class="slider" value="1" min="0" max="1" step="0.01">
                 </div>
                 <button id="btnEqToggle" class="ctrl-btn eq-btn"><i class="fa-solid fa-sliders"></i> EQ</button>
