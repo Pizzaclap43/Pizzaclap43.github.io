@@ -21,6 +21,10 @@ const stationsData = [
     { id: 19, name: "Rumbera Network (Barcelona) 94.5 FM", url: "https://server6.globalhostla.com:8012/stream" },
     { id: 20, name: "Rumbera Network (Maturin) 89.5 FM", url: "https://streaming.rumberamaturin.com/;"},
     { id: 21, name: "Rumbera Network (Maracaibo) 98.7 FM", url: "https://stream-286.surfernetwork.com/85y72q4wzdfuv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiI4NXk3MnE0d3pkZnV2IiwiaG9zdCI6InN0cmVhbS0yODYuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiIzbk9LY3NzYVFrLTRMZ0xLaGQtblhRIiwiaWF0IjoxNzgxNTcwOTAzLCJleHAiOjE3ODE1NzA5NjN9.ZyOnZL5TtLNdNHJPeqWkEqFLgdCk80XGBUTU9AwSd3w" },
+    { id: 22, name: "La Mega (Barcelona) 100.9 FM", url: "https://acp4.lorini.net:10008/stream" },
+    { id: 23, name: "Exitos (Barcelona) 95.3 FM", url: "https://acp4.lorini.net:10004/stream" },
+    { id: 24, name: "Onda (Barcelona) 91.5 FM", url: "https://acp4.lorini.net:10006/stream" },
+    { id: 25, name: "Union Radio (Barcelona) 93.7 FM", url: "https://acp4.lorini.net:10002/stream" }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
