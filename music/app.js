@@ -3,14 +3,15 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// !!! COPIA AQUÍ TUS CREDENCIALES DE CONFIGURACIÓN DE FIREBASE !!!
+// Configuración de tu proyecto Pizza Music
 const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "TU_AUTH_DOMAIN",
-    projectId: "TU_PROJECT_ID",
-    storageBucket: "TU_STORAGE_BUCKET",
-    messagingSenderId: "TU_MESSAGING_SENDER_ID",
-    appId: "TU_APP_ID"
+  apiKey: "AIzaSyCWx8kKQYe11_urooRTCfvBcC20xlIfMes",
+  authDomain: "pizza-music-eab88.firebaseapp.com",
+  projectId: "pizza-music-eab88",
+  storageBucket: "pizza-music-eab88.firebasestorage.app",
+  messagingSenderId: "678682489891",
+  appId: "1:678682489891:web:e9b3ede88d2acd7ff3ed96",
+  measurementId: "G-T72Y6QRH6L"
 };
 
 // Inicializar Firebase
