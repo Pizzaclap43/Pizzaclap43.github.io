@@ -4,28 +4,42 @@
     --text-main: #fff;
     --text-muted: #a1a1aa;
     --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
 }
 
-body { background-color: var(--bg-dark); color: var(--text-main); font-family: sans-serif; margin: 0; padding-bottom: 120px; }
+body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 150px; }
 
 /* Toast Notification */
 #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; }
-.toast { background: var(--pizza-red); color: white; padding: 10px 20px; border-radius: 5px; margin-bottom: 10px; animation: slideIn 0.3s ease; }
+.toast { background: var(--pizza-red); color: white; padding: 10px 20px; border-radius: 8px; margin-bottom: 10px; animation: slideIn 0.3s ease; }
 @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
-/* Player UI */
-.advanced-player { position: fixed; bottom: 0; left: 0; width: 100%; background: #111; border-top: 1px solid #333; padding: 10px 20px; display: none; }
-.advanced-player.show { display: block; }
-.player-content { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: auto; }
-.track-art { width: 50px; height: 50px; background: #222; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-.track-art.active { animation: rotate 3s linear infinite; }
+/* Header & Main */
+.main-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: rgba(0,0,0,0.8); border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; }
+.spin-slow { animation: rotate 4s linear infinite; }
 @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-/* EQ Styles */
-.eq-panel { display: none; padding: 10px 40px; justify-content: center; gap: 40px; background: #000; }
-.eq-panel.show { display: flex; }
-.slider-vertical { writing-mode: bt-lr; appearance: slider-vertical; width: 8px; height: 80px; }
+.app-container { display: grid; grid-template-columns: 1fr 350px; gap: 40px; padding: 40px; max-width: 1400px; margin: auto; }
 
-/* Mantener el diseño de cards y botones del paso anterior... */
-.song-card { background: var(--glass-bg); padding: 15px; border-radius: 12px; cursor: pointer; transition: 0.3s; }
-.song-card:hover { background: rgba(255,255,255,0.1); }
+/* Cards */
+.song-card { background: var(--glass-bg); padding: 20px; border-radius: 16px; cursor: pointer; border: 1px solid var(--glass-border); transition: 0.3s; }
+.song-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-5px); }
+
+/* Player UI */
+.advanced-player { position: fixed; bottom: 0; left: 0; width: 100%; background: #111; border-top: 1px solid #333; z-index: 2000; display: none; }
+.advanced-player.show { display: block; }
+.player-content { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; }
+.track-art { width: 50px; height: 50px; background: #222; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.track-art.active { animation: rotate 3s linear infinite; }
+
+/* EQ Styles */
+.eq-panel { display: none; padding: 10px 40px; justify-content: center; gap: 40px; background: #000; border-top: 1px solid #333; }
+.eq-panel.show { display: flex; }
+.eq-band { display: flex; flex-direction: column; align-items: center; }
+.slider-vertical { appearance: slider-vertical; width: 8px; height: 80px; accent-color: var(--pizza-red); }
+
+/* Buttons & Inputs */
+.btn-glow { background: var(--pizza-red); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 100%; }
+.ctrl-btn { background: none; border: none; color: white; cursor: pointer; font-size: 20px; }
+.play-btn { font-size: 30px; color: var(--pizza-red); }
+.glass-card { background: var(--glass-bg); padding: 20px; border-radius: 16px; }
