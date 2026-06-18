@@ -31,7 +31,11 @@ const stationsData = [
     { id: 29, name: "Exitos (Barquisimeto) 98.1 FM", url: "https://acp4.lorini.net:2070/stream" },
     { id: 30, name: "Onda (Barquisimeto) 104.5 FM", url: "https://acp4.lorini.net:35002/stream" },
     { id: 31, name: "Union Radio (Barquisimeto) 102.3 FM", url: "https://acp4.lorini.net:2080/stream" },
-    { id: 32, name: "Union Radio (Barquisimeto) 870 AM", url: "https://acp4.lorini.net:35004/stream" }
+    { id: 32, name: "Union Radio (Barquisimeto) 870 AM", url: "https://acp4.lorini.net:35004/stream" },
+    { id: 33, name: "La Mega (Margarita) 91.9 FM", url: "https://acp4.lorini.net:25004/stream" },
+    { id: 34, name: "Exitos (Margarita) 99.7 FM", url: "https://acp4.lorini.net:25006/stream" },
+    { id: 35, name: "Onda (Margarita) 105.1 FM", url: "https://acp4.lorini.net:25002/stream" },
+    { id: 36, name: "Union Radio (Margarita) 94.9 FM", url: "https://acp4.lorini.net:25008/stream" }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
