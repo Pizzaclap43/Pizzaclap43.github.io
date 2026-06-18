@@ -35,7 +35,10 @@ const stationsData = [
     { id: 33, name: "La Mega (Margarita) 91.9 FM", url: "https://acp4.lorini.net:25004/stream" },
     { id: 34, name: "Exitos (Margarita) 99.7 FM", url: "https://acp4.lorini.net:25006/stream" },
     { id: 35, name: "Onda (Margarita) 105.1 FM", url: "https://acp4.lorini.net:25002/stream" },
-    { id: 36, name: "Union Radio (Margarita) 94.9 FM", url: "https://acp4.lorini.net:25008/stream" }
+    { id: 36, name: "Union Radio (Margarita) 94.9 FM", url: "https://acp4.lorini.net:25008/stream" },
+    { id: 37, name: "La Mega (Maracaibo) 99.7 FM", url: "https://acp4.lorini.net:30002/stream" },
+    { id: 38, name: "Exitos (Maracaibo) 89.7 FM", url: "https://acp4.lorini.net:30000/stream" },
+    { id: 39, name: "Onda (Maracaibo) 107.3 FM", url: "https://acp4.lorini.net:30004/stream" }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
