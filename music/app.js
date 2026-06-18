@@ -34,7 +34,7 @@ let audioCtx, source;
 let eqBands = [];
 let isAudioSetup = false;
 
-// Componentes del DOM del Reproductor Fusionado
+// Componentes del DOM
 const mainAudio = document.getElementById('mainAudio');
 const globalPlayer = document.getElementById('globalPlayer');
 const playerTitle = document.getElementById('playerTitle');
@@ -52,12 +52,13 @@ const muteIcon = document.getElementById('muteIcon');
 const btnEqToggle = document.getElementById('btnEqToggle');
 const eqPanel = document.getElementById('eqPanel');
 
-// Elementos Visuales de Radio Pizza
+// Contenedores Visuales
 const vinyl = document.getElementById('vinyl');
 const visualizer = document.getElementById('visualizer');
 const toastContainer = document.getElementById('toast-container');
 const searchInput = document.getElementById('searchInput');
-const songsGrid = document.getElementById('songsGrid');
+const songsGrid = document.getElementById('songsGrid'); // Música
+const podcastsGrid = document.getElementById('podcastsGrid'); // Podcasts
 
 // --- SISTEMA DE NOTIFICACIONES (TOASTS DE RADIO PIZZA) ---
 function showToast(message) {
@@ -112,21 +113,18 @@ function setupAudioContext() {
     audioCtx = new AudioContext();
     source = audioCtx.createMediaElementSource(mainAudio);
 
-    // Frecuencias: Sub, Mid-Low, Mid, Mid-High, High
     const frequencies = [60, 230, 910, 3600, 14000];
     const types = ['lowshelf', 'peaking', 'peaking', 'peaking', 'highshelf'];
 
-    // Creación dinámica de las 5 bandas
     eqBands = frequencies.map((freq, index) => {
         let filter = audioCtx.createBiquadFilter();
         filter.type = types[index];
         filter.frequency.value = freq;
-        filter.Q.value = 1.2; // Rango más estrecho para mayor precisión de banda
+        filter.Q.value = 1.2;
         filter.gain.value = 0;
         return filter;
     });
 
-    // Conectar en cadena: Fuente -> Banda 1 -> Banda 2 -> ... -> Destino
     source.connect(eqBands[0]);
     for (let i = 0; i < eqBands.length - 1; i++) {
         eqBands[i].connect(eqBands[i + 1]);
@@ -152,10 +150,10 @@ function loadAndPlaySong(song) {
         .then(() => {
             updatePlayStatus(true);
             updateFavIconState();
-            showToast(`Escuchando: ${song.titulo}`);
+            showToast(`Sintonizando: ${song.titulo}`);
         })
         .catch(() => {
-            showToast("Error cargando el streaming del track");
+            showToast("Error cargando el streaming del archivo");
             updatePlayStatus(false);
         });
 }
@@ -229,7 +227,7 @@ progressBar.addEventListener('input', () => {
     }
 });
 
-// Control de Volumen y Mute Avanzado (Radio Pizza Style)
+// Control de Volumen y Mute Avanzado
 muteIcon.addEventListener('click', () => {
     if (isMuted) {
         mainAudio.volume = previousVolume > 0 ? previousVolume : 0.8;
@@ -288,7 +286,6 @@ btnEqToggle.addEventListener('click', () => {
     btnEqToggle.classList.toggle('active');
 });
 
-// Arreglo para mapear la barra con su valor de texto
 const faders = [
     { el: document.getElementById('eq60'), val: document.getElementById('val60') },
     { el: document.getElementById('eq230'), val: document.getElementById('val230') },
@@ -297,41 +294,40 @@ const faders = [
     { el: document.getElementById('eq14k'), val: document.getElementById('val14k') }
 ];
 
-// Asignar los eventos de arrastre a los faders
 faders.forEach((band, index) => {
     band.el.addEventListener('input', (e) => {
         const value = e.target.value;
-        band.val.innerText = `${value > 0 ? '+' : ''}${value} dB`; // Actualiza el texto con el dB
+        band.val.innerText = `${value > 0 ? '+' : ''}${value} dB`;
         if (eqBands[index]) eqBands[index].gain.value = value;
     });
 });
 
-// Botón de Reset Maestro para el EQ
 document.getElementById('btnEqReset').addEventListener('click', () => {
     faders.forEach((band, index) => {
         band.el.value = 0;
-        band.val.innerText = "0 dB"; // Resetear el texto visual
-        if (eqBands[index]) eqBands[index].gain.value = 0; // Resetear el filtro real de audio
+        band.val.innerText = "0 dB";
+        if (eqBands[index]) eqBands[index].gain.value = 0; 
     });
     showToast("Ecualizador reiniciado a 0 dB");
 });
 
 
-// --- RENDERS DE BASE DE DATOS Y ENLACES ---
-function renderSongs(songs) {
-    songsGrid.innerHTML = "";
-    if (songs.length === 0) {
-        songsGrid.innerHTML = "<p style='color: var(--text-muted);'>No encontramos ese track...</p>";
+// --- RENDERS MULTIPLES (MÚSICA Y PODCASTS) ---
+function renderTracks(tracksList, container) {
+    container.innerHTML = "";
+    if (tracksList.length === 0) {
+        container.innerHTML = "<p style='color: var(--text-muted);'>No hay nada por aquí...</p>";
         return;
     }
-    songs.forEach((s, index) => {
+    tracksList.forEach((s, index) => {
         const div = document.createElement('div');
         div.className = 'song-card';
         
-        // Verifica si la canción tiene URL de portada y la aplica, si no usa el ícono predeterminado
+        // Verifica si tiene imagen, si no, usa el icono según sea música o podcast
+        const iconClass = s.tipo === 'podcast' ? 'fa-microphone' : 'fa-music';
         const coverHtml = s.portadaUrl 
             ? `<img src="${s.portadaUrl}" class="cover-img" alt="Portada">` 
-            : `<i class="fa-solid fa-music" style="font-size:40px; color:#222;"></i>`;
+            : `<i class="fa-solid ${iconClass}" style="font-size:40px; color:#222;"></i>`;
 
         div.innerHTML = `
             <div class="cover-placeholder">
@@ -342,33 +338,48 @@ function renderSongs(songs) {
         `;
         
         div.onclick = () => {
-            currentPlaylist = songs;
+            currentPlaylist = tracksList; // Si pincha un podcast, la lista se vuelve de puros podcasts
             currentSongIndex = index;
             loadAndPlaySong(currentPlaylist[currentSongIndex]);
         };
-        songsGrid.appendChild(div);
+        container.appendChild(div);
     });
 }
 
 searchInput.addEventListener('input', (e) => {
     const term = e.target.value.toLowerCase();
-    const filtered = allSongs.filter(s => 
-        s.titulo.toLowerCase().includes(term) || s.nombreArtista.toLowerCase().includes(term)
+    
+    // Filtrar música
+    const filteredMusic = allSongs.filter(s => s.tipo !== 'podcast' && 
+        (s.titulo.toLowerCase().includes(term) || s.nombreArtista.toLowerCase().includes(term))
     );
-    renderSongs(filtered);
+    // Filtrar podcasts
+    const filteredPodcasts = allSongs.filter(s => s.tipo === 'podcast' && 
+        (s.titulo.toLowerCase().includes(term) || s.nombreArtista.toLowerCase().includes(term))
+    );
+    
+    renderTracks(filteredMusic, songsGrid);
+    renderTracks(filteredPodcasts, podcastsGrid);
 });
 
 const q = query(collection(db, "canciones"), orderBy("fecha", "desc"));
 onSnapshot(q, (snapshot) => {
     allSongs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    
+    // Los datos viejos en la DB que no tienen "tipo" se asumen como "musica" por defecto
+    allSongs.forEach(s => { if(!s.tipo) s.tipo = 'musica'; });
+
     if(searchInput.value === "") {
-        currentPlaylist = allSongs;
-        renderSongs(allSongs);
+        const musicList = allSongs.filter(s => s.tipo === 'musica');
+        const podcastList = allSongs.filter(s => s.tipo === 'podcast');
+        
+        renderTracks(musicList, songsGrid);
+        renderTracks(podcastList, podcastsGrid);
     }
 });
 
 
-// --- FLUJO DE AUTENTICACIÓN Y REGISTRO (INTACTOS) ---
+// --- FLUJO DE AUTENTICACIÓN Y SUBIDA DE TRACKS ---
 const authPanel = document.getElementById('authPanel');
 const uploadPanel = document.getElementById('uploadPanel');
 const authForm = document.getElementById('authForm');
@@ -437,22 +448,25 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+// NUEVA FUNCIÓN DE SUBIDA (GUARDA TIPO DE TRACK)
 uploadForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const type = document.getElementById('trackType').value;
     const title = document.getElementById('songTitle').value;
     const url = document.getElementById('catboxUrl').value;
-    const cover = document.getElementById('coverUrl').value; // Recupera el valor de la portada
+    const cover = document.getElementById('coverUrl').value;
     
     try {
         await addDoc(collection(db, "canciones"), {
+            tipo: type, // <--- Guardamos si es música o podcast
             titulo: title,
             urlCatbox: url,
-            portadaUrl: cover, // Lo guarda en la base de datos de Firebase
+            portadaUrl: cover,
             artistaId: auth.currentUser.uid,
             nombreArtista: currentArtistName,
             fecha: new Date()
         });
-        showToast("¡Track montado y sonando!");
+        showToast("¡Lanzamiento en el aire!");
         uploadForm.reset();
     } catch (error) {
         showToast("No se pudo subir: " + error.message);
