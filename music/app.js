@@ -23,6 +23,8 @@ let currentPlaylist = [];
 let currentSongIndex = -1;
 let isSignUpMode = false;
 let currentArtistName = "";
+let isMuted = false;
+let previousVolume = 1;
 
 // Web Audio API (Para el Ecualizador)
 let audioCtx, source, bassFilter, midFilter, trebleFilter;
@@ -32,7 +34,7 @@ let isAudioSetup = false;
 const songsGrid = document.getElementById('songsGrid');
 const searchInput = document.getElementById('searchInput');
 
-// DOM del Reproductor
+// DOM del Reproductor y Efectos Visuales
 const mainAudio = document.getElementById('mainAudio');
 const globalPlayer = document.getElementById('globalPlayer');
 const playerTitle = document.getElementById('playerTitle');
@@ -47,6 +49,21 @@ const timeTotal = document.getElementById('timeTotal');
 const volBar = document.getElementById('volBar');
 const btnEqToggle = document.getElementById('btnEqToggle');
 const eqPanel = document.getElementById('eqPanel');
+
+// Variables heredadas de Radio Pizza
+const muteIcon = document.getElementById('muteIcon');
+const vinyl = document.getElementById('vinyl');
+const visualizer = document.getElementById('visualizer');
+const toastContainer = document.getElementById('toast-container');
+
+// --- 0. FUNCIONES DE NOTIFICACIÓN (RADIO PIZZA) ---
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    toastContainer.appendChild(toast);
+    setTimeout(() => { toast.remove(); }, 3000);
+}
 
 // --- 1. RENDERIZADO Y BÚSQUEDA ---
 function renderSongs(songs) {
@@ -66,7 +83,7 @@ function renderSongs(songs) {
             <p>${s.nombreArtista}</p>
         `;
         div.onclick = () => {
-            currentPlaylist = songs; // La lista actual se basa en la búsqueda
+            currentPlaylist = songs; 
             currentSongIndex = index;
             loadAndPlaySong(currentPlaylist[currentSongIndex]);
         };
@@ -93,10 +110,8 @@ onSnapshot(q, (snapshot) => {
     }
 });
 
-
 // --- 2. MOTOR DEL REPRODUCTOR AVANZADO ---
 
-// Configurar Web Audio API (Se ejecuta en la primera interacción)
 function setupAudioContext() {
     if (isAudioSetup) return;
     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -104,20 +119,10 @@ function setupAudioContext() {
     source = audioCtx.createMediaElementSource(mainAudio);
 
     // Filtros del EQ
-    bassFilter = audioCtx.createBiquadFilter();
-    bassFilter.type = "lowshelf";
-    bassFilter.frequency.value = 250;
+    bassFilter = audioCtx.createBiquadFilter(); bassFilter.type = "lowshelf"; bassFilter.frequency.value = 250;
+    midFilter = audioCtx.createBiquadFilter(); midFilter.type = "peaking"; midFilter.frequency.value = 1000; midFilter.Q.value = 1;
+    trebleFilter = audioCtx.createBiquadFilter(); trebleFilter.type = "highshelf"; trebleFilter.frequency.value = 4000;
 
-    midFilter = audioCtx.createBiquadFilter();
-    midFilter.type = "peaking";
-    midFilter.frequency.value = 1000;
-    midFilter.Q.value = 1;
-
-    trebleFilter = audioCtx.createBiquadFilter();
-    trebleFilter.type = "highshelf";
-    trebleFilter.frequency.value = 4000;
-
-    // Conectar nodos: Audio -> Bajo -> Medio -> Brillo -> Salida
     source.connect(bassFilter);
     bassFilter.connect(midFilter);
     midFilter.connect(trebleFilter);
@@ -128,22 +133,46 @@ function setupAudioContext() {
 
 function loadAndPlaySong(song) {
     if (!song) return;
-    setupAudioContext(); // Activamos el EQ si es la primera vez
+    setupAudioContext(); 
     if (audioCtx.state === 'suspended') audioCtx.resume();
 
-    globalPlayer.classList.add('active'); // Mostrar panel
+    globalPlayer.classList.add('active'); 
     playerTitle.innerText = song.titulo;
     playerArtist.innerText = song.nombreArtista;
     mainAudio.src = song.urlCatbox;
     
     mainAudio.play()
-        .then(() => updatePlayBtn(true))
-        .catch(err => console.log("Esperando interacción para autoplay"));
+        .then(() => {
+            updatePlayBtn(true);
+            showToast(`🎵 Sonando: ${song.titulo}`);
+        })
+        .catch(err => {
+            console.log("Esperando interacción para autoplay");
+            showToast("Dale play para empezar la rumba");
+        });
 }
 
 function updatePlayBtn(isPlaying) {
     btnPlayPause.innerHTML = isPlaying ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
+    // Animaciones del Radio Pizza
+    if (isPlaying) {
+        vinyl.classList.add('playing');
+        visualizer.classList.add('active');
+    } else {
+        vinyl.classList.remove('playing');
+        visualizer.classList.remove('active');
+    }
 }
+
+// Escuchadores de estado del audio (Radio Pizza Style)
+mainAudio.addEventListener('waiting', () => {
+    visualizer.classList.remove('active');
+    vinyl.classList.remove('playing');
+});
+mainAudio.addEventListener('playing', () => {
+    visualizer.classList.add('active');
+    vinyl.classList.add('playing');
+});
 
 // Botones de Control
 btnPlayPause.addEventListener('click', () => {
@@ -171,7 +200,7 @@ btnNext.addEventListener('click', () => {
         currentSongIndex++;
         loadAndPlaySong(currentPlaylist[currentSongIndex]);
     } else {
-        currentSongIndex = 0; // Vuelve al inicio
+        currentSongIndex = 0; 
         loadAndPlaySong(currentPlaylist[currentSongIndex]);
     }
 });
@@ -183,7 +212,7 @@ btnPrev.addEventListener('click', () => {
     }
 });
 
-// Auto-Next cuando termina la canción
+// Auto-Next
 mainAudio.addEventListener('ended', () => btnNext.click());
 
 // Formatear Tiempo
@@ -206,7 +235,6 @@ mainAudio.addEventListener('timeupdate', () => {
     }
 });
 
-// Adelantar/Atrasar canción
 progressBar.addEventListener('input', () => {
     const duration = mainAudio.duration;
     if (duration) {
@@ -214,27 +242,43 @@ progressBar.addEventListener('input', () => {
     }
 });
 
-// Control de Volumen
+// --- CONTROL DE VOLUMEN Y MUTE (LÓGICA RADIO PIZZA) ---
+function toggleMute() {
+    if (isMuted) {
+        mainAudio.volume = previousVolume > 0 ? previousVolume : 1;
+        volBar.value = mainAudio.volume;
+        isMuted = false;
+    } else {
+        previousVolume = mainAudio.volume;
+        mainAudio.volume = 0;
+        volBar.value = 0;
+        isMuted = true;
+    }
+    updateMuteIcon();
+}
+
+function updateMuteIcon() {
+    muteIcon.className = (mainAudio.volume === 0) ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
+    muteIcon.style.color = (mainAudio.volume === 0) ? "var(--pizza-red)" : "var(--text-muted)";
+}
+
+muteIcon.addEventListener('click', toggleMute);
+
 volBar.addEventListener('input', (e) => {
     mainAudio.volume = e.target.value;
+    isMuted = mainAudio.volume == 0;
+    updateMuteIcon();
 });
 
-// Controles de Ecualizador (EQ)
+// --- EQ TOGGLE ---
 btnEqToggle.addEventListener('click', () => {
     eqPanel.classList.toggle('show');
     btnEqToggle.classList.toggle('active');
 });
 
-document.getElementById('eqBass').addEventListener('input', (e) => {
-    if (bassFilter) bassFilter.gain.value = e.target.value;
-});
-document.getElementById('eqMid').addEventListener('input', (e) => {
-    if (midFilter) midFilter.gain.value = e.target.value;
-});
-document.getElementById('eqTreble').addEventListener('input', (e) => {
-    if (trebleFilter) trebleFilter.gain.value = e.target.value;
-});
-
+document.getElementById('eqBass').addEventListener('input', (e) => { if (bassFilter) bassFilter.gain.value = e.target.value; });
+document.getElementById('eqMid').addEventListener('input', (e) => { if (midFilter) midFilter.gain.value = e.target.value; });
+document.getElementById('eqTreble').addEventListener('input', (e) => { if (trebleFilter) trebleFilter.gain.value = e.target.value; });
 
 // --- 3. AUTENTICACIÓN Y SUBIDA (INTACTO) ---
 const authPanel = document.getElementById('authPanel');
@@ -275,18 +319,21 @@ authForm.addEventListener('submit', async (e) => {
             const artistName = document.getElementById('artistName').value;
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             await updateProfile(userCredential.user, { displayName: artistName });
-            alert(`¡Registro brutal! Bienvenido a Pizza Music, ${artistName}`);
+            showToast(`¡Registro brutal! Bienvenido, ${artistName}`);
         } else {
             await signInWithEmailAndPassword(auth, email, password);
-            alert("¡Adentro del Studio! Sesión iniciada.");
+            showToast("¡Adentro del Studio! Sesión iniciada.");
         }
         authForm.reset();
     } catch (error) {
-        alert("Hubo un rollo: " + error.message);
+        showToast("Hubo un rollo: " + error.message);
     }
 });
 
-btnLogout.addEventListener('click', () => signOut(auth));
+btnLogout.addEventListener('click', () => {
+    signOut(auth);
+    showToast("Has salido del Studio");
+});
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -315,9 +362,9 @@ uploadForm.addEventListener('submit', async (e) => {
             nombreArtista: currentArtistName,
             fecha: new Date()
         });
-        alert("¡Track montado! Ya está sonando en Pizza Music.");
+        showToast("¡Track montado y sonando!");
         uploadForm.reset();
     } catch (error) {
-        alert("No se pudo subir: " + error.message);
+        showToast("No se pudo subir: " + error.message);
     }
 });
