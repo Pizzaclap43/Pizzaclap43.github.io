@@ -66,13 +66,16 @@
 
             <div id="uploadPanel" class="glass-card" style="display: none;">
                 <h3>Lanzamiento</h3>
-                <p class="card-desc">Sube tu track a Catbox y pega el link</p>
+                <p class="card-desc">Sube tu track a Catbox y pega los links</p>
                 <form id="uploadForm">
                     <div class="field">
                         <input type="text" id="songTitle" required placeholder="Título del Track">
                     </div>
                     <div class="field">
                         <input type="url" id="catboxUrl" required placeholder="Link .mp3 (Catbox)">
+                    </div>
+                    <div class="field">
+                        <input type="url" id="coverUrl" placeholder="Link portada (imagen .jpg/.png)">
                     </div>
                     <button type="submit" class="btn-glow btn-success">Lanzar Track</button>
                 </form>
@@ -132,37 +135,27 @@
             <div class="eq-sliders">
                 <div class="eq-band">
                     <span class="eq-value" id="val60">0 dB</span>
-                    <div class="fader-wrapper">
-                        <input type="range" id="eq60" class="fader" value="0" min="-12" max="12" step="1">
-                    </div>
+                    <div class="fader-wrapper"><input type="range" id="eq60" class="fader" value="0" min="-12" max="12" step="1"></div>
                     <span class="eq-label">60Hz</span>
                 </div>
                 <div class="eq-band">
                     <span class="eq-value" id="val230">0 dB</span>
-                    <div class="fader-wrapper">
-                        <input type="range" id="eq230" class="fader" value="0" min="-12" max="12" step="1">
-                    </div>
+                    <div class="fader-wrapper"><input type="range" id="eq230" class="fader" value="0" min="-12" max="12" step="1"></div>
                     <span class="eq-label">230Hz</span>
                 </div>
                 <div class="eq-band">
                     <span class="eq-value" id="val910">0 dB</span>
-                    <div class="fader-wrapper">
-                        <input type="range" id="eq910" class="fader" value="0" min="-12" max="12" step="1">
-                    </div>
+                    <div class="fader-wrapper"><input type="range" id="eq910" class="fader" value="0" min="-12" max="12" step="1"></div>
                     <span class="eq-label">910Hz</span>
                 </div>
                 <div class="eq-band">
                     <span class="eq-value" id="val3k">0 dB</span>
-                    <div class="fader-wrapper">
-                        <input type="range" id="eq3k" class="fader" value="0" min="-12" max="12" step="1">
-                    </div>
+                    <div class="fader-wrapper"><input type="range" id="eq3k" class="fader" value="0" min="-12" max="12" step="1"></div>
                     <span class="eq-label">3.6kHz</span>
                 </div>
                 <div class="eq-band">
                     <span class="eq-value" id="val14k">0 dB</span>
-                    <div class="fader-wrapper">
-                        <input type="range" id="eq14k" class="fader" value="0" min="-12" max="12" step="1">
-                    </div>
+                    <div class="fader-wrapper"><input type="range" id="eq14k" class="fader" value="0" min="-12" max="12" step="1"></div>
                     <span class="eq-label">14kHz</span>
                 </div>
             </div>
