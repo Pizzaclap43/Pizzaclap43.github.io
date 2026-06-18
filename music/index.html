@@ -38,12 +38,21 @@
     </header>
 
     <main class="app-container">
-        <section class="music-feed">
-            <h2 class="section-title">Tendencias Emergentes</h2>
-            <div class="songs-grid" id="songsGrid">
-                <div class="loader">Cargando la magia...</div>
-            </div>
-        </section>
+        <div class="feeds-wrapper">
+            <section class="music-feed">
+                <h2 class="section-title">🎵 Tendencias Musicales</h2>
+                <div class="songs-grid" id="songsGrid">
+                    <div class="loader">Cargando la música...</div>
+                </div>
+            </section>
+
+            <section class="podcast-feed" style="margin-top: 50px;">
+                <h2 class="section-title">🎙️ Podcasts Exclusivos</h2>
+                <div class="songs-grid" id="podcastsGrid">
+                    <div class="loader">Cargando los episodios...</div>
+                </div>
+            </section>
+        </div>
 
         <aside class="side-panel">
             <div id="authPanel" class="glass-card">
@@ -66,16 +75,22 @@
 
             <div id="uploadPanel" class="glass-card" style="display: none;">
                 <h3>Lanzamiento</h3>
-                <p class="card-desc">Sube tu track a Catbox y pega los links</p>
+                <p class="card-desc">Sube tu audio a Catbox y pega los links</p>
                 <form id="uploadForm">
                     <div class="field">
-                        <input type="text" id="songTitle" required placeholder="Título del Track">
+                        <select id="trackType" class="glass-select">
+                            <option value="musica">🎵 Es una Canción</option>
+                            <option value="podcast">🎙️ Es un Podcast</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <input type="text" id="songTitle" required placeholder="Título del Track/Episodio">
                     </div>
                     <div class="field">
                         <input type="url" id="catboxUrl" required placeholder="Link .mp3 (Catbox)">
                     </div>
                     <div class="field">
-                        <input type="url" id="coverUrl" placeholder="Link de portada .jpg o .png (Opcional)">
+                        <input type="url" id="coverUrl" placeholder="Link de portada .jpg/.png (Opcional)">
                     </div>
                     <button type="submit" class="btn-glow btn-success">Lanzar Track</button>
                 </form>
