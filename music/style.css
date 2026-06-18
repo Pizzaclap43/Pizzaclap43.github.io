@@ -201,13 +201,26 @@ body {
 .eq-btn { background: transparent; border: 1px solid var(--glass-border); color: white; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; }
 .eq-btn.active { border-color: var(--pizza-red); color: var(--pizza-red); box-shadow: 0 0 10px var(--pizza-glow); }
 
-/* INTERFAZ DEL PANEL EQ */
-.eq-panel { width: 100%; background: #0b0b0f; border-top: 1px solid var(--glass-border); margin-top: 15px; padding: 15px 0 5px; display: none; justify-content: space-between; align-items: center; }
+/* INTERFAZ DEL PANEL EQ PROFESIONAL (5 BANDAS) */
+.eq-panel { 
+    width: 100%; 
+    background: #0b0b0f; 
+    border-top: 1px solid var(--glass-border); 
+    margin-top: 15px; 
+    padding: 15px 40px; 
+    display: none; 
+    justify-content: space-between; 
+    align-items: center; 
+    box-sizing: border-box; 
+}
 .eq-panel.show { display: flex; }
+.eq-header { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
 .eq-panel h4 { margin: 0; color: var(--pizza-red); font-size: 14px; }
-.eq-sliders { display: flex; gap: 35px; margin-right: 20px; }
+.eq-reset-btn { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); border-radius: 4px; cursor: pointer; padding: 4px 10px; font-size: 11px; font-weight: bold; transition: 0.3s; }
+.eq-reset-btn:hover { border-color: var(--pizza-red); color: var(--pizza-red); }
+.eq-sliders { display: flex; gap: 20px; }
 .eq-band { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 11px; color: var(--text-muted); }
-.slider-vertical { appearance: slider-vertical; -webkit-appearance: slider-vertical; width: 8px; height: 70px; background: #222; accent-color: var(--pizza-red); }
+.slider-vertical { appearance: slider-vertical; -webkit-appearance: slider-vertical; width: 8px; height: 70px; background: #222; accent-color: var(--pizza-red); cursor: pointer; }
 
 /* PANELES LATERALES */
 .glass-card { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 25px; border-radius: 16px; backdrop-filter: blur(15px); margin-bottom: 25px; }
