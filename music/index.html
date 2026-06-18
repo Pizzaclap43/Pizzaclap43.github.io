@@ -125,19 +125,30 @@
         </div>
 
         <div class="eq-panel" id="eqPanel">
-            <h4>Ecualizador Maestro</h4>
+            <div class="eq-header">
+                <h4>EQ Profesional</h4>
+                <button id="btnEqReset" class="eq-reset-btn">Reset</button>
+            </div>
             <div class="eq-sliders">
                 <div class="eq-band">
-                    <input type="range" id="eqBass" class="slider-vertical" value="0" min="-15" max="15" step="1">
-                    <span>Bajos</span>
+                    <input type="range" id="eq60" class="slider-vertical" value="0" min="-12" max="12" step="1">
+                    <span>60Hz</span>
                 </div>
                 <div class="eq-band">
-                    <input type="range" id="eqMid" class="slider-vertical" value="0" min="-15" max="15" step="1">
-                    <span>Medios</span>
+                    <input type="range" id="eq230" class="slider-vertical" value="0" min="-12" max="12" step="1">
+                    <span>230Hz</span>
                 </div>
                 <div class="eq-band">
-                    <input type="range" id="eqTreble" class="slider-vertical" value="0" min="-15" max="15" step="1">
-                    <span>Brillos</span>
+                    <input type="range" id="eq910" class="slider-vertical" value="0" min="-12" max="12" step="1">
+                    <span>910Hz</span>
+                </div>
+                <div class="eq-band">
+                    <input type="range" id="eq3k" class="slider-vertical" value="0" min="-12" max="12" step="1">
+                    <span>3.6kHz</span>
+                </div>
+                <div class="eq-band">
+                    <input type="range" id="eq14k" class="slider-vertical" value="0" min="-12" max="12" step="1">
+                    <span>14kHz</span>
                 </div>
             </div>
         </div>
