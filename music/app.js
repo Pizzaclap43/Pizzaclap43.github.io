@@ -282,34 +282,38 @@ function updateFavIconState() {
     playerFavBtn.innerHTML = `<i class="${isFav ? 'fas' : 'far'} fa-heart" style="color: ${isFav ? 'var(--pizza-red)' : 'inherit'}"></i>`;
 }
 
-// Control de los Deslizadores del Ecualizador
+// Control de los Deslizadores Verticales (Faders) del Ecualizador
 btnEqToggle.addEventListener('click', () => {
     eqPanel.classList.toggle('show');
     btnEqToggle.classList.toggle('active');
 });
 
-const eqSliders = [
-    document.getElementById('eq60'),
-    document.getElementById('eq230'),
-    document.getElementById('eq910'),
-    document.getElementById('eq3k'),
-    document.getElementById('eq14k')
+// Arreglo para mapear la barra con su valor de texto
+const faders = [
+    { el: document.getElementById('eq60'), val: document.getElementById('val60') },
+    { el: document.getElementById('eq230'), val: document.getElementById('val230') },
+    { el: document.getElementById('eq910'), val: document.getElementById('val910') },
+    { el: document.getElementById('eq3k'), val: document.getElementById('val3k') },
+    { el: document.getElementById('eq14k'), val: document.getElementById('val14k') }
 ];
 
-// Asignar el valor de cada slider a su respectiva banda del ecualizador
-eqSliders.forEach((slider, index) => {
-    slider.addEventListener('input', (e) => {
-        if (eqBands[index]) eqBands[index].gain.value = e.target.value;
+// Asignar los eventos de arrastre a los faders
+faders.forEach((band, index) => {
+    band.el.addEventListener('input', (e) => {
+        const value = e.target.value;
+        band.val.innerText = `${value > 0 ? '+' : ''}${value} dB`; // Actualiza el texto con el dB
+        if (eqBands[index]) eqBands[index].gain.value = value;
     });
 });
 
-// Botón de Reset para el EQ
+// Botón de Reset Maestro para el EQ
 document.getElementById('btnEqReset').addEventListener('click', () => {
-    eqSliders.forEach((slider, index) => {
-        slider.value = 0; // Resetear la UI
-        if (eqBands[index]) eqBands[index].gain.value = 0; // Resetear el audio
+    faders.forEach((band, index) => {
+        band.el.value = 0;
+        band.val.innerText = "0 dB"; // Resetear el texto visual
+        if (eqBands[index]) eqBands[index].gain.value = 0; // Resetear el filtro real de audio
     });
-    showToast("Ecualizador reiniciado");
+    showToast("Ecualizador reiniciado a 0 dB");
 });
 
 
