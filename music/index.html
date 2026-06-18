@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pizza Music | Premium Studio</title>
+    <title>Pizza Music | Radio & Studio</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -12,7 +12,10 @@
     <div id="toast-container"></div>
 
     <header class="main-header">
-        <div class="brand"><i class="fa-solid fa-compact-disc spin-slow" id="vinyl"></i> Pizza<span>Music</span></div>
+        <div class="brand">
+            <i class="fa-solid fa-compact-disc spin-slow" id="vinyl"></i> 
+            Pizza<span>Music</span>
+        </div>
         <div class="search-bar">
             <i class="fa-solid fa-search"></i>
             <input type="text" id="searchInput" placeholder="Busca tu vibra hoy...">
@@ -22,7 +25,7 @@
 
     <main class="app-container">
         <section class="music-feed">
-            <h2 class="section-title">Tu Librería</h2>
+            <h2 class="section-title">Tu Biblioteca</h2>
             <div class="songs-grid" id="songsGrid"></div>
         </section>
 
@@ -37,6 +40,7 @@
                 </form>
                 <p class="toggle-text"><span id="toggleAuthMode">Registrarse</span></p>
             </div>
+            
             <div id="uploadPanel" class="glass-card" style="display: none;">
                 <h3>Subir Track</h3>
                 <form id="uploadForm">
@@ -61,19 +65,20 @@
             </div>
             <div class="player-core">
                 <div class="controls-buttons">
-                    <button class="ctrl-btn" onclick="prevStation()"><i class="fas fa-step-backward"></i></button>
-                    <button class="ctrl-btn play-btn" id="playPauseBtn" onclick="togglePlayPause()"><i class="fas fa-play-circle"></i></button>
-                    <button class="ctrl-btn" onclick="nextStation()"><i class="fas fa-step-forward"></i></button>
+                    <button class="ctrl-btn" id="btnPrev"><i class="fas fa-step-backward"></i></button>
+                    <button class="ctrl-btn play-btn" id="playPauseBtn"><i class="fas fa-play-circle"></i></button>
+                    <button class="ctrl-btn" id="btnNext"><i class="fas fa-step-forward"></i></button>
                 </div>
             </div>
             <div class="player-extras">
                 <button class="ctrl-btn eq-btn" id="btnEqToggle"><i class="fas fa-sliders-h"></i> EQ</button>
                 <div class="volume-control">
-                    <i class="fas fa-volume-down" id="muteIcon" onclick="toggleMute()"></i>
+                    <i class="fas fa-volume-down" id="muteIcon"></i>
                     <input type="range" id="volumeSlider" class="slider" min="0" max="1" step="0.1" value="0.8">
                 </div>
             </div>
         </div>
+        
         <div class="eq-panel" id="eqPanel">
             <div class="eq-band"><input type="range" id="eqBass" class="slider-vertical" min="-15" max="15" value="0"><span>Bass</span></div>
             <div class="eq-band"><input type="range" id="eqMid" class="slider-vertical" min="-15" max="15" value="0"><span>Mid</span></div>
