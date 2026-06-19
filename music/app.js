@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, doc, updateDoc, arrayUnion, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, doc, updateDoc, arrayUnion, arrayRemove, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Tu Configuración de Pizza Music Cloud
 const firebaseConfig = {
@@ -121,6 +121,7 @@ function loadAndPlaySong(song) {
         .then(() => {
             updatePlayStatus(true);
             updateFavIconState();
+            updatePlaylistDropdown(); // Actualiza el check si está en la playlist
             showToast(`Sintonizando: ${song.titulo}`);
         })
         .catch(() => {
@@ -296,7 +297,6 @@ function renderTracks(tracksList, container) {
             ? `<img src="${s.portadaUrl}" class="cover-img" alt="Portada">` 
             : `<i class="fa-solid ${iconClass}" style="font-size:40px; color:#222;"></i>`;
 
-        // NUEVO: Agregamos el nombre del Álbum a la tarjeta
         const albumName = s.album || "Sencillo";
 
         div.innerHTML = `
@@ -447,7 +447,7 @@ uploadForm.addEventListener('submit', async (e) => {
     try {
         await addDoc(collection(db, "canciones"), {
             tipo: type,
-            album: albumName || "Sencillo", // Guardamos el álbum
+            album: albumName || "Sencillo", 
             titulo: title,
             urlCatbox: url,
             portadaUrl: cover,
@@ -483,32 +483,79 @@ document.getElementById('btnCreatePlaylist').addEventListener('click', async () 
     }
 });
 
-// Renderizar Playlists en la barra lateral y en el dropdown del reproductor
+// Renderizar Playlists en la barra lateral
 function renderCloudPlaylistsUI() {
     const listEl = document.getElementById('userPlaylistsList');
-    const dropEl = document.getElementById('playlistDropdown');
     listEl.innerHTML = "";
-    dropEl.innerHTML = "";
 
     if (cloudPlaylists.length === 0) {
         listEl.innerHTML = "<p style='color:var(--text-muted); font-size:12px;'>Aún no tienes listas.</p>";
+    } else {
+        cloudPlaylists.forEach(p => {
+            const div = document.createElement('div');
+            div.className = 'playlist-item';
+            
+            div.innerHTML = `
+                <div class="playlist-info" style="flex-grow: 1; cursor: pointer;">
+                    <span><i class="fas fa-list"></i> ${p.nombre}</span> 
+                    <span style="color:var(--pizza-red); font-size: 11px; margin-left: 8px;">${p.canciones.length} tracks</span>
+                </div>
+                <button class="btn-delete-playlist" title="Eliminar Playlist"><i class="fas fa-trash"></i></button>
+            `;
+            
+            // Clic en la info reproduce
+            div.querySelector('.playlist-info').onclick = () => playCloudPlaylist(p);
+            
+            // Clic en la papelera elimina
+            div.querySelector('.btn-delete-playlist').onclick = (e) => {
+                e.stopPropagation();
+                deleteCloudPlaylist(p.id, p.nombre);
+            };
+            
+            listEl.appendChild(div);
+        });
+    }
+
+    // Actualizamos el dropdown del reproductor también
+    updatePlaylistDropdown();
+}
+
+// Nueva función: Actualizar Dropdown del reproductor según la canción actual
+function updatePlaylistDropdown() {
+    const dropEl = document.getElementById('playlistDropdown');
+    dropEl.innerHTML = "";
+
+    if (cloudPlaylists.length === 0) {
         dropEl.innerHTML = "<div class='playlist-dropdown-item'>No tienes playlists</div>";
         return;
     }
 
-    cloudPlaylists.forEach(p => {
-        // En panel lateral (Para reproducir)
-        const div = document.createElement('div');
-        div.className = 'playlist-item';
-        div.innerHTML = `<span><i class="fas fa-list"></i> ${p.nombre}</span> <span style="color:var(--pizza-red)">${p.canciones.length} tracks</span>`;
-        div.onclick = () => playCloudPlaylist(p);
-        listEl.appendChild(div);
+    let currentTrackId = null;
+    if (currentSongIndex !== -1 && currentPlaylist[currentSongIndex]) {
+        currentTrackId = currentPlaylist[currentSongIndex].id;
+    }
 
-        // En dropdown del reproductor (Para agregar canción actual)
+    cloudPlaylists.forEach(p => {
         const dropItem = document.createElement('div');
         dropItem.className = 'playlist-dropdown-item';
-        dropItem.innerText = `+ ${p.nombre}`;
-        dropItem.onclick = () => addCurrentSongToCloudPlaylist(p.id, p.nombre);
+        
+        // Si el track actual ya está en la lista, mostrar opción para quitarlo
+        if (currentTrackId && p.canciones.includes(currentTrackId)) {
+            dropItem.innerHTML = `<i class="fas fa-check" style="color:var(--pizza-red)"></i> ${p.nombre}`;
+            dropItem.onclick = (e) => {
+                e.stopPropagation();
+                removeCurrentSongFromCloudPlaylist(p.id, p.nombre);
+                dropEl.classList.remove('show');
+            };
+        } else {
+            // Si no está, mostrar opción para agregarlo
+            dropItem.innerHTML = `+ ${p.nombre}`;
+            dropItem.onclick = (e) => {
+                e.stopPropagation();
+                addCurrentSongToCloudPlaylist(p.id, p.nombre);
+                dropEl.classList.remove('show');
+            };
+        }
         dropEl.appendChild(dropItem);
     });
 }
@@ -533,6 +580,18 @@ function playCloudPlaylist(playlist) {
     
     // Scrollear hacia arriba para que el usuario vea la playlist
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Borrar Playlist completa de Firebase
+async function deleteCloudPlaylist(playlistId, playlistName) {
+    if (confirm(`¿Seguro que quieres borrar la playlist "${playlistName}" pa' siempre?`)) {
+        try {
+            await deleteDoc(doc(db, "playlists", playlistId));
+            showToast(`Playlist "${playlistName}" borrada`);
+        } catch(e) {
+            showToast("Error al borrar: " + e.message);
+        }
+    }
 }
 
 // Lógica del botón + en el reproductor
@@ -570,5 +629,21 @@ async function addCurrentSongToCloudPlaylist(playlistId, playlistName) {
         showToast(`Guardado en "${playlistName}"`);
     } catch(e) {
         showToast("Error al guardar: " + e.message);
+    }
+}
+
+// Quitar de Firebase
+async function removeCurrentSongFromCloudPlaylist(playlistId, playlistName) {
+    if (currentSongIndex === -1 || !currentPlaylist[currentSongIndex]) return;
+    const trackId = currentPlaylist[currentSongIndex].id;
+    
+    try {
+        const playlistRef = doc(db, "playlists", playlistId);
+        await updateDoc(playlistRef, {
+            canciones: arrayRemove(trackId) // arrayRemove saca ese ID del arreglo
+        });
+        showToast(`Eliminado de "${playlistName}"`);
+    } catch(e) {
+        showToast("Error al quitar: " + e.message);
     }
 }
