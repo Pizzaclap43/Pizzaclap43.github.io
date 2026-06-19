@@ -57,10 +57,13 @@ const vinyl = document.getElementById('vinyl');
 const visualizer = document.getElementById('visualizer');
 const toastContainer = document.getElementById('toast-container');
 const searchInput = document.getElementById('searchInput');
-const songsGrid = document.getElementById('songsGrid'); // Música
+
+// Contenedores de Feeds
+const mixedGrid = document.getElementById('mixedGrid');    // Novedades
+const songsGrid = document.getElementById('songsGrid');    // Música
 const podcastsGrid = document.getElementById('podcastsGrid'); // Podcasts
 
-// --- SISTEMA DE NOTIFICACIONES (TOASTS DE RADIO PIZZA) ---
+// --- SISTEMA DE NOTIFICACIONES (TOASTS) ---
 function showToast(message) {
     const toast = document.createElement('div');
     toast.className = 'toast';
@@ -275,7 +278,7 @@ document.getElementById('btnEqReset').addEventListener('click', () => {
 });
 
 
-// --- RENDERS MULTIPLES (MÚSICA Y PODCASTS) ---
+// --- RENDERS MULTIPLES (MÚSICA, PODCASTS Y MIXTO) ---
 function renderTracks(tracksList, container) {
     container.innerHTML = "";
     if (tracksList.length === 0) {
@@ -301,7 +304,7 @@ function renderTracks(tracksList, container) {
         `;
         
         div.onclick = () => {
-            currentPlaylist = tracksList; // Si pincha un podcast, la lista se vuelve de puros podcasts
+            currentPlaylist = tracksList; // Crea la cola de reproducción basada en el contenedor donde dio clic
             currentSongIndex = index;
             loadAndPlaySong(currentPlaylist[currentSongIndex]);
         };
@@ -312,6 +315,10 @@ function renderTracks(tracksList, container) {
 searchInput.addEventListener('input', (e) => {
     const term = e.target.value.toLowerCase();
     
+    // Filtrar mixto (Todos)
+    const filteredMixed = allSongs.filter(s => 
+        (s.titulo.toLowerCase().includes(term) || s.nombreArtista.toLowerCase().includes(term))
+    );
     // Filtrar música
     const filteredMusic = allSongs.filter(s => s.tipo !== 'podcast' && 
         (s.titulo.toLowerCase().includes(term) || s.nombreArtista.toLowerCase().includes(term))
@@ -321,6 +328,7 @@ searchInput.addEventListener('input', (e) => {
         (s.titulo.toLowerCase().includes(term) || s.nombreArtista.toLowerCase().includes(term))
     );
     
+    renderTracks(filteredMixed, mixedGrid);
     renderTracks(filteredMusic, songsGrid);
     renderTracks(filteredPodcasts, podcastsGrid);
 });
@@ -336,6 +344,7 @@ onSnapshot(q, (snapshot) => {
         const musicList = allSongs.filter(s => s.tipo === 'musica');
         const podcastList = allSongs.filter(s => s.tipo === 'podcast');
         
+        renderTracks(allSongs, mixedGrid); // Mix de todo en la sección principal
         renderTracks(musicList, songsGrid);
         renderTracks(podcastList, podcastsGrid);
     }
@@ -411,7 +420,6 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// NUEVA FUNCIÓN DE SUBIDA (GUARDA TIPO DE TRACK)
 uploadForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const type = document.getElementById('trackType').value;
@@ -421,7 +429,7 @@ uploadForm.addEventListener('submit', async (e) => {
     
     try {
         await addDoc(collection(db, "canciones"), {
-            tipo: type, // <--- Guardamos si es música o podcast
+            tipo: type, // Guarda si es música o podcast
             titulo: title,
             urlCatbox: url,
             portadaUrl: cover,
