@@ -35,7 +35,7 @@
         <div class="feeds-wrapper">
             
             <section class="mixed-feed">
-                <h2 class="section-title">🔥 Novedades (Descubre)</h2>
+                <h2 class="section-title" id="mixedFeedTitle">🔥 Novedades (Descubre)</h2>
                 <div class="songs-grid" id="mixedGrid">
                     <div class="loader">Cargando el flow...</div>
                 </div>
@@ -75,15 +75,29 @@
                 <p class="toggle-text">¿No tienes acceso? <span id="toggleAuthMode">Crea tu cuenta</span></p>
             </div>
 
+            <div id="playlistsPanel" class="glass-card" style="display: none;">
+                <h3>Mis Playlists</h3>
+                <p class="card-desc">Arma tus listas personalizadas</p>
+                <div class="field" style="display:flex; gap:10px; margin-bottom: 5px;">
+                    <input type="text" id="newPlaylistName" placeholder="Nueva Playlist...">
+                    <button type="button" id="btnCreatePlaylist" class="btn-glow" style="width: 50px;"><i class="fas fa-plus"></i></button>
+                </div>
+                <div id="userPlaylistsList" class="playlist-list">
+                    </div>
+            </div>
+
             <div id="uploadPanel" class="glass-card" style="display: none;">
                 <h3>Lanzamiento</h3>
-                <p class="card-desc">Sube tu audio a Catbox y pega los links</p>
+                <p class="card-desc">Publica tu nuevo tema o episodio</p>
                 <form id="uploadForm">
                     <div class="field">
                         <select id="trackType" class="glass-select">
                             <option value="musica">🎵 Es una Canción</option>
                             <option value="podcast">🎙️ Es un Podcast</option>
                         </select>
+                    </div>
+                    <div class="field">
+                        <input type="text" id="albumTitle" placeholder="Álbum / Colección (Opcional)">
                     </div>
                     <div class="field">
                         <input type="text" id="songTitle" required placeholder="Título del Track/Episodio">
@@ -128,7 +142,15 @@
                 <button class="control-btn" id="btnPrev" title="Anterior"><i class="fas fa-step-backward"></i></button>
                 <button class="control-btn play-pause-btn" id="btnPlayPause"><i class="fas fa-play-circle"></i></button>
                 <button class="control-btn" id="btnNext" title="Siguiente"><i class="fas fa-step-forward"></i></button>
-                <button class="control-btn" id="playerFavBtn" title="Favoritos"><i class="far fa-heart"></i></button>
+                <button class="control-btn" id="playerFavBtn" title="Favoritos Locales"><i class="far fa-heart"></i></button>
+                
+                <div style="position: relative; display: flex; align-items: center;">
+                    <button class="control-btn" id="btnAddToPlaylist" title="Guardar en Playlist">
+                        <i class="fas fa-list-ul"></i><i class="fas fa-plus" style="font-size: 10px; margin-left: 2px;"></i>
+                    </button>
+                    <div id="playlistDropdown" class="playlist-dropdown">
+                        </div>
+                </div>
             </div>
             
             <div class="progress-container">
@@ -152,37 +174,27 @@
             <div class="eq-sliders">
                 <div class="eq-band">
                     <span class="eq-value" id="val60">0 dB</span>
-                    <div class="fader-wrapper">
-                        <input type="range" id="eq60" class="fader" value="0" min="-12" max="12" step="1">
-                    </div>
+                    <div class="fader-wrapper"><input type="range" id="eq60" class="fader" value="0" min="-12" max="12" step="1"></div>
                     <span class="eq-label">60Hz</span>
                 </div>
                 <div class="eq-band">
                     <span class="eq-value" id="val230">0 dB</span>
-                    <div class="fader-wrapper">
-                        <input type="range" id="eq230" class="fader" value="0" min="-12" max="12" step="1">
-                    </div>
+                    <div class="fader-wrapper"><input type="range" id="eq230" class="fader" value="0" min="-12" max="12" step="1"></div>
                     <span class="eq-label">230Hz</span>
                 </div>
                 <div class="eq-band">
                     <span class="eq-value" id="val910">0 dB</span>
-                    <div class="fader-wrapper">
-                        <input type="range" id="eq910" class="fader" value="0" min="-12" max="12" step="1">
-                    </div>
+                    <div class="fader-wrapper"><input type="range" id="eq910" class="fader" value="0" min="-12" max="12" step="1"></div>
                     <span class="eq-label">910Hz</span>
                 </div>
                 <div class="eq-band">
                     <span class="eq-value" id="val3k">0 dB</span>
-                    <div class="fader-wrapper">
-                        <input type="range" id="eq3k" class="fader" value="0" min="-12" max="12" step="1">
-                    </div>
+                    <div class="fader-wrapper"><input type="range" id="eq3k" class="fader" value="0" min="-12" max="12" step="1"></div>
                     <span class="eq-label">3.6kHz</span>
                 </div>
                 <div class="eq-band">
                     <span class="eq-value" id="val14k">0 dB</span>
-                    <div class="fader-wrapper">
-                        <input type="range" id="eq14k" class="fader" value="0" min="-12" max="12" step="1">
-                    </div>
+                    <div class="fader-wrapper"><input type="range" id="eq14k" class="fader" value="0" min="-12" max="12" step="1"></div>
                     <span class="eq-label">14kHz</span>
                 </div>
             </div>
