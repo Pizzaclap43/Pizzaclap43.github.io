@@ -81,17 +81,6 @@ body {
 .spin-slow { animation: spinHeader 6s linear infinite; }
 @keyframes spinHeader { 100% { transform: rotate(360deg); } }
 
-.user-info {
-    display: flex;
-    gap: 20px;
-    font-size: 13px;
-    color: var(--text-muted);
-    background: rgba(0, 0, 0, 0.2);
-    padding: 8px 16px;
-    border-radius: 20px;
-    border: 1px solid var(--glass-border);
-}
-
 .search-bar {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 30px;
@@ -232,7 +221,7 @@ input[type="text"], input[type="email"], input[type="password"], input[type="url
 }
 input:focus { border-color: var(--pizza-red); outline: none; }
 
-/* NUEVO: Estilo para el selector de Música/Podcast */
+/* Estilo para el selector de Música/Podcast */
 .glass-select {
     width: 100%; padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); 
     border-radius: 6px; color: white; box-sizing: border-box; appearance: none; cursor: pointer;
