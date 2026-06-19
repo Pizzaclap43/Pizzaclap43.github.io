@@ -265,12 +265,27 @@ input:focus { border-color: var(--pizza-red); outline: none; }
     border: 1px solid var(--glass-border);
     padding: 10px 15px;
     border-radius: 6px;
-    cursor: pointer;
     transition: 0.2s;
     font-size: 13px;
     font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 .playlist-item:hover { border-color: var(--pizza-red); background: rgba(211,47,47,0.1); }
+
+.btn-delete-playlist {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.2s;
+    font-size: 14px;
+}
+.btn-delete-playlist:hover {
+    color: var(--pizza-red);
+}
 
 .playlist-dropdown {
     position: absolute;
