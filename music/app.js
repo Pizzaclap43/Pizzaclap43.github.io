@@ -69,43 +69,6 @@ function showToast(message) {
     setTimeout(() => { toast.remove(); }, 3000);
 }
 
-// --- WIDGETS DE ENTORNO EN VIVO (RELOJ, FECHA Y CLIMA) ---
-function updateClock() {
-    const now = new Date();
-    document.getElementById('clock').textContent = `🕒 ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'})}`;
-    
-    const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-    let dateStr = now.toLocaleDateString('es-ES', options);
-    document.getElementById('date').textContent = `📅 ${dateStr.charAt(0).toUpperCase() + dateStr.slice(1)}`;
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-function getWeatherCodeDesc(code) {
-    if (code === 0) return "Despejado ☀️";
-    if (code <= 3) return "Parcialmente Nublado ⛅";
-    if (code >= 51 && code <= 67) return "Lluvia 🌧️";
-    if (code === 95) return "Tormenta ⛈️";
-    return "Nublado ☁️";
-}
-
-function getWeather() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-            fetch(`https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current=temperature_2m,weather_code`)
-                .then(res => res.json())
-                .then(data => {
-                    const temp = Math.round(data.current.temperature_2m);
-                    const desc = getWeatherCodeDesc(data.current.weather_code);
-                    document.getElementById('weather').textContent = `🌡️ ${temp}°C | ${desc}`;
-                }).catch(() => { document.getElementById('weather').textContent = "🌡️ --°C"; });
-        }, () => { document.getElementById('weather').textContent = "📍 Sin Ubicación"; });
-    }
-}
-getWeather();
-setInterval(getWeather, 15 * 60 * 1000);
-
-
 // --- CONFIGURACIÓN DE AUDIO CON ECUALIZADOR (5 BANDAS PRO) ---
 function setupAudioContext() {
     if (isAudioSetup) return;
