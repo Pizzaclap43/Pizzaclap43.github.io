@@ -19,12 +19,6 @@
             <i class="fa-solid fa-compact-disc spin-slow" id="headerVinyl"></i> 
             Pizza<span>Music</span>
         </div>
-        
-        <div class="user-info">
-            <span id="date">📅 Cargando fecha...</span>
-            <span id="clock">🕒 00:00:00</span>
-            <span id="weather">🌡️ Cargando clima...</span>
-        </div>
 
         <div class="search-bar">
             <i class="fa-solid fa-search"></i>
@@ -38,6 +32,7 @@
     </header>
 
     <main class="app-container">
+        <!-- SECCIÓN DE MÚSICA Y PODCASTS -->
         <div class="feeds-wrapper">
             <section class="music-feed">
                 <h2 class="section-title">🎵 Tendencias Musicales</h2>
@@ -54,6 +49,7 @@
             </section>
         </div>
 
+        <!-- PANELES LATERALES -->
         <aside class="side-panel">
             <div id="authPanel" class="glass-card">
                 <h3 id="authTitle">Studio Access</h3>
@@ -77,6 +73,7 @@
                 <h3>Lanzamiento</h3>
                 <p class="card-desc">Sube tu audio a Catbox y pega los links</p>
                 <form id="uploadForm">
+                    <!-- Selector de Tipo -->
                     <div class="field">
                         <select id="trackType" class="glass-select">
                             <option value="musica">🎵 Es una Canción</option>
@@ -99,6 +96,7 @@
         </aside>
     </main>
 
+    <!-- REPRODUCTOR MAESTRO -->
     <footer class="player-container" id="globalPlayer">
         <audio id="mainAudio" crossorigin="anonymous"></audio>
         
@@ -142,6 +140,7 @@
             <button id="btnEqToggle" class="ctrl-btn eq-btn"><i class="fa-solid fa-sliders"></i> EQ</button>
         </div>
 
+        <!-- PANEL DE ECUALIZADOR -->
         <div class="eq-panel" id="eqPanel">
             <div class="eq-header">
                 <h4>EQ Profesional</h4>
