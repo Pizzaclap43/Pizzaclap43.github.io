@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, doc, updateDoc, arrayUnion, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Tu Configuración de Pizza Music Cloud
 const firebaseConfig = {
@@ -24,12 +24,16 @@ let currentSongIndex = -1;
 let isSignUpMode = false;
 let currentArtistName = "";
 
-// Estado Compartido Estilo Radio Pizza
+// Estado de Playlists de la Nube (Nuevo)
+let cloudPlaylists = [];
+let unsubscribePlaylists = null;
+
+// Estado Compartido Estilo Radio Pizza (Favoritos Locales)
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
 let isMuted = false;
 let previousVolume = 0.8;
 
-// Web Audio API Context (Para el Ecualizador Profesional de 5 Bandas)
+// Web Audio API Context
 let audioCtx, source;
 let eqBands = [];
 let isAudioSetup = false;
@@ -59,11 +63,12 @@ const toastContainer = document.getElementById('toast-container');
 const searchInput = document.getElementById('searchInput');
 
 // Contenedores de Feeds
-const mixedGrid = document.getElementById('mixedGrid');    // Novedades
-const songsGrid = document.getElementById('songsGrid');    // Música
-const podcastsGrid = document.getElementById('podcastsGrid'); // Podcasts
+const mixedFeedTitle = document.getElementById('mixedFeedTitle');
+const mixedGrid = document.getElementById('mixedGrid');    
+const songsGrid = document.getElementById('songsGrid');    
+const podcastsGrid = document.getElementById('podcastsGrid'); 
 
-// --- SISTEMA DE NOTIFICACIONES (TOASTS) ---
+// --- SISTEMA DE NOTIFICACIONES ---
 function showToast(message) {
     const toast = document.createElement('div');
     toast.className = 'toast';
@@ -171,7 +176,6 @@ btnPrev.addEventListener('click', () => {
 
 mainAudio.addEventListener('ended', () => btnNext.click());
 
-// Barra de Progreso y Tiempo
 function formatTime(seconds) {
     if (isNaN(seconds)) return "0:00";
     const m = Math.floor(seconds / 60);
@@ -193,7 +197,6 @@ progressBar.addEventListener('input', () => {
     }
 });
 
-// Control de Volumen y Mute Avanzado
 muteIcon.addEventListener('click', () => {
     if (isMuted) {
         mainAudio.volume = previousVolume > 0 ? previousVolume : 0.8;
@@ -224,17 +227,16 @@ volBar.addEventListener('input', (e) => {
     updateMuteUI();
 });
 
-// Gestión de Favoritos LocalStorage
+// Favoritos Locales
 playerFavBtn.addEventListener('click', () => {
     if (currentSongIndex === -1 || !currentPlaylist[currentSongIndex]) return;
     const track = currentPlaylist[currentSongIndex];
-    
     if (favorites.includes(track.id)) {
         favorites = favorites.filter(id => id !== track.id);
-        showToast("Removido de favoritos");
+        showToast("Removido de favoritos locales");
     } else {
         favorites.push(track.id);
-        showToast("¡Agregado a tus favoritos! ❤️");
+        showToast("¡Agregado a tus favoritos locales! ❤️");
     }
     localStorage.setItem('radioPizzaFavs', JSON.stringify(favorites));
     updateFavIconState();
@@ -246,7 +248,7 @@ function updateFavIconState() {
     playerFavBtn.innerHTML = `<i class="${isFav ? 'fas' : 'far'} fa-heart" style="color: ${isFav ? 'var(--pizza-red)' : 'inherit'}"></i>`;
 }
 
-// Control de los Deslizadores Verticales (Faders) del Ecualizador
+// Control EQ
 btnEqToggle.addEventListener('click', () => {
     eqPanel.classList.toggle('show');
     btnEqToggle.classList.toggle('active');
@@ -289,22 +291,25 @@ function renderTracks(tracksList, container) {
         const div = document.createElement('div');
         div.className = 'song-card';
         
-        // Verifica si tiene imagen, si no, usa el icono según sea música o podcast
         const iconClass = s.tipo === 'podcast' ? 'fa-microphone' : 'fa-music';
         const coverHtml = s.portadaUrl 
             ? `<img src="${s.portadaUrl}" class="cover-img" alt="Portada">` 
             : `<i class="fa-solid ${iconClass}" style="font-size:40px; color:#222;"></i>`;
 
+        // NUEVO: Agregamos el nombre del Álbum a la tarjeta
+        const albumName = s.album || "Sencillo";
+
         div.innerHTML = `
             <div class="cover-placeholder">
                 ${coverHtml}
             </div>
+            <span class="album-tag"><i class="fas fa-compact-disc"></i> ${albumName}</span>
             <h4>${s.titulo}</h4>
             <p>${s.nombreArtista}</p>
         `;
         
         div.onclick = () => {
-            currentPlaylist = tracksList; // Crea la cola de reproducción basada en el contenedor donde dio clic
+            currentPlaylist = tracksList; 
             currentSongIndex = index;
             loadAndPlaySong(currentPlaylist[currentSongIndex]);
         };
@@ -315,45 +320,43 @@ function renderTracks(tracksList, container) {
 searchInput.addEventListener('input', (e) => {
     const term = e.target.value.toLowerCase();
     
-    // Filtrar mixto (Todos)
     const filteredMixed = allSongs.filter(s => 
-        (s.titulo.toLowerCase().includes(term) || s.nombreArtista.toLowerCase().includes(term))
+        (s.titulo.toLowerCase().includes(term) || s.nombreArtista.toLowerCase().includes(term) || (s.album && s.album.toLowerCase().includes(term)))
     );
-    // Filtrar música
     const filteredMusic = allSongs.filter(s => s.tipo !== 'podcast' && 
-        (s.titulo.toLowerCase().includes(term) || s.nombreArtista.toLowerCase().includes(term))
+        (s.titulo.toLowerCase().includes(term) || s.nombreArtista.toLowerCase().includes(term) || (s.album && s.album.toLowerCase().includes(term)))
     );
-    // Filtrar podcasts
     const filteredPodcasts = allSongs.filter(s => s.tipo === 'podcast' && 
-        (s.titulo.toLowerCase().includes(term) || s.nombreArtista.toLowerCase().includes(term))
+        (s.titulo.toLowerCase().includes(term) || s.nombreArtista.toLowerCase().includes(term) || (s.album && s.album.toLowerCase().includes(term)))
     );
     
+    mixedFeedTitle.innerHTML = "🔥 Resultados de Búsqueda";
     renderTracks(filteredMixed, mixedGrid);
     renderTracks(filteredMusic, songsGrid);
     renderTracks(filteredPodcasts, podcastsGrid);
 });
 
+// Listener Global de Canciones
 const q = query(collection(db, "canciones"), orderBy("fecha", "desc"));
 onSnapshot(q, (snapshot) => {
     allSongs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    
-    // Los datos viejos en la DB que no tienen "tipo" se asumen como "musica" por defecto
     allSongs.forEach(s => { if(!s.tipo) s.tipo = 'musica'; });
 
     if(searchInput.value === "") {
+        mixedFeedTitle.innerHTML = "🔥 Novedades (Descubre)";
         const musicList = allSongs.filter(s => s.tipo === 'musica');
         const podcastList = allSongs.filter(s => s.tipo === 'podcast');
-        
-        renderTracks(allSongs, mixedGrid); // Mix de todo en la sección principal
+        renderTracks(allSongs, mixedGrid); 
         renderTracks(musicList, songsGrid);
         renderTracks(podcastList, podcastsGrid);
     }
 });
 
 
-// --- FLUJO DE AUTENTICACIÓN Y SUBIDA DE TRACKS ---
+// --- FLUJO DE AUTENTICACIÓN, SUBIDA Y PLAYLISTS DE NUBE ---
 const authPanel = document.getElementById('authPanel');
 const uploadPanel = document.getElementById('uploadPanel');
+const playlistsPanel = document.getElementById('playlistsPanel');
 const authForm = document.getElementById('authForm');
 const uploadForm = document.getElementById('uploadForm');
 const authTitle = document.getElementById('authTitle');
@@ -384,7 +387,6 @@ authForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    
     try {
         if (isSignUpMode) {
             const artistName = document.getElementById('artistName').value;
@@ -393,7 +395,7 @@ authForm.addEventListener('submit', async (e) => {
             showToast(`¡Registro brutal! Bienvenido, ${artistName}`);
         } else {
             await signInWithEmailAndPassword(auth, email, password);
-            showToast("¡Sesión iniciada en el Studio!");
+            showToast("¡Sesión iniciada!");
         }
         authForm.reset();
     } catch (error) {
@@ -403,7 +405,7 @@ authForm.addEventListener('submit', async (e) => {
 
 btnLogout.addEventListener('click', () => {
     signOut(auth);
-    showToast("Has salido del Studio");
+    showToast("Has cerrado sesión");
 });
 
 onAuthStateChanged(auth, (user) => {
@@ -412,24 +414,40 @@ onAuthStateChanged(auth, (user) => {
         userStatusText.innerText = currentArtistName;
         authPanel.style.display = "none";
         uploadPanel.style.display = "block";
+        playlistsPanel.style.display = "block";
+
+        // Suscribirse a las playlists del usuario
+        const pq = query(collection(db, "playlists"), where("creadorId", "==", user.uid));
+        unsubscribePlaylists = onSnapshot(pq, (snapshot) => {
+            cloudPlaylists = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderCloudPlaylistsUI();
+        });
+
     } else {
         currentArtistName = "";
         userStatusText.innerText = "Invitado";
         authPanel.style.display = "block";
         uploadPanel.style.display = "none";
+        playlistsPanel.style.display = "none";
+        if (unsubscribePlaylists) unsubscribePlaylists();
+        cloudPlaylists = [];
+        renderCloudPlaylistsUI();
     }
 });
 
+// SUBIDA CON ÁLBUM Y TIPO
 uploadForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const type = document.getElementById('trackType').value;
+    const albumName = document.getElementById('albumTitle').value;
     const title = document.getElementById('songTitle').value;
     const url = document.getElementById('catboxUrl').value;
     const cover = document.getElementById('coverUrl').value;
     
     try {
         await addDoc(collection(db, "canciones"), {
-            tipo: type, // Guarda si es música o podcast
+            tipo: type,
+            album: albumName || "Sencillo", // Guardamos el álbum
             titulo: title,
             urlCatbox: url,
             portadaUrl: cover,
@@ -443,3 +461,114 @@ uploadForm.addEventListener('submit', async (e) => {
         showToast("No se pudo subir: " + error.message);
     }
 });
+
+// --- LÓGICA DE PLAYLISTS DE LA NUBE ---
+
+// Crear nueva Playlist
+document.getElementById('btnCreatePlaylist').addEventListener('click', async () => {
+    const inputName = document.getElementById('newPlaylistName');
+    const pname = inputName.value.trim();
+    if(!pname) return;
+    try {
+        await addDoc(collection(db, "playlists"), {
+            nombre: pname,
+            creadorId: auth.currentUser.uid,
+            canciones: [], // Array vacío de IDs
+            fechaCreacion: new Date()
+        });
+        showToast(`Playlist "${pname}" creada`);
+        inputName.value = "";
+    } catch(e) {
+        showToast("Error al crear: " + e.message);
+    }
+});
+
+// Renderizar Playlists en la barra lateral y en el dropdown del reproductor
+function renderCloudPlaylistsUI() {
+    const listEl = document.getElementById('userPlaylistsList');
+    const dropEl = document.getElementById('playlistDropdown');
+    listEl.innerHTML = "";
+    dropEl.innerHTML = "";
+
+    if (cloudPlaylists.length === 0) {
+        listEl.innerHTML = "<p style='color:var(--text-muted); font-size:12px;'>Aún no tienes listas.</p>";
+        dropEl.innerHTML = "<div class='playlist-dropdown-item'>No tienes playlists</div>";
+        return;
+    }
+
+    cloudPlaylists.forEach(p => {
+        // En panel lateral (Para reproducir)
+        const div = document.createElement('div');
+        div.className = 'playlist-item';
+        div.innerHTML = `<span><i class="fas fa-list"></i> ${p.nombre}</span> <span style="color:var(--pizza-red)">${p.canciones.length} tracks</span>`;
+        div.onclick = () => playCloudPlaylist(p);
+        listEl.appendChild(div);
+
+        // En dropdown del reproductor (Para agregar canción actual)
+        const dropItem = document.createElement('div');
+        dropItem.className = 'playlist-dropdown-item';
+        dropItem.innerText = `+ ${p.nombre}`;
+        dropItem.onclick = () => addCurrentSongToCloudPlaylist(p.id, p.nombre);
+        dropEl.appendChild(dropItem);
+    });
+}
+
+// Reproducir una playlist
+function playCloudPlaylist(playlist) {
+    if (playlist.canciones.length === 0) {
+        showToast("Esa playlist está vacía chamo 🤷‍♂️");
+        return;
+    }
+    // Mapeamos los IDs de la playlist a los objetos reales de canciones
+    const tracksToPlay = playlist.canciones.map(id => allSongs.find(s => s.id === id)).filter(Boolean);
+    
+    // Cambiamos la vista principal a la playlist seleccionada
+    mixedFeedTitle.innerHTML = `🎧 Playlist: ${playlist.nombre}`;
+    renderTracks(tracksToPlay, mixedGrid);
+    
+    // Auto-Play del primer track de la lista
+    currentPlaylist = tracksToPlay;
+    currentSongIndex = 0;
+    loadAndPlaySong(currentPlaylist[currentSongIndex]);
+    
+    // Scrollear hacia arriba para que el usuario vea la playlist
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Lógica del botón + en el reproductor
+const btnAddToPlaylist = document.getElementById('btnAddToPlaylist');
+const playlistDropdown = document.getElementById('playlistDropdown');
+
+btnAddToPlaylist.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (!auth.currentUser) {
+        showToast("Debes iniciar sesión para usar playlists");
+        return;
+    }
+    if (currentSongIndex === -1 || !currentPlaylist[currentSongIndex]) {
+        showToast("Reproduce un track primero");
+        return;
+    }
+    playlistDropdown.classList.toggle('show');
+});
+
+// Cerrar dropdown al hacer click afuera
+window.addEventListener('click', () => {
+    playlistDropdown.classList.remove('show');
+});
+
+// Agregar a Firebase
+async function addCurrentSongToCloudPlaylist(playlistId, playlistName) {
+    if (currentSongIndex === -1 || !currentPlaylist[currentSongIndex]) return;
+    const trackId = currentPlaylist[currentSongIndex].id;
+    
+    try {
+        const playlistRef = doc(db, "playlists", playlistId);
+        await updateDoc(playlistRef, {
+            canciones: arrayUnion(trackId) // arrayUnion asegura que no se duplique
+        });
+        showToast(`Guardado en "${playlistName}"`);
+    } catch(e) {
+        showToast("Error al guardar: " + e.message);
+    }
+}
