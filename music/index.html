@@ -32,9 +32,16 @@
     </header>
 
     <main class="app-container">
-        <!-- SECCIÓN DE MÚSICA Y PODCASTS -->
         <div class="feeds-wrapper">
-            <section class="music-feed">
+            
+            <section class="mixed-feed">
+                <h2 class="section-title">🔥 Novedades (Descubre)</h2>
+                <div class="songs-grid" id="mixedGrid">
+                    <div class="loader">Cargando el flow...</div>
+                </div>
+            </section>
+
+            <section class="music-feed" style="margin-top: 50px;">
                 <h2 class="section-title">🎵 Tendencias Musicales</h2>
                 <div class="songs-grid" id="songsGrid">
                     <div class="loader">Cargando la música...</div>
@@ -49,7 +56,6 @@
             </section>
         </div>
 
-        <!-- PANELES LATERALES -->
         <aside class="side-panel">
             <div id="authPanel" class="glass-card">
                 <h3 id="authTitle">Studio Access</h3>
@@ -73,7 +79,6 @@
                 <h3>Lanzamiento</h3>
                 <p class="card-desc">Sube tu audio a Catbox y pega los links</p>
                 <form id="uploadForm">
-                    <!-- Selector de Tipo -->
                     <div class="field">
                         <select id="trackType" class="glass-select">
                             <option value="musica">🎵 Es una Canción</option>
@@ -96,7 +101,6 @@
         </aside>
     </main>
 
-    <!-- REPRODUCTOR MAESTRO -->
     <footer class="player-container" id="globalPlayer">
         <audio id="mainAudio" crossorigin="anonymous"></audio>
         
@@ -140,7 +144,6 @@
             <button id="btnEqToggle" class="ctrl-btn eq-btn"><i class="fa-solid fa-sliders"></i> EQ</button>
         </div>
 
-        <!-- PANEL DE ECUALIZADOR -->
         <div class="eq-panel" id="eqPanel">
             <div class="eq-header">
                 <h4>EQ Profesional</h4>
