@@ -100,6 +100,36 @@ body {
     color: var(--text-muted);
 }
 
+/* NUEVO: ESTILOS DEL DROPDOWN DE USUARIO */
+.user-dropdown {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background: rgba(15, 15, 20, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    width: 230px;
+    display: none;
+    flex-direction: column;
+    padding: 15px;
+    z-index: 2100;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.8);
+    cursor: default;
+}
+.user-dropdown.show { display: flex; }
+.dropdown-section {
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+.dropdown-input {
+    width: 100%; padding: 8px; background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border);
+    border-radius: 4px; color: white; font-size: 12px; box-sizing: border-box;
+}
+.dropdown-input:focus { border-color: var(--pizza-red); outline: none; }
+#userProfileBtn:hover { color: white; }
+
 /* BOTÓN HEADER PANEL DE CONTROL */
 .btn-header {
     background: transparent;
