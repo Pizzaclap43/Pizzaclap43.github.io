@@ -24,11 +24,11 @@ let currentSongIndex = -1;
 let isSignUpMode = false;
 let currentArtistName = "";
 
-// Estado de Playlists de la Nube (Nuevo)
+// Estado de Playlists de la Nube
 let cloudPlaylists = [];
 let unsubscribePlaylists = null;
 
-// Estado Compartido Estilo Radio Pizza (Favoritos Locales)
+// Estado Favoritos Locales
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
 let isMuted = false;
 let previousVolume = 0.8;
@@ -38,7 +38,7 @@ let audioCtx, source;
 let eqBands = [];
 let isAudioSetup = false;
 
-// Componentes del DOM
+// Componentes del DOM (Reproductor)
 const mainAudio = document.getElementById('mainAudio');
 const globalPlayer = document.getElementById('globalPlayer');
 const playerTitle = document.getElementById('playerTitle');
@@ -62,6 +62,11 @@ const visualizer = document.getElementById('visualizer');
 const toastContainer = document.getElementById('toast-container');
 const searchInput = document.getElementById('searchInput');
 
+// Contenedores Estructurales
+const feedsArea = document.getElementById('feedsArea');
+const dashboardArea = document.getElementById('dashboardArea');
+const btnDashboardToggle = document.getElementById('btnDashboardToggle');
+
 // Contenedores de Feeds
 const mixedFeedTitle = document.getElementById('mixedFeedTitle');
 const mixedGrid = document.getElementById('mixedGrid');    
@@ -76,6 +81,22 @@ function showToast(message) {
     toastContainer.appendChild(toast);
     setTimeout(() => { toast.remove(); }, 3000);
 }
+
+// --- LÓGICA DEL PANEL DE CONTROL (DASHBOARD TOGGLE) ---
+let inDashboard = false;
+btnDashboardToggle.addEventListener('click', () => {
+    inDashboard = !inDashboard;
+    if (inDashboard) {
+        feedsArea.style.display = "none";
+        dashboardArea.style.display = "block";
+        btnDashboardToggle.innerText = "Volver a Inicio";
+    } else {
+        feedsArea.style.display = "block";
+        dashboardArea.style.display = "none";
+        btnDashboardToggle.innerText = "🎛️ Panel de Control";
+    }
+});
+
 
 // --- CONFIGURACIÓN DE AUDIO CON ECUALIZADOR (5 BANDAS PRO) ---
 function setupAudioContext() {
@@ -353,10 +374,10 @@ onSnapshot(q, (snapshot) => {
 });
 
 
-// --- FLUJO DE AUTENTICACIÓN, SUBIDA Y PLAYLISTS DE NUBE ---
+// --- FLUJO DE AUTENTICACIÓN Y PANELES ---
 const authPanel = document.getElementById('authPanel');
-const uploadPanel = document.getElementById('uploadPanel');
 const playlistsPanel = document.getElementById('playlistsPanel');
+const profilePanel = document.getElementById('profilePanel');
 const authForm = document.getElementById('authForm');
 const uploadForm = document.getElementById('uploadForm');
 const authTitle = document.getElementById('authTitle');
@@ -412,9 +433,11 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         currentArtistName = user.displayName || "Artista";
         userStatusText.innerText = currentArtistName;
+        
         authPanel.style.display = "none";
-        uploadPanel.style.display = "block";
         playlistsPanel.style.display = "block";
+        profilePanel.style.display = "block";
+        btnDashboardToggle.style.display = "block";
 
         // Suscribirse a las playlists del usuario
         const pq = query(collection(db, "playlists"), where("creadorId", "==", user.uid));
@@ -426,16 +449,25 @@ onAuthStateChanged(auth, (user) => {
     } else {
         currentArtistName = "";
         userStatusText.innerText = "Invitado";
+        
         authPanel.style.display = "block";
-        uploadPanel.style.display = "none";
         playlistsPanel.style.display = "none";
+        profilePanel.style.display = "none";
+        btnDashboardToggle.style.display = "none";
+        
+        // Resetear vista al inicio si cerró sesión
+        inDashboard = false;
+        feedsArea.style.display = "block";
+        dashboardArea.style.display = "none";
+        btnDashboardToggle.innerText = "🎛️ Panel de Control";
+
         if (unsubscribePlaylists) unsubscribePlaylists();
         cloudPlaylists = [];
         renderCloudPlaylistsUI();
     }
 });
 
-// SUBIDA CON ÁLBUM Y TIPO
+// SUBIDA DE AUDIO (DASHBOARD)
 uploadForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const type = document.getElementById('trackType').value;
@@ -457,6 +489,9 @@ uploadForm.addEventListener('submit', async (e) => {
         });
         showToast("¡Lanzamiento en el aire!");
         uploadForm.reset();
+        
+        // Auto volver al feed principal al publicar
+        btnDashboardToggle.click(); 
     } catch (error) {
         showToast("No se pudo subir: " + error.message);
     }
@@ -520,7 +555,7 @@ function renderCloudPlaylistsUI() {
     updatePlaylistDropdown();
 }
 
-// Nueva función: Actualizar Dropdown del reproductor según la canción actual
+// Actualizar Dropdown del reproductor según la canción actual
 function updatePlaylistDropdown() {
     const dropEl = document.getElementById('playlistDropdown');
     dropEl.innerHTML = "";
