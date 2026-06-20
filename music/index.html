@@ -26,37 +26,68 @@
         </div>
         
         <div class="user-area">
+            <button id="btnDashboardToggle" class="btn-header" style="display: none;">🎛️ Panel de Control</button>
             <i class="fa-regular fa-user-circle"></i> 
             <span id="userStatusText">Invitado</span>
         </div>
     </header>
 
     <main class="app-container">
-        <div class="feeds-wrapper">
+        <div class="content-wrapper">
             
-            <section class="mixed-feed">
-                <h2 class="section-title" id="mixedFeedTitle">🔥 Novedades (Descubre)</h2>
-                <div class="songs-grid" id="mixedGrid">
-                    <div class="loader">Cargando el flow...</div>
-                </div>
-            </section>
+            <div id="feedsArea" class="feeds-wrapper">
+                <section class="mixed-feed">
+                    <h2 class="section-title" id="mixedFeedTitle">🔥 Novedades (Descubre)</h2>
+                    <div class="songs-grid" id="mixedGrid">
+                        <div class="loader">Cargando el flow...</div>
+                    </div>
+                </section>
 
-            <section class="music-feed" style="margin-top: 50px;">
-                <h2 class="section-title">🎵 Tendencias Musicales</h2>
-                <div class="songs-grid" id="songsGrid">
-                    <div class="loader">Cargando la música...</div>
-                </div>
-            </section>
+                <section class="music-feed" style="margin-top: 50px;">
+                    <h2 class="section-title">🎵 Tendencias Musicales</h2>
+                    <div class="songs-grid" id="songsGrid">
+                        <div class="loader">Cargando la música...</div>
+                    </div>
+                </section>
 
-            <section class="podcast-feed" style="margin-top: 50px;">
-                <h2 class="section-title">🎙️ Podcasts Exclusivos</h2>
-                <div class="songs-grid" id="podcastsGrid">
-                    <div class="loader">Cargando los episodios...</div>
-                </div>
-            </section>
-        </div>
+                <section class="podcast-feed" style="margin-top: 50px;">
+                    <h2 class="section-title">🎙️ Podcasts Exclusivos</h2>
+                    <div class="songs-grid" id="podcastsGrid">
+                        <div class="loader">Cargando los episodios...</div>
+                    </div>
+                </section>
+            </div>
 
-        <aside class="side-panel">
+            <div id="dashboardArea" style="display: none; animation: slideIn 0.3s ease;">
+                <h2 class="section-title">🎛️ Panel de Control Profesional</h2>
+                <div id="uploadPanel" class="glass-card" style="max-width: 600px;">
+                    <h3>Lanzamiento de Audio</h3>
+                    <p class="card-desc">Publica tu nuevo tema o episodio en la nube de Pizza Music</p>
+                    <form id="uploadForm">
+                        <div class="field">
+                            <select id="trackType" class="glass-select">
+                                <option value="musica">🎵 Es una Canción</option>
+                                <option value="podcast">🎙️ Es un Podcast</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <input type="text" id="albumTitle" placeholder="Álbum / Colección (Opcional)">
+                        </div>
+                        <div class="field">
+                            <input type="text" id="songTitle" required placeholder="Título del Track/Episodio">
+                        </div>
+                        <div class="field">
+                            <input type="url" id="catboxUrl" required placeholder="Link .mp3 (Catbox)">
+                        </div>
+                        <div class="field">
+                            <input type="url" id="coverUrl" placeholder="Link de portada .jpg/.png (Opcional)">
+                        </div>
+                        <button type="submit" class="btn-glow btn-success" style="margin-top: 10px;">🚀 Lanzar Track</button>
+                    </form>
+                </div>
+            </div>
+
+        </div> <aside class="side-panel">
             <div id="authPanel" class="glass-card">
                 <h3 id="authTitle">Studio Access</h3>
                 <p class="card-desc">Conecta y sube tu arte</p>
@@ -86,31 +117,9 @@
                     </div>
             </div>
 
-            <div id="uploadPanel" class="glass-card" style="display: none;">
-                <h3>Lanzamiento</h3>
-                <p class="card-desc">Publica tu nuevo tema o episodio</p>
-                <form id="uploadForm">
-                    <div class="field">
-                        <select id="trackType" class="glass-select">
-                            <option value="musica">🎵 Es una Canción/Música</option>
-                            <option value="podcast">🎙️ Es un Podcast</option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <input type="text" id="albumTitle" placeholder="Álbum / Colección (Opcional)">
-                    </div>
-                    <div class="field">
-                        <input type="text" id="songTitle" required placeholder="Título del Track/Episodio">
-                    </div>
-                    <div class="field">
-                        <input type="url" id="catboxUrl" required placeholder="Link .mp3/.wav (Opcional)">
-                    </div>
-                    <div class="field">
-                        <input type="url" id="coverUrl" placeholder="Link de portada .jpg/.png (Opcional)">
-                    </div>
-                    <button type="submit" class="btn-glow btn-success">Lanzar Track</button>
-                </form>
-                <button id="btnLogout" class="btn-outline">Desconectar</button>
+            <div id="profilePanel" class="glass-card" style="display: none;">
+                <h3>Mi Cuenta</h3>
+                <button id="btnLogout" class="btn-outline"><i class="fas fa-sign-out-alt"></i> Desconectar</button>
             </div>
         </aside>
     </main>
