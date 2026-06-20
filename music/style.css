@@ -100,6 +100,25 @@ body {
     color: var(--text-muted);
 }
 
+/* BOTÓN HEADER PANEL DE CONTROL */
+.btn-header {
+    background: transparent;
+    border: 1px solid var(--pizza-red);
+    color: var(--pizza-red);
+    padding: 8px 16px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s;
+    margin-right: 15px;
+}
+.btn-header:hover {
+    background: var(--pizza-red);
+    color: white;
+    box-shadow: 0 0 10px var(--pizza-glow);
+}
+
 /* DISEÑO DE LA APP */
 .app-container {
     display: grid;
@@ -110,6 +129,8 @@ body {
     max-width: 1500px;
     margin: 0 auto;
 }
+.content-wrapper { display: flex; flex-direction: column; width: 100%; }
+
 .section-title { font-size: 24px; font-weight: 700; margin-bottom: 25px; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
 
 .songs-grid {
@@ -247,11 +268,12 @@ input:focus { border-color: var(--pizza-red); outline: none; }
 .btn-glow { background: var(--pizza-red); color: white; width: 100%; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px var(--pizza-glow); transition: 0.2s;}
 .btn-glow:hover { transform: scale(1.02); }
 .btn-success { background: #1db954; box-shadow: 0 4px 12px rgba(29,185,84,0.3); }
-.btn-outline { background: transparent; border: 1px solid var(--text-muted); color: white; width: 100%; padding: 10px; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+.btn-outline { background: transparent; border: 1px solid var(--text-muted); color: white; width: 100%; padding: 10px; border-radius: 6px; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+.btn-outline:hover { background: rgba(255,255,255,0.05); }
 .toggle-text { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 15px; }
 .toggle-text span { color: var(--pizza-red); font-weight: bold; cursor: pointer; }
 
-/* NUEVO: ESTILOS DE PLAYLISTS LATERAL Y DROPDOWN */
+/* ESTILOS DE PLAYLISTS LATERAL Y DROPDOWN */
 .playlist-list {
     margin-top: 15px;
     display: flex;
