@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, doc, updateDoc, arrayUnion, arrayRemove, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Tu Configuración de Pizza Music Cloud
@@ -73,6 +73,16 @@ const mixedGrid = document.getElementById('mixedGrid');
 const songsGrid = document.getElementById('songsGrid');    
 const podcastsGrid = document.getElementById('podcastsGrid'); 
 
+// Dropdowns y Elementos de Usuario
+const userProfileBtn = document.getElementById('userProfileBtn');
+const userDropdown = document.getElementById('userDropdown');
+const artistIdDisplay = document.getElementById('artistIdDisplay');
+const newUsernameInput = document.getElementById('newUsernameInput');
+const btnChangeName = document.getElementById('btnChangeName');
+const btnResetPassword = document.getElementById('btnResetPassword');
+const btnLogout = document.getElementById('btnLogout');
+const userStatusText = document.getElementById('userStatusText');
+
 // --- SISTEMA DE NOTIFICACIONES ---
 function showToast(message) {
     const toast = document.createElement('div');
@@ -94,6 +104,51 @@ btnDashboardToggle.addEventListener('click', () => {
         feedsArea.style.display = "block";
         dashboardArea.style.display = "none";
         btnDashboardToggle.innerText = "🎛️ Panel de Control";
+    }
+});
+
+
+// --- MENU DESPLEGABLE DE USUARIO (CUENTA) ---
+userProfileBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (auth.currentUser) {
+        userDropdown.classList.toggle('show');
+    } else {
+        showToast("Inicia sesión pa' ver las opciones de tu cuenta");
+    }
+});
+
+// Evitar que hacer clic dentro del dropdown lo cierre
+userDropdown.addEventListener('click', (e) => {
+    e.stopPropagation();
+});
+
+// Cambiar Nombre
+btnChangeName.addEventListener('click', async () => {
+    const newName = newUsernameInput.value.trim();
+    if (!newName) return;
+    try {
+        await updateProfile(auth.currentUser, { displayName: newName });
+        currentArtistName = newName;
+        userStatusText.innerText = newName;
+        showToast("¡Nombre actualizado al pelo!");
+        newUsernameInput.value = "";
+        userDropdown.classList.remove('show');
+    } catch (e) {
+        showToast("Error al cambiar nombre: " + e.message);
+    }
+});
+
+// Restablecer Contraseña
+btnResetPassword.addEventListener('click', async () => {
+    if (!auth.currentUser) return;
+    const email = auth.currentUser.email;
+    try {
+        await sendPasswordResetEmail(auth, email);
+        showToast("¡Revisa tu correo! Te mandamos el link de recuperación");
+        userDropdown.classList.remove('show');
+    } catch (e) {
+        showToast("Rollo con la clave: " + e.message);
     }
 });
 
@@ -377,15 +432,12 @@ onSnapshot(q, (snapshot) => {
 // --- FLUJO DE AUTENTICACIÓN Y PANELES ---
 const authPanel = document.getElementById('authPanel');
 const playlistsPanel = document.getElementById('playlistsPanel');
-const profilePanel = document.getElementById('profilePanel');
 const authForm = document.getElementById('authForm');
 const uploadForm = document.getElementById('uploadForm');
 const authTitle = document.getElementById('authTitle');
 const nameField = document.getElementById('nameField');
 const btnAuthSubmit = document.getElementById('btnAuthSubmit');
 const toggleAuthMode = document.getElementById('toggleAuthMode');
-const userStatusText = document.getElementById('userStatusText');
-const btnLogout = document.getElementById('btnLogout');
 
 toggleAuthMode.addEventListener('click', () => {
     isSignUpMode = !isSignUpMode;
@@ -427,16 +479,17 @@ authForm.addEventListener('submit', async (e) => {
 btnLogout.addEventListener('click', () => {
     signOut(auth);
     showToast("Has cerrado sesión");
+    userDropdown.classList.remove('show');
 });
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
         currentArtistName = user.displayName || "Artista";
         userStatusText.innerText = currentArtistName;
+        artistIdDisplay.innerText = user.uid;
         
         authPanel.style.display = "none";
         playlistsPanel.style.display = "block";
-        profilePanel.style.display = "block";
         btnDashboardToggle.style.display = "block";
 
         // Suscribirse a las playlists del usuario
@@ -449,11 +502,12 @@ onAuthStateChanged(auth, (user) => {
     } else {
         currentArtistName = "";
         userStatusText.innerText = "Invitado";
+        artistIdDisplay.innerText = "...";
         
         authPanel.style.display = "block";
         playlistsPanel.style.display = "none";
-        profilePanel.style.display = "none";
         btnDashboardToggle.style.display = "none";
+        userDropdown.classList.remove('show');
         
         // Resetear vista al inicio si cerró sesión
         inDashboard = false;
@@ -636,7 +690,7 @@ const playlistDropdown = document.getElementById('playlistDropdown');
 btnAddToPlaylist.addEventListener('click', (e) => {
     e.stopPropagation();
     if (!auth.currentUser) {
-        showToast("Debes iniciar sesión para usar playlists");
+        showToast("Debes iniciar sesión pa' usar playlists");
         return;
     }
     if (currentSongIndex === -1 || !currentPlaylist[currentSongIndex]) {
@@ -646,9 +700,10 @@ btnAddToPlaylist.addEventListener('click', (e) => {
     playlistDropdown.classList.toggle('show');
 });
 
-// Cerrar dropdown al hacer click afuera
+// Cerrar cualquier dropdown al hacer click afuera
 window.addEventListener('click', () => {
     playlistDropdown.classList.remove('show');
+    userDropdown.classList.remove('show');
 });
 
 // Agregar a Firebase
