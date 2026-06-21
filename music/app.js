@@ -70,6 +70,7 @@ const btnDashboardToggle = document.getElementById('btnDashboardToggle');
 // Contenedores de Feeds
 const mixedFeedTitle = document.getElementById('mixedFeedTitle');
 const mixedGrid = document.getElementById('mixedGrid');    
+const albumsGrid = document.getElementById('albumsGrid'); // NUEVO
 const songsGrid = document.getElementById('songsGrid');    
 const podcastsGrid = document.getElementById('podcastsGrid'); 
 
@@ -106,7 +107,7 @@ btnDashboardToggle.addEventListener('click', () => {
         feedsArea.style.display = "none";
         dashboardArea.style.display = "block";
         btnDashboardToggle.innerText = "Volver a Inicio";
-        renderUserDashboardTracks(); // Renderizar lista al entrar
+        renderUserDashboardTracks();
     } else {
         feedsArea.style.display = "block";
         dashboardArea.style.display = "none";
@@ -361,6 +362,67 @@ document.getElementById('btnEqReset').addEventListener('click', () => {
 });
 
 
+// --- RENDERS DE ÁLBUMES (NUEVO) ---
+function renderAlbums(songsList) {
+    albumsGrid.innerHTML = "";
+    
+    // Agrupar por Álbum + Artista
+    const albumsMap = {};
+    songsList.forEach(s => {
+        // Excluir los que son 'Sencillo' o no tienen álbum
+        if (s.album && s.album.toLowerCase() !== "sencillo") {
+            const key = `${s.album}_${s.nombreArtista}`;
+            if (!albumsMap[key]) {
+                albumsMap[key] = {
+                    nombre: s.album,
+                    artista: s.nombreArtista,
+                    portadaUrl: s.portadaUrl, 
+                    canciones: []
+                };
+            }
+            albumsMap[key].canciones.push(s);
+        }
+    });
+
+    const albums = Object.values(albumsMap);
+
+    if (albums.length === 0) {
+        albumsGrid.innerHTML = "<p style='color: var(--text-muted);'>No hay álbumes creados todavía...</p>";
+        return;
+    }
+
+    albums.forEach(album => {
+        const div = document.createElement('div');
+        div.className = 'song-card';
+        
+        const coverHtml = album.portadaUrl 
+            ? `<img src="${album.portadaUrl}" class="cover-img" alt="Portada Álbum">` 
+            : `<i class="fa-solid fa-compact-disc" style="font-size:40px; color:#222;"></i>`;
+
+        div.innerHTML = `
+            <div class="cover-placeholder">
+                ${coverHtml}
+            </div>
+            <span class="album-tag"><i class="fas fa-list-ol"></i> ${album.canciones.length} tracks</span>
+            <h4>${album.nombre}</h4>
+            <p>${album.artista}</p>
+        `;
+        
+        // Al dar clic en un álbum, muestra y reproduce sus canciones
+        div.onclick = () => {
+            mixedFeedTitle.innerHTML = `💿 Álbum: ${album.nombre} - ${album.artista}`;
+            renderTracks(album.canciones, mixedGrid);
+            
+            currentPlaylist = album.canciones;
+            currentSongIndex = 0;
+            loadAndPlaySong(currentPlaylist[currentSongIndex]);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        albumsGrid.appendChild(div);
+    });
+}
+
+
 // --- RENDERS MULTIPLES (MÚSICA, PODCASTS Y MIXTO) ---
 function renderTracks(tracksList, container) {
     container.innerHTML = "";
@@ -412,6 +474,7 @@ searchInput.addEventListener('input', (e) => {
     
     mixedFeedTitle.innerHTML = "🔥 Resultados de Búsqueda";
     renderTracks(filteredMixed, mixedGrid);
+    renderAlbums(filteredMixed); // Filtrar álbumes también
     renderTracks(filteredMusic, songsGrid);
     renderTracks(filteredPodcasts, podcastsGrid);
 });
@@ -426,12 +489,13 @@ onSnapshot(q, (snapshot) => {
         mixedFeedTitle.innerHTML = "🔥 Novedades (Descubre)";
         const musicList = allSongs.filter(s => s.tipo === 'musica');
         const podcastList = allSongs.filter(s => s.tipo === 'podcast');
+        
         renderTracks(allSongs, mixedGrid); 
+        renderAlbums(allSongs); // Mostrar álbumes
         renderTracks(musicList, songsGrid);
         renderTracks(podcastList, podcastsGrid);
     }
     
-    // Si estamos en el dashboard, actualizamos la lista de publicaciones del usuario
     if (auth.currentUser && inDashboard) {
         renderUserDashboardTracks();
     }
@@ -585,7 +649,6 @@ onAuthStateChanged(auth, (user) => {
         
         renderUserDashboardTracks();
 
-        // Suscribirse a las playlists del usuario
         const pq = query(collection(db, "playlists"), where("creadorId", "==", user.uid));
         unsubscribePlaylists = onSnapshot(pq, (snapshot) => {
             cloudPlaylists = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -602,7 +665,6 @@ onAuthStateChanged(auth, (user) => {
         btnDashboardToggle.style.display = "none";
         userDropdown.classList.remove('show');
         
-        // Resetear vista al inicio si cerró sesión
         inDashboard = false;
         feedsArea.style.display = "block";
         dashboardArea.style.display = "none";
@@ -653,7 +715,7 @@ document.getElementById('btnCreatePlaylist').addEventListener('click', async () 
         await addDoc(collection(db, "playlists"), {
             nombre: pname,
             creadorId: auth.currentUser.uid,
-            canciones: [], // Array vacío de IDs
+            canciones: [],
             fechaCreacion: new Date()
         });
         showToast(`Playlist "${pname}" creada`);
@@ -746,7 +808,6 @@ function playCloudPlaylist(playlist) {
     currentSongIndex = 0;
     loadAndPlaySong(currentPlaylist[currentSongIndex]);
     
-    // Si estás en el panel de control, te saca de ahí para ver la playlist
     if(inDashboard) btnDashboardToggle.click();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
