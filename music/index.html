@@ -78,30 +78,40 @@
 
             <div id="dashboardArea" style="display: none; animation: slideIn 0.3s ease;">
                 <h2 class="section-title">🎛️ Panel de Control Profesional</h2>
-                <div id="uploadPanel" class="glass-card" style="max-width: 600px;">
-                    <h3>Lanzamiento de Audio</h3>
-                    <p class="card-desc">Publica tu nuevo tema o episodio en la nube de Pizza Music</p>
-                    <form id="uploadForm">
-                        <div class="field">
-                            <select id="trackType" class="glass-select">
-                                <option value="musica">🎵 Es una Canción</option>
-                                <option value="podcast">🎙️ Es un Podcast</option>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <input type="text" id="albumTitle" placeholder="Álbum / Colección (Opcional)">
-                        </div>
-                        <div class="field">
-                            <input type="text" id="songTitle" required placeholder="Título del Track/Episodio">
-                        </div>
-                        <div class="field">
-                            <input type="url" id="catboxUrl" required placeholder="Link .mp3 (Catbox)">
-                        </div>
-                        <div class="field">
-                            <input type="url" id="coverUrl" placeholder="Link de portada .jpg/.png (Opcional)">
-                        </div>
-                        <button type="submit" class="btn-glow btn-success" style="margin-top: 10px;">🚀 Lanzar Track</button>
-                    </form>
+                
+                <div class="dashboard-grid">
+                    <div id="uploadPanel" class="glass-card">
+                        <h3>Lanzamiento de Audio</h3>
+                        <p class="card-desc">Publica tu nuevo tema o episodio en la nube</p>
+                        <form id="uploadForm">
+                            <div class="field">
+                                <select id="trackType" class="glass-select">
+                                    <option value="musica">🎵 Es una Canción</option>
+                                    <option value="podcast">🎙️ Es un Podcast</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <input type="text" id="albumTitle" placeholder="Álbum / Colección (Opcional)">
+                            </div>
+                            <div class="field">
+                                <input type="text" id="songTitle" required placeholder="Título del Track/Episodio">
+                            </div>
+                            <div class="field">
+                                <input type="url" id="catboxUrl" required placeholder="Link .mp3 (Catbox)">
+                            </div>
+                            <div class="field">
+                                <input type="url" id="coverUrl" placeholder="Link de portada .jpg/.png (Opcional)">
+                            </div>
+                            <button type="submit" class="btn-glow btn-success" style="margin-top: 10px;">🚀 Lanzar Track</button>
+                        </form>
+                    </div>
+
+                    <div id="managePanel" class="glass-card">
+                        <h3>Tus Publicaciones</h3>
+                        <p class="card-desc">Administra, edita o elimina tu contenido</p>
+                        <div id="userTracksContainer" class="user-tracks-list">
+                            </div>
+                    </div>
                 </div>
             </div>
 
@@ -138,6 +148,35 @@
             </div>
         </aside>
     </main>
+
+    <div id="editModal" class="modal-overlay" style="display: none;">
+        <div class="glass-card modal-content">
+            <span id="closeEditModal" class="close-btn">&times;</span>
+            <h3 style="margin-top: 0; margin-bottom: 20px;">Editar Publicación</h3>
+            <form id="editForm">
+                <input type="hidden" id="editTrackId">
+                <div class="field">
+                    <select id="editTrackType" class="glass-select">
+                        <option value="musica">🎵 Es una Canción</option>
+                        <option value="podcast">🎙️ Es un Podcast</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <input type="text" id="editAlbumTitle" placeholder="Álbum / Colección (Opcional)">
+                </div>
+                <div class="field">
+                    <input type="text" id="editSongTitle" required placeholder="Título del Track/Episodio">
+                </div>
+                <div class="field">
+                    <input type="url" id="editCatboxUrl" required placeholder="Link .mp3 (Catbox)">
+                </div>
+                <div class="field">
+                    <input type="url" id="editCoverUrl" placeholder="Link de portada .jpg/.png (Opcional)">
+                </div>
+                <button type="submit" class="btn-glow btn-success" style="margin-top: 10px;">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
 
     <footer class="player-container" id="globalPlayer">
         <audio id="mainAudio" crossorigin="anonymous"></audio>
