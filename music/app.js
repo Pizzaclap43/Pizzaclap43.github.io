@@ -83,6 +83,12 @@ const btnResetPassword = document.getElementById('btnResetPassword');
 const btnLogout = document.getElementById('btnLogout');
 const userStatusText = document.getElementById('userStatusText');
 
+// Elementos de Gestión de Publicaciones (Dashboard)
+const userTracksContainer = document.getElementById('userTracksContainer');
+const editModal = document.getElementById('editModal');
+const closeEditModal = document.getElementById('closeEditModal');
+const editForm = document.getElementById('editForm');
+
 // --- SISTEMA DE NOTIFICACIONES ---
 function showToast(message) {
     const toast = document.createElement('div');
@@ -100,6 +106,7 @@ btnDashboardToggle.addEventListener('click', () => {
         feedsArea.style.display = "none";
         dashboardArea.style.display = "block";
         btnDashboardToggle.innerText = "Volver a Inicio";
+        renderUserDashboardTracks(); // Renderizar lista al entrar
     } else {
         feedsArea.style.display = "block";
         dashboardArea.style.display = "none";
@@ -118,10 +125,7 @@ userProfileBtn.addEventListener('click', (e) => {
     }
 });
 
-// Evitar que hacer clic dentro del dropdown lo cierre
-userDropdown.addEventListener('click', (e) => {
-    e.stopPropagation();
-});
+userDropdown.addEventListener('click', (e) => { e.stopPropagation(); });
 
 // Cambiar Nombre
 btnChangeName.addEventListener('click', async () => {
@@ -197,7 +201,7 @@ function loadAndPlaySong(song) {
         .then(() => {
             updatePlayStatus(true);
             updateFavIconState();
-            updatePlaylistDropdown(); // Actualiza el check si está en la playlist
+            updatePlaylistDropdown();
             showToast(`Sintonizando: ${song.titulo}`);
         })
         .catch(() => {
@@ -426,7 +430,94 @@ onSnapshot(q, (snapshot) => {
         renderTracks(musicList, songsGrid);
         renderTracks(podcastList, podcastsGrid);
     }
+    
+    // Si estamos en el dashboard, actualizamos la lista de publicaciones del usuario
+    if (auth.currentUser && inDashboard) {
+        renderUserDashboardTracks();
+    }
 });
+
+
+// --- LÓGICA DE GESTIÓN DE PUBLICACIONES (DASHBOARD) ---
+function renderUserDashboardTracks() {
+    if (!auth.currentUser) return;
+    const myTracks = allSongs.filter(s => s.artistaId === auth.currentUser.uid);
+    userTracksContainer.innerHTML = "";
+    
+    if (myTracks.length === 0) {
+        userTracksContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>Aún no tienes publicaciones en la nube.</p>";
+        return;
+    }
+    
+    myTracks.forEach(track => {
+        const div = document.createElement('div');
+        div.className = 'user-track-item';
+        
+        const iconClass = track.tipo === 'podcast' ? 'fa-microphone' : 'fa-music';
+        const coverHtml = track.portadaUrl 
+            ? `<img src="${track.portadaUrl}" class="user-track-cover">` 
+            : `<div class="user-track-cover"><i class="fa-solid ${iconClass}" style="color:#555;"></i></div>`;
+        
+        div.innerHTML = `
+            <div class="user-track-info">
+                ${coverHtml}
+                <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    <div style="font-size: 14px; font-weight: 600; color: white;">${track.titulo}</div>
+                    <div style="font-size: 11px; color: var(--text-muted);"><i class="fas fa-compact-disc"></i> ${track.album || 'Sencillo'}</div>
+                </div>
+            </div>
+            <div class="user-track-actions">
+                <button class="btn-icon edit-track-btn" title="Editar Publicación"><i class="fas fa-edit"></i></button>
+                <button class="btn-icon delete-track-btn" title="Eliminar Publicación"><i class="fas fa-trash"></i></button>
+            </div>
+        `;
+        
+        div.querySelector('.edit-track-btn').onclick = () => openEditModal(track);
+        div.querySelector('.delete-track-btn').onclick = () => deleteUserTrack(track);
+        userTracksContainer.appendChild(div);
+    });
+}
+
+function openEditModal(track) {
+    document.getElementById('editTrackId').value = track.id;
+    document.getElementById('editTrackType').value = track.tipo || 'musica';
+    document.getElementById('editAlbumTitle').value = track.album || '';
+    document.getElementById('editSongTitle').value = track.titulo || '';
+    document.getElementById('editCatboxUrl').value = track.urlCatbox || '';
+    document.getElementById('editCoverUrl').value = track.portadaUrl || '';
+    editModal.style.display = 'flex';
+}
+
+closeEditModal.onclick = () => { editModal.style.display = 'none'; };
+
+editForm.onsubmit = async (e) => {
+    e.preventDefault();
+    const trackId = document.getElementById('editTrackId').value;
+    try {
+        await updateDoc(doc(db, "canciones", trackId), {
+            tipo: document.getElementById('editTrackType').value,
+            album: document.getElementById('editAlbumTitle').value || "Sencillo",
+            titulo: document.getElementById('editSongTitle').value,
+            urlCatbox: document.getElementById('editCatboxUrl').value,
+            portadaUrl: document.getElementById('editCoverUrl').value
+        });
+        showToast("¡Publicación actualizada con éxito!");
+        editModal.style.display = 'none';
+    } catch (err) {
+        showToast("Error al guardar: " + err.message);
+    }
+};
+
+async function deleteUserTrack(track) {
+    if (confirm(`¿Seguro que quieres eliminar "${track.titulo}"? Esta acción borrará el track para siempre.`)) {
+        try {
+            await deleteDoc(doc(db, "canciones", track.id));
+            showToast("Publicación eliminada correctamente.");
+        } catch (err) {
+            showToast("Error al eliminar: " + err.message);
+        }
+    }
+}
 
 
 // --- FLUJO DE AUTENTICACIÓN Y PANELES ---
@@ -491,6 +582,8 @@ onAuthStateChanged(auth, (user) => {
         authPanel.style.display = "none";
         playlistsPanel.style.display = "block";
         btnDashboardToggle.style.display = "block";
+        
+        renderUserDashboardTracks();
 
         // Suscribirse a las playlists del usuario
         const pq = query(collection(db, "playlists"), where("creadorId", "==", user.uid));
@@ -518,6 +611,7 @@ onAuthStateChanged(auth, (user) => {
         if (unsubscribePlaylists) unsubscribePlaylists();
         cloudPlaylists = [];
         renderCloudPlaylistsUI();
+        userTracksContainer.innerHTML = "";
     }
 });
 
@@ -544,8 +638,6 @@ uploadForm.addEventListener('submit', async (e) => {
         showToast("¡Lanzamiento en el aire!");
         uploadForm.reset();
         
-        // Auto volver al feed principal al publicar
-        btnDashboardToggle.click(); 
     } catch (error) {
         showToast("No se pudo subir: " + error.message);
     }
@@ -553,7 +645,6 @@ uploadForm.addEventListener('submit', async (e) => {
 
 // --- LÓGICA DE PLAYLISTS DE LA NUBE ---
 
-// Crear nueva Playlist
 document.getElementById('btnCreatePlaylist').addEventListener('click', async () => {
     const inputName = document.getElementById('newPlaylistName');
     const pname = inputName.value.trim();
@@ -572,7 +663,6 @@ document.getElementById('btnCreatePlaylist').addEventListener('click', async () 
     }
 });
 
-// Renderizar Playlists en la barra lateral
 function renderCloudPlaylistsUI() {
     const listEl = document.getElementById('userPlaylistsList');
     listEl.innerHTML = "";
@@ -592,10 +682,8 @@ function renderCloudPlaylistsUI() {
                 <button class="btn-delete-playlist" title="Eliminar Playlist"><i class="fas fa-trash"></i></button>
             `;
             
-            // Clic en la info reproduce
             div.querySelector('.playlist-info').onclick = () => playCloudPlaylist(p);
             
-            // Clic en la papelera elimina
             div.querySelector('.btn-delete-playlist').onclick = (e) => {
                 e.stopPropagation();
                 deleteCloudPlaylist(p.id, p.nombre);
@@ -604,12 +692,9 @@ function renderCloudPlaylistsUI() {
             listEl.appendChild(div);
         });
     }
-
-    // Actualizamos el dropdown del reproductor también
     updatePlaylistDropdown();
 }
 
-// Actualizar Dropdown del reproductor según la canción actual
 function updatePlaylistDropdown() {
     const dropEl = document.getElementById('playlistDropdown');
     dropEl.innerHTML = "";
@@ -628,7 +713,6 @@ function updatePlaylistDropdown() {
         const dropItem = document.createElement('div');
         dropItem.className = 'playlist-dropdown-item';
         
-        // Si el track actual ya está en la lista, mostrar opción para quitarlo
         if (currentTrackId && p.canciones.includes(currentTrackId)) {
             dropItem.innerHTML = `<i class="fas fa-check" style="color:var(--pizza-red)"></i> ${p.nombre}`;
             dropItem.onclick = (e) => {
@@ -637,7 +721,6 @@ function updatePlaylistDropdown() {
                 dropEl.classList.remove('show');
             };
         } else {
-            // Si no está, mostrar opción para agregarlo
             dropItem.innerHTML = `+ ${p.nombre}`;
             dropItem.onclick = (e) => {
                 e.stopPropagation();
@@ -649,29 +732,25 @@ function updatePlaylistDropdown() {
     });
 }
 
-// Reproducir una playlist
 function playCloudPlaylist(playlist) {
     if (playlist.canciones.length === 0) {
         showToast("Esa playlist está vacía chamo 🤷‍♂️");
         return;
     }
-    // Mapeamos los IDs de la playlist a los objetos reales de canciones
     const tracksToPlay = playlist.canciones.map(id => allSongs.find(s => s.id === id)).filter(Boolean);
     
-    // Cambiamos la vista principal a la playlist seleccionada
     mixedFeedTitle.innerHTML = `🎧 Playlist: ${playlist.nombre}`;
     renderTracks(tracksToPlay, mixedGrid);
     
-    // Auto-Play del primer track de la lista
     currentPlaylist = tracksToPlay;
     currentSongIndex = 0;
     loadAndPlaySong(currentPlaylist[currentSongIndex]);
     
-    // Scrollear hacia arriba para que el usuario vea la playlist
+    // Si estás en el panel de control, te saca de ahí para ver la playlist
+    if(inDashboard) btnDashboardToggle.click();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Borrar Playlist completa de Firebase
 async function deleteCloudPlaylist(playlistId, playlistName) {
     if (confirm(`¿Seguro que quieres borrar la playlist "${playlistName}" pa' siempre?`)) {
         try {
@@ -683,7 +762,6 @@ async function deleteCloudPlaylist(playlistId, playlistName) {
     }
 }
 
-// Lógica del botón + en el reproductor
 const btnAddToPlaylist = document.getElementById('btnAddToPlaylist');
 const playlistDropdown = document.getElementById('playlistDropdown');
 
@@ -700,13 +778,11 @@ btnAddToPlaylist.addEventListener('click', (e) => {
     playlistDropdown.classList.toggle('show');
 });
 
-// Cerrar cualquier dropdown al hacer click afuera
 window.addEventListener('click', () => {
     playlistDropdown.classList.remove('show');
     userDropdown.classList.remove('show');
 });
 
-// Agregar a Firebase
 async function addCurrentSongToCloudPlaylist(playlistId, playlistName) {
     if (currentSongIndex === -1 || !currentPlaylist[currentSongIndex]) return;
     const trackId = currentPlaylist[currentSongIndex].id;
@@ -714,7 +790,7 @@ async function addCurrentSongToCloudPlaylist(playlistId, playlistName) {
     try {
         const playlistRef = doc(db, "playlists", playlistId);
         await updateDoc(playlistRef, {
-            canciones: arrayUnion(trackId) // arrayUnion asegura que no se duplique
+            canciones: arrayUnion(trackId)
         });
         showToast(`Guardado en "${playlistName}"`);
     } catch(e) {
@@ -722,7 +798,6 @@ async function addCurrentSongToCloudPlaylist(playlistId, playlistName) {
     }
 }
 
-// Quitar de Firebase
 async function removeCurrentSongFromCloudPlaylist(playlistId, playlistName) {
     if (currentSongIndex === -1 || !currentPlaylist[currentSongIndex]) return;
     const trackId = currentPlaylist[currentSongIndex].id;
@@ -730,7 +805,7 @@ async function removeCurrentSongFromCloudPlaylist(playlistId, playlistName) {
     try {
         const playlistRef = doc(db, "playlists", playlistId);
         await updateDoc(playlistRef, {
-            canciones: arrayRemove(trackId) // arrayRemove saca ese ID del arreglo
+            canciones: arrayRemove(trackId) 
         });
         showToast(`Eliminado de "${playlistName}"`);
     } catch(e) {
