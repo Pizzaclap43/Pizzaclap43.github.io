@@ -15,24 +15,6 @@ document.querySelectorAll('.nav-link').forEach(link => {
     });
 });
 
-// ── Reproductor de Música
-const btnMusic = document.getElementById('playMusic');
-const audioMusic = document.getElementById('audioMusic');
-
-if (btnMusic && audioMusic) {
-    const iconPlay = btnMusic.querySelector('i');
-    
-    btnMusic.addEventListener('click', () => {
-        if (audioMusic.paused) {
-            audioMusic.play();
-            iconPlay.classList.replace('fa-play', 'fa-pause');
-        } else {
-            audioMusic.pause();
-            iconPlay.classList.replace('fa-pause', 'fa-play');
-        }
-    });
-}
-
 // ── YouTube API (Asegurado por dominio)
 const YT_API_KEY   = 'AIzaSyAp9QRBNfxQcq3ldn-NMzzeKxJzDpWsvzs';
 const YT_CHANNEL_ID = 'UCAHqT9NOnooeGQO6xVCuf3g';
