@@ -248,44 +248,14 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
 }
 
-/* ── MUSIC WIDGET ─────────────────────────── */
-.music-widget {
+/* ── SPOTIFY WIDGET ─────────────────────────── */
+.spotify-widget {
     position: fixed; 
     bottom: 24px; right: 24px; 
-    background: rgba(9, 9, 11, 0.85);
-    backdrop-filter: blur(12px); 
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--border); 
-    border-radius: 16px;
-    padding: 12px 20px; 
-    display: flex; 
-    align-items: center; 
-    gap: 16px; 
     z-index: 90;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    border-radius: 12px;
 }
-
-.music-info { display: flex; align-items: center; gap: 12px; }
-.music-info i { color: #ff6b9d; font-size: 1.2rem; }
-.music-text { display: flex; flex-direction: column; }
-.music-title { font-weight: 600; font-size: 0.9rem; }
-.music-status { font-size: 0.75rem; color: #4ade80; }
-
-.music-btn { 
-    background: #fafafa; 
-    color: #09090b; 
-    border: none; 
-    width: 36px; height: 36px; 
-    border-radius: 50%; 
-    cursor: pointer; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    font-size: 0.9rem; 
-    transition: transform 0.2s; 
-}
-
-.music-btn:hover { transform: scale(1.1); }
 
 /* ── FOOTER ───────────────────────────── */
 .footer { 
@@ -384,8 +354,12 @@ body {
     
     .footer-redes { justify-content: center; }
     
-    .music-widget { 
+    .spotify-widget { 
         bottom: 16px; right: 16px; left: 16px; 
-        justify-content: space-between; 
+        display: flex; justify-content: center;
+    }
+    .spotify-widget iframe {
+        width: 100%;
+        max-width: 350px;
     }
 }
