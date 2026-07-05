@@ -23,6 +23,16 @@
             color: var(--text);
             margin-bottom: 8px;
         }
+        
+        /* Ajustes específicos para móviles */
+        @media (max-width: 768px) {
+            .caja-legal {
+                padding: 24px;
+            }
+            .caja-legal h1 {
+                font-size: 1.8rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -43,7 +53,7 @@
         </ul>
     </nav>
 
-    <section class="section" style="padding-top: 140px; min-height: 70vh;">
+    <section class="section" style="padding-top: clamp(100px, 15vh, 140px); min-height: 70vh;">
         <div class="section-inner caja-legal">
             <h1>Términos de Uso</h1>
             <p style="margin-top: 16px; color: var(--text-muted); line-height: 1.8;">Al acceder a Pizza Web, Neón Dash y mis servidores de ClassiCube, etc, aceptas utilizar los servicios de buena fe. No me hago responsable por caídas temporales del servidor de juegos o la radio. Todo el código y contenido en los repositorios de GitHub vinculados aquí son de mi autoría (Pizzaclap43), a menos que se indique lo contrario. Pórtate bien en mi web y disfruta del contenido.</p>
@@ -53,7 +63,7 @@
     <footer class="footer">
         <div class="footer-inner">
             <div class="footer-col brand-col">
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <div class="brand-flex" style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
                     <img src="perfil.png" alt="Logo" class="footer-logo" style="margin-bottom: 0;">
                     <span style="font-size: 1.1rem; font-weight: 700; color: var(--text); background: linear-gradient(90deg, #fafafa, #a1a1aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Pizzaclap43</span>
                 </div>
