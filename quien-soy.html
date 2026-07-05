@@ -9,12 +9,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-    <!-- Pega aquí el mismo <nav> que tienes en el index.html -->
     
-    <section class="section" style="padding-top: 120px; min-height: 70vh;">
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="nav-brand">
+            <img src="perfil.png" alt="Logo Pizzaclap43" class="nav-logo">
+            <span class="nav-title">Pizzaclap43</span>
+        </a>
+        <button class="nav-toggle" id="navToggle" aria-label="Menú">
+            <i class="fas fa-bars"></i>
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html#mas" class="nav-link">Más</a></li>
+            <li><a href="quien-soy.html" class="nav-link">¿Quién soy?</a></li>
+            <li><a href="galeria.html" class="nav-link">Galería</a></li>
+            <li><a href="https://pizzaclap43net.blogspot.com" target="_blank" class="nav-link">Blog</a></li>
+        </ul>
+    </nav>
+    
+    <section class="section" style="padding-top: clamp(100px, 15vh, 120px); min-height: 70vh;">
         <div class="section-inner" style="max-width: 700px;">
             <p class="section-label">👋 Sobre mí</p>
-            <h1 style="font-size: 2.5rem; margin-bottom: 24px;">¡Hola! Aquí algunas cositas sobre mí >w<</h1>
+            <h1 style="font-size: clamp(1.8rem, 6vw, 2.5rem); margin-bottom: 24px;">¡Hola! Aquí algunas cositas sobre mí >w<</h1>
             
             <div style="color: var(--text-muted); font-size: 1.1rem; display: flex; flex-direction: column; gap: 16px;">
                 <p>Soy un adolescente de 15 años que nacio y vive en venezuela. Soy un apasionado por la tecnología, el desarrollo web y la creación de contenido.</p>
@@ -28,6 +43,46 @@
         </div>
     </section>
 
-    <!-- Pega aquí el mismo <footer> que tienes en el index.html -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-col brand-col">
+                <div class="brand-flex" style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                    <img src="perfil.png" alt="Logo" class="footer-logo" style="margin-bottom: 0;">
+                    <span style="font-size: 1.1rem; font-weight: 700; color: var(--text); background: linear-gradient(90deg, #fafafa, #a1a1aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Pizzaclap43</span>
+                </div>
+                <p class="footer-tagline">Creador de Contenido & Desarrollador</p>
+                <a href="mailto:pizzaclapyt@gmail.com" class="footer-mail"><i class="fas fa-envelope"></i> pizzaclapyt@gmail.com</a>
+            </div>
+            
+            <div class="footer-col links-col">
+                <h4 class="footer-title">Legal</h4>
+                <a href="terminos.html" class="footer-link">Términos de Uso</a>
+                <a href="privacidad.html" class="footer-link">Política de Privacidad</a>
+            </div>
+
+            <div class="footer-col redes-col">
+                <h4 class="footer-title">Redes Sociales</h4>
+                <div class="footer-redes">
+                    <a href="https://instagram.com/pizzaclap43" target="_blank" class="footer-red" data-platform="instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://tiktok.com/@pizzaclap43" target="_blank" class="footer-red" data-platform="tiktok" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://youtube.com/@Pizzaclap43" target="_blank" class="footer-red" data-platform="youtube" title="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://twitch.tv/pizzaclap43" target="_blank" class="footer-red" data-platform="twitch" title="Twitch"><i class="fab fa-twitch"></i></a>
+                    <a href="https://kick.com/pizzaclap43" target="_blank" class="footer-red" data-platform="kick" title="Kick"><i class="fas fa-bolt"></i></a>
+                    <a href="https://discord.com/invite/BhSYNUYrxP" target="_blank" class="footer-red" data-platform="discord" title="Discord"><i class="fab fa-discord"></i></a>
+                    <a href="https://twitter.com/Pizzaclap43" target="_blank" class="footer-red" data-platform="twitter" title="Twitter / X"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://facebook.com/pizzaclap43" target="_blank" class="footer-red" data-platform="facebook" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="https://t.me/pizzaclap43" target="_blank" class="footer-red" data-platform="telegram" title="Telegram"><i class="fab fa-telegram"></i></a>
+                    <a href="https://open.spotify.com/user/3167cgabjecc74nd7xf6yadlryc4?si=3571e122a64d4df4" target="_blank" class="footer-red" data-platform="spotify" title="Spotify"><i class="fab fa-spotify"></i></a>
+                    <a href="https://music.youtube.com/channel/UCK2QmDn8eU70eSQcYndJIfg" target="_blank" class="footer-red" data-platform="ytmusic" title="YT Music"><i class="fab fa-youtube"></i></a>
+                    <a href="https://github.com/Pizzaclap43" target="_blank" class="footer-red" data-platform="github" title="GitHub"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span class="footer-copy">© 2026 Pizzaclap43 · Todos los derechos reservados</span>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
