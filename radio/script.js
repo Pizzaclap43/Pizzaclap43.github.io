@@ -297,3 +297,12 @@ function updatePlayerFavIcon() {
 audio.addEventListener('waiting', () => visualizer.classList.remove('active'));
 audio.addEventListener('playing', () => visualizer.classList.add('active'));
 renderStations();
+
+// --- REGISTRO DEL SERVICE WORKER (PWA) ---
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('Service Worker registrado con éxito.', reg))
+            .catch(err => console.warn('Error al registrar Service Worker.', err));
+    });
+}
