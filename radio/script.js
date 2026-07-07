@@ -43,7 +43,7 @@ const stationsData = [
     { id: 41, name: "Exitos (Puerto Ordaz) 90.5 FM", url: "https://acp4.lorini.net:10109/stream" },
     { id: 42, name: "Onda (Puerto Ordaz) 88.1 FM", url: "https://acp4.lorini.net:10111/stream" },
     { id: 43, name: "Union Radio 1090 AM", url: "https://acp4.lorini.net:2090/stream" },
-    { id: 44, name: "YVKE Mundial 550 AM/94.5 FM", url: "https://radiomundial.com.ve/streaming/" }
+    { id: 44, name: "YVKE Mundial Radio 550 AM/94.5 FM", url: "https://radiomundial.com.ve/streaming/" }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
