@@ -1,4 +1,4 @@
-const CACHE_NAME = 'radio-pizza-v1';
+const CACHE_NAME = 'radio-pizza-v2';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
