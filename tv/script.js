@@ -99,7 +99,7 @@ window.playChannel = function(id) {
     playerView.style.display = 'flex';
     nowPlaying.innerText = `📺 ${channel.name}`;
 
-    // Aquí está la magia: Detecta VTV o cualquier enlace HTTP y usa el proxy de Cloudflare
+    // AHORA SÍ: Usamos el proxy para VTV o para cualquier enlace HTTP
     const finalUrl = (channel.id === 'vtv' || channel.url.startsWith('http://')) ? PROXY_URL + encodeURIComponent(channel.url) : channel.url;
 
     // Resetear estados de audio anteriores
