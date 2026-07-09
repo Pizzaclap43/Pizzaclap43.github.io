@@ -10,7 +10,8 @@ const channels = [
     { id: 'promartv', name: 'Promar TV', url: 'https://vcp.myplaytv.com/promar/promar/chunklist_w998280401.m3u8' },
     { id: 'cerotactica', name: 'Cero Táctica', url: 'https://vod2live.univtec.com/manifest/c9db01e8-4ea2-48a3-8745-831b6540cdfb/5160000.m3u8' },
     { id: 'veplus', name: 'Venevision Plus', url: 'https://veplus-ioriver-cdn.encoders.immergo.tv/master.m3u8' },
-    { id: 'novelisima', name: 'Novelisima', url: 'https://dai.google.com/linear/hls/pa/event/8QpjAnHCQQqBxFVRdDQXCA/stream/41ed5680-2519-43a5-8ea7-40b9b9aac3dd:DLS/variant/081f51567e9cf4e34cd83fdd282d2412/bandwidth/3071200.m3u8' }
+    { id: 'novelisima', name: 'Novelisima', url: 'https://dai.google.com/linear/hls/pa/event/8QpjAnHCQQqBxFVRdDQXCA/stream/41ed5680-2519-43a5-8ea7-40b9b9aac3dd:DLS/variant/081f51567e9cf4e34cd83fdd282d2412/bandwidth/3071200.m3u8' },
+    { id: 'noticierovv', name: 'Noticiero Venevision', url: 'https://dai.google.com/linear/hls/pa/event/q2LqrJ2ZRP6UuyzA6X0VsA/stream/c5c8687e-1688-43ba-a3f9-386aa5f7d893:ATL/master.m3u8' }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('pizzatv_favs')) || [];
