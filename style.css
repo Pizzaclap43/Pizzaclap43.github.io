@@ -248,14 +248,59 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
 }
 
-/* ── SPOTIFY WIDGET ─────────────────────────── */
-.spotify-widget {
+/* ── YOUTUBE WIDGET ─────────────────────────── */
+.yt-widget {
     position: fixed; 
     bottom: 24px; right: 24px; 
     z-index: 90;
     width: 320px;
+    background: var(--bg);
+    border: 1px solid var(--border);
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.yt-widget-toggle {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.04);
+    border: none;
+    color: var(--text);
+    padding: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    border-bottom: 1px solid var(--border);
+}
+
+.yt-widget-toggle:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.yt-widget-toggle i {
+    transition: transform 0.3s ease;
+}
+
+.yt-widget-content {
+    height: 315px; /* Misma altura que el iframe */
+    transition: height 0.3s ease;
+    overflow: hidden;
+}
+
+.yt-widget-content iframe {
+    display: block; /* Evita el margen fantasma debajo del iframe */
+}
+
+/* Estado minimizado */
+.yt-widget.minimized .yt-widget-content {
+    height: 0;
+}
+
+.yt-widget.minimized .yt-widget-toggle i {
+    transform: rotate(180deg); /* Voltea la flechita */
 }
 
 /* ── FOOTER ───────────────────────────── */
@@ -358,8 +403,11 @@ body {
     /* ¡Aquí va el ajuste del logo del footer para móviles! */
     .brand-flex { justify-content: center; } 
     
-    .spotify-widget { 
+    /* ... otros estilos del media query ... */
+    
+    .yt-widget { 
         bottom: 16px; right: 16px; left: 16px; 
         width: auto;
     }
 }
+
