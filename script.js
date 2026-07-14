@@ -44,3 +44,14 @@ async function cargarUltimoVideo() {
 }
 
 cargarUltimoVideo();
+
+// ── YouTube Widget: Minimizar/Maximizar
+const ytToggleBtn = document.getElementById('ytToggleBtn');
+const ytWidget = document.getElementById('ytWidget');
+
+if (ytToggleBtn && ytWidget) {
+    ytToggleBtn.addEventListener('click', () => {
+        // Agrega o quita la clase "minimized" al hacer clic
+        ytWidget.classList.toggle('minimized');
+    });
+}
