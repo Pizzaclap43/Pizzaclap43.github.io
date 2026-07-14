@@ -76,6 +76,66 @@ body {
     background-clip: text;
 }
 
+/* ── CONTROLES Y WIDGET NAV ─────────────────────────── */
+.nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.nav-widget {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    transition: background 0.3s;
+}
+
+.nav-widget:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+}
+
+.widget-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.2;
+}
+
+.widget-time {
+    font-weight: 700;
+    color: var(--text);
+}
+
+.widget-date {
+    font-size: 0.7rem;
+}
+
+.widget-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+}
+
+.widget-weather {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.widget-weather i {
+    color: #4facfe; /* Color cyan para el clima */
+}
+
+/* ── NAV LINKS ─────────────────────────────── */
 .nav-links { 
     display: flex; 
     align-items: center; 
@@ -285,22 +345,21 @@ body {
 }
 
 .yt-widget-content {
-    height: 315px; /* Misma altura que el iframe */
+    height: 315px; 
     transition: height 0.3s ease;
     overflow: hidden;
 }
 
 .yt-widget-content iframe {
-    display: block; /* Evita el margen fantasma debajo del iframe */
+    display: block; 
 }
 
-/* Estado minimizado */
 .yt-widget.minimized .yt-widget-content {
     height: 0;
 }
 
 .yt-widget.minimized .yt-widget-toggle i {
-    transform: rotate(180deg); /* Voltea la flechita */
+    transform: rotate(180deg); 
 }
 
 /* ── FOOTER ───────────────────────────── */
@@ -392,6 +451,21 @@ body {
     .nav-links.open { display: flex; }
     .nav-toggle { display: block; }
     
+    /* Ajustes móviles del Nav Widget */
+    .nav-widget {
+        padding: 4px 8px;
+        gap: 8px;
+    }
+    .widget-date {
+        display: none; /* Ocultamos la fecha en movil para ahorrar espacio */
+    }
+    .widget-divider {
+        display: none;
+    }
+    .nav-controls {
+        gap: 12px;
+    }
+
     .footer-inner { 
         grid-template-columns: 1fr; 
         text-align: center; 
@@ -399,15 +473,10 @@ body {
     }
     
     .footer-redes { justify-content: center; }
-    
-    /* ¡Aquí va el ajuste del logo del footer para móviles! */
     .brand-flex { justify-content: center; } 
-    
-    /* ... otros estilos del media query ... */
     
     .yt-widget { 
         bottom: 16px; right: 16px; left: 16px; 
         width: auto;
     }
 }
-
