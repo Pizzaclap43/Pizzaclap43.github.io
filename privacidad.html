@@ -42,9 +42,25 @@
             <img src="perfil.png" alt="Logo Pizzaclap43" class="nav-logo">
             <span class="nav-title">Pizzaclap43</span>
         </a>
-        <button class="nav-toggle" id="navToggle" aria-label="Menú">
-            <i class="fas fa-bars"></i>
-        </button>
+        
+        <div class="nav-controls">
+            <div class="nav-widget" id="navWidget">
+                <div class="widget-col">
+                    <span id="navTime" class="widget-time">--:--</span>
+                <span id="navDate" class="widget-date" style="text-transform: capitalize;">--/--/--</span>
+                </div>
+                <div class="widget-divider"></div>
+                <div class="widget-weather" id="navWeather" title="Clima actual">
+    <i id="navWeatherIcon" class="fas fa-spinner fa-spin"></i>
+    <span id="navTemp">--°C</span>
+    <span id="navWeatherText" style="font-size: 0.8rem; margin-left: 4px; font-weight: 500;"></span>
+</div>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Menú">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
         <ul class="nav-links" id="navLinks">
             <li><a href="index.html#mas" class="nav-link">Más</a></li>
             <li><a href="quien-soy.html" class="nav-link">¿Quién soy?</a></li>
