@@ -17,9 +17,25 @@
             <img src="perfil.png" alt="Logo Pizzaclap43" class="nav-logo">
             <span class="nav-title">Pizzaclap43</span>
         </a>
-        <button class="nav-toggle" id="navToggle" aria-label="Menú">
-            <i class="fas fa-bars"></i>
-        </button>
+        
+        <div class="nav-controls">
+            <div class="nav-widget" id="navWidget">
+                <div class="widget-col">
+                    <span id="navTime" class="widget-time">--:--</span>
+                    <span id="navDate" class="widget-date" style="text-transform: capitalize;">--/--/--</span>
+                </div>
+                <div class="widget-divider"></div>
+                <div class="widget-weather" id="navWeather" title="Clima actual">
+    <i id="navWeatherIcon" class="fas fa-spinner fa-spin"></i>
+    <span id="navTemp">--°C</span>
+    <span id="navWeatherText" style="font-size: 0.8rem; margin-left: 4px; font-weight: 500;"></span>
+</div>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Menú">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
         <ul class="nav-links" id="navLinks">
             <li><a href="#mas" class="nav-link">Más</a></li>
             <li><a href="quien-soy.html" class="nav-link">¿Quién soy?</a></li>
@@ -70,8 +86,7 @@
             <span style="font-size: 0.85rem; margin-left: 8px; font-weight: 600;">Reproductor de YouTube</span>
         </button>
         <div class="yt-widget-content" id="ytContent">
-            <!-- Se cambió width="560" a width="100%" para que sea responsive -->
-            <iframe width="100%" height="315" src="https://www.youtube-nocookie.com/embed/videoseries?si=v5LKhbJJkfxr4pAs&amp;list=PL-jhD1_bQZq3NB1MFqkiTj_QJGXumJuc-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <iframe width="100%" height="315" src="https://www.youtube-nocookie.com/embed/videoseries?si=v5LKhbJJkfxr4pAs&list=PL-jhD1_bQZq3NB1MFqkiTj_QJGXumJuc-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
     </div>
 
