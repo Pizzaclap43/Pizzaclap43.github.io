@@ -45,7 +45,8 @@ const stationsData = [
     { id: 43, name: "Union Radio 1090 AM", url: "https://acp4.lorini.net:2090/stream" },
     { id: 44, name: "YVKE Mundial Radio 550 AM/94.5 FM", url: "https://radiomundial.com.ve/streaming/" },
     { id: 45, name: "RNV (Radio Nacional de Venezuela) 91.1 FM", url: "https://guri.tepuyserver.net/8048/stream" },
-    { id: 46, name: "Fundaclove", url: "https://stream-175.surfernetwork.com/qyc9h29ce2zuv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJxeWM5aDI5Y2UyenV2IiwiaG9zdCI6InN0cmVhbS0xNzUuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiI4QnJjdlFZU1RQS1hXQnUxMjdCbFFnIiwiaWF0IjoxNzgzODc0NTk0LCJleHAiOjE3ODM4NzQ2NTR9.Vp4OD7vLYHwv32smQNjzLZ2CbJt7rfX2UxDeoEs0lXo" }
+    { id: 46, name: "Fundaclove", url: "https://stream-175.surfernetwork.com/qyc9h29ce2zuv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJxeWM5aDI5Y2UyenV2IiwiaG9zdCI6InN0cmVhbS0xNzUuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiI4QnJjdlFZU1RQS1hXQnUxMjdCbFFnIiwiaWF0IjoxNzgzODc0NTk0LCJleHAiOjE3ODM4NzQ2NTR9.Vp4OD7vLYHwv32smQNjzLZ2CbJt7rfX2UxDeoEs0lXo" },
+    { id: 47, name: "Magic Radio 92.5 FM", url: "https://streaming.supermezclashosting.com/8500/;" }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
