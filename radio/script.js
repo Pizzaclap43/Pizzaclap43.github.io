@@ -190,7 +190,7 @@ function selectStation(station) {
     currentStationNameEl.textContent = station.name;
     
     // --- NUEVO: Actualiza el título de la pestaña ---
-    document.title = station.name + " - Radio Pizza 黒";
+    document.title = station.name + " - Radio Pizza";
     
     playerUI.classList.add('show');
     updatePlayerFavIcon();
