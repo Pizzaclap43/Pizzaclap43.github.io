@@ -46,7 +46,10 @@ const stationsData = [
     { id: 44, name: "YVKE Mundial Radio 550 AM/94.5 FM", url: "https://radiomundial.com.ve/streaming/" },
     { id: 45, name: "RNV (Radio Nacional de Venezuela) 91.1 FM", url: "https://guri.tepuyserver.net/8048/stream" },
     { id: 46, name: "Fundaclove", url: "https://stream-175.surfernetwork.com/qyc9h29ce2zuv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJxeWM5aDI5Y2UyenV2IiwiaG9zdCI6InN0cmVhbS0xNzUuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiI4QnJjdlFZU1RQS1hXQnUxMjdCbFFnIiwiaWF0IjoxNzgzODc0NTk0LCJleHAiOjE3ODM4NzQ2NTR9.Vp4OD7vLYHwv32smQNjzLZ2CbJt7rfX2UxDeoEs0lXo" },
-    { id: 47, name: "Magic Radio 92.5 FM", url: "https://streaming.supermezclashosting.com/8500/;" }
+    { id: 47, name: "Magic Radio 92.5 FM", url: "https://streaming.supermezclashosting.com/8500/;" },
+    { id: 48, name: "Radio Show 106.7 FM", url: "https://server6.globalhostla.com:9476/stream" },
+    { id: 49, name: "Magnetica 90.1 FM", url: "https://stream-282.surfernetwork.com/f7akwszagywuv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJmN2Frd3N6YWd5d3V2IiwiaG9zdCI6InN0cmVhbS0yODIuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJVRnRMQkhSWVF0aWpSTXBzbGRaVFVRIiwiaWF0IjoxNzg0MDgzMjA4LCJleHAiOjE3ODQwODMyNjh9.CAGfeTOnXjgDJGtOdAy6j42mQSY-QRt6DeVSn5m-Xpo" },
+    { id: 50, name: "Victoria 103.9 FM", url: "https://sapircast.caster.fm:13998/JCNN8?token=82ed7b04dc883cf719ec4ef217d2c927" }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
