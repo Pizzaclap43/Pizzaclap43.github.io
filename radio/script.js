@@ -49,7 +49,9 @@ const stationsData = [
     { id: 47, name: "Magic Radio 92.5 FM", url: "https://streaming.supermezclashosting.com/8500/;" },
     { id: 48, name: "Radio Show 106.7 FM", url: "https://server6.globalhostla.com:9476/stream" },
     { id: 49, name: "Magnetica 90.1 FM", url: "https://stream-282.surfernetwork.com/f7akwszagywuv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJmN2Frd3N6YWd5d3V2IiwiaG9zdCI6InN0cmVhbS0yODIuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJVRnRMQkhSWVF0aWpSTXBzbGRaVFVRIiwiaWF0IjoxNzg0MDgzMjA4LCJleHAiOjE3ODQwODMyNjh9.CAGfeTOnXjgDJGtOdAy6j42mQSY-QRt6DeVSn5m-Xpo" },
-    { id: 50, name: "Victoria 103.9 FM", url: "https://sapircast.caster.fm:13998/JCNN8?token=82ed7b04dc883cf719ec4ef217d2c927" }
+    { id: 50, name: "Victoria 103.9 FM", url: "https://sapircast.caster.fm:13998/JCNN8?token=82ed7b04dc883cf719ec4ef217d2c927" },
+    { id: 51, name: "Caliente 103.3 FM", url: "https://stream-179.surfernetwork.com/yc81fn5wgm8uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ5YzgxZm41d2dtOHV2IiwiaG9zdCI6InN0cmVhbS0xNzkuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJhUnJ6MUlwMlFXV2FwNnZ4Ni1MZnJRIiwiaWF0IjoxNzg0MDgzNTA1LCJleHAiOjE3ODQwODM1NjV9.qIor6GBMGJOtp0WptFDI85zdTxn-B6Xo_n1ogoYCAnI" },
+    { id: 52, name: "Costa de Oro 90.7 FM", url: "https://stream-177.surfernetwork.com/a07x8r77cm8uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJhMDd4OHI3N2NtOHV2IiwiaG9zdCI6InN0cmVhbS0xNzcuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJnQkVmbmlWaFJ3S2JRWmFielR3X0ZnIiwiaWF0IjoxNzg0MDgzNjMyLCJleHAiOjE3ODQwODM2OTJ9.8WS5cj29IAg_Qwtv5w_b28FiHru83LR7Vz5oS7zj6hY" }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
