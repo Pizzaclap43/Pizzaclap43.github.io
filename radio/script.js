@@ -191,7 +191,7 @@ function selectStation(station) {
     currentStationNameEl.textContent = station.name;
     
     // --- NUEVO: Actualiza el título de la pestaña ---
-    document.title = station.name + " - Radio Pizza";
+    document.title = station.name + " - Radio Pizza 🍕";
     
     playerUI.classList.add('show');
     updatePlayerFavIcon();
@@ -247,7 +247,7 @@ function stopAudio() {
     currentStation = null;
     
     // --- NUEVO: Devuelve el título original cuando se detiene ---
-    document.title = "Radio Pizza 黒";
+    document.title = "Radio Pizza 🍕";
 }
 
 function updatePlayPauseIcon() {
