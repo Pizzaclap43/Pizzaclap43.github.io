@@ -12,7 +12,8 @@ const channels = [
     { id: 'veplus', name: 'Venevision Plus', url: 'https://veplus-ioriver-cdn.encoders.immergo.tv/master.m3u8' },
     { id: 'showven', name: 'ShowVen', url: 'http://vcp1.myplaytv.com/coll/coll/playlist.m3u8' },
     { id: 'vtv', name: 'Venezolana de Television', url: 'https://live.eu-north-1b.cf.dmcdn.net/sec2(ccM8wEFvouBrwjAr76qq8DCAJUUEDG4tmjgNab5JrPx8jbawGMvj9x-WhS4cuWLIAzAFaIbPoyHFtzsOZJKWjwr3Q4h_nXL3-O9M8aZ_7jTfdU7W3LPA3kuj7FNGNzdJ)/dm/3/x930kre/d/live-720@60.m3u8#cell=lcf-eu-north-1b' },
-    { id: 'mtv', name: 'Meridiano TV', url: 'https://live.eu-north-1a.cf.dmcdn.net/sec2(N9ZhMiQgDuJWEkjiBuWCrDFnb8jz1jqh2XR4Hs_DA9mCGr-S8xXAioyPpwfk1NctRIxPym5wEkkYbIVvAMpurW2RRQClpvbsEN6-S9IbV8drFJsphdqfI_c2iJmNIKKc)/dm/3/x9sxu9y/s/live-720.m3u8#cell=lcf-eu-north-1a' }
+    { id: 'mtv', name: 'Meridiano TV', url: 'https://live.eu-north-1a.cf.dmcdn.net/sec2(N9ZhMiQgDuJWEkjiBuWCrDFnb8jz1jqh2XR4Hs_DA9mCGr-S8xXAioyPpwfk1NctRIxPym5wEkkYbIVvAMpurW2RRQClpvbsEN6-S9IbV8drFJsphdqfI_c2iJmNIKKc)/dm/3/x9sxu9y/s/live-720.m3u8#cell=lcf-eu-north-1a' },
+    { id: 'tlt', name: 'La Tele Tuya', url: 'https://live2.eu-north-1a.cf.dmcdn.net/sec2(UWxBy0Oqus5VmgZnw97hh9PnFK1Nc72mcdY5Z2Sk_al6s1-EUG423x_8q5KWvBBpyHAIvu6IvQ6Xl4snfr8EBpYDl9hmdVHEoASyQdCqGFpjZoGLEb3a1dnAe8oXUibJ)/cloud/3/x8z1lwk/s/live-1080@60.m3u8#cell=lcf2-eu-north-1a' }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('pizzatv_favs')) || [];
