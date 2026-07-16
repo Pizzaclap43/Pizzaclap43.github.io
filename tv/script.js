@@ -99,8 +99,8 @@ window.playChannel = function(id) {
     playerView.style.display = 'flex';
     nowPlaying.innerText = `📺 ${channel.name}`;
 
-    // AHORA SÍ: Usamos el proxy para VTV o para cualquier enlace HTTP
-    const finalUrl = (channel.id === 'vtv' || channel.url.startsWith('http://')) ? PROXY_URL + encodeURIComponent(channel.url) : channel.url;
+    // AHORA SÍ: Usamos el proxy para cualquier enlace HTTP y para servidores de Dailymotion (dmcdn.net)
+    const finalUrl = (channel.url.includes('dmcdn.net') || channel.url.startsWith('http://')) ? PROXY_URL + encodeURIComponent(channel.url) : channel.url;
 
     // Resetear estados de audio anteriores
     tvAudio.pause();
