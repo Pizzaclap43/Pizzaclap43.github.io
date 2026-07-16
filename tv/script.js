@@ -9,7 +9,8 @@ const channels = [
     { id: 'latinanoticias', name: 'Latina Noticias', url: 'https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latinanoticias/latinanoticias.smil/playlist.m3u8?did=r1us539206592f9464dfc502f675a1611d0374450d96c&ndvc=0' },
     { id: 'promartv', name: 'Promar TV', url: 'https://vcp.myplaytv.com/promar/promar/chunklist_w998280401.m3u8' },
     { id: 'cerotactica', name: 'Cero Táctica', url: 'https://vod2live.univtec.com/manifest/c9db01e8-4ea2-48a3-8745-831b6540cdfb/5160000.m3u8' },
-    { id: 'veplus', name: 'Venevision Plus', url: 'https://veplus-ioriver-cdn.encoders.immergo.tv/master.m3u8' }
+    { id: 'veplus', name: 'Venevision Plus', url: 'https://veplus-ioriver-cdn.encoders.immergo.tv/master.m3u8' },
+{ id: 'showven', name: 'ShowVen', url: 'http://vcp1.myplaytv.com/coll/coll/playlist.m3u8' }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('pizzatv_favs')) || [];
