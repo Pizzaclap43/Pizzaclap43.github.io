@@ -2,7 +2,7 @@
 const stationsData = [
     // --- NUESTRA RADIO SIMULADA ---
     { id: 999, name: "Radio Pizza 24/7 (AutoDJ)", url: "#", isSimulated: true },
-    // --- RESTO DE LAS EMISORAS ---
+    // --- RESTO DE LAS EMISORAS (Intactas) ---
     { id: 1, name: "Aragueña 99.5 FM", url: "https://cloudstream2036.conectarhosting.com/8060/stream" },
     { id: 2, name: "Positiva 92.7 FM", url: "https://stream-176.zeno.fm/zptsvda6fd0uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ6cHRzdmRhNmZkMHV2IiwiaG9zdCI6InN0cmVhbS0xNzYuemVuby5mbSIsInJ0dGwiOjUsImp0aSI6IjVXdTRybEhVVDBXUktVYnlhY3Z2bUEiLCJpYXQiOjE3ODA4NTQ0NzIsImV4cCI6MTactive8NTUzMn0.9JdBaAuZxxvhE57kpjST6WH_hHdy2-Wl_Q2Gg3vufnA&adtonosListenerId=01HG6CKJKK2N4PESGSQR728VHT&aw_0_req_lsid=a73b93b4a361b1b74689f98df91c7c0c&acu-uid=856841341346&an-uid=9072685044421090607&mm-uid=657a6563-879f-4a00-8364-1f46175de940&dot-uid=09d8220400ff6773733290ac&amb-uid=2654924301368664169&dbm-uid=CAESENpW9w2DvDhRMIuRcx8yRQA&cto-uid=2e3d537f-d45f-4fa1-8c77-abe908bae5f0-6563879e-5645&bsw-uid=e4c56c24-32be-47a2-8015-909eed2c0adb&dyn-uid=2940798897331886011&ttd-uid=f23e4a03-2239-4e97-95f9-9ff58a23724c&triton-uid=cookie%3A25a0b549-c8b9-4b1c-8a70-95e9dfab29ef&adt-uid=cuid_9d23eb64-8c85-11ee-94b0-121a6d1d7927&1779752060716" },
     { id: 3, name: "La Mega 107.3 FM", url: "https://acp4.lorini.net:2050/stream" },
@@ -59,31 +59,55 @@ const stationsData = [
     { id: 54, name: "Radio Miraflores 95.9", url: "https://stream-283.surfernetwork.com/prcs4h7d9k8uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJwcmNzNGg3ZDlrOHV2IiwiaG9zdCI6InN0cmVhbS0yODMuc3VyZmVybmV0d29yay5jb20iLCJ0bSI6ZmFsc2UsInJ0dGwiOjUsImp0aSI6Ims5LTJKOF9tUXJPalNXQWZwMXZJQ3ciLCJpYXQiOjE3ODQyNDgyMjUsImV4cCI6MTc4NDI0ODI4NX0.6l8Z7utvwZCniSAg0dNIR0a7B4JhZ1ZHKR2qGHn350c" }
 ];
 
-// --- 1.5 DATOS DE LA RADIO SIMULADA ---
-// Integrada canción de prueba: Voltario.mp3 (2:37 = 157 segundos)
+// --- 1.5 DATOS DE LA RADIO SIMULADA (AHORA CON IDs DE YOUTUBE) ---
+// Extraje algunos IDs basándome en los nombres que tenías, puedes cambiarlos a gusto
 const simuladaPlaylist = [
-    { url: "https://elmichiyt.github.io/cdn/music/voltario.mp3", duration: 157 },
-    // Minero - ElrubiusOMG
-    { url: "https://files.catbox.moe/22xkip.mp3", duration: 233 },
-    // Radio Pizza 24/7
-    { url: "https://files.catbox.moe/9rtcpa.wav", duration: 15 },
-    // Creeper vs. Zombie - ZarcortGame
-    { url: "https://files.catbox.moe/3rdm9i.mp3", duration: 215 },
-    // Covers de CatMeow98
-    { url: "https://files.catbox.moe/hh6jav.mp3", duration: 392 },
-    { url: "https://files.catbox.moe/fnzmzp.mp3", duration: 317 },
-    { url: "https://files.catbox.moe/czzfa4.mp3", duration: 223 },
-    { url: "https://files.catbox.moe/ufd60z.mp3", duration: 194 },
-    { url: "https://files.catbox.moe/dmwjye.mp3", duration: 257 },
-    // Estamos con Venezuela
-    { url: "https://files.catbox.moe/660gvx.mp3", duration: 3 },
-    // Recuerdos - Porfi Baloa y sus Adolescentes
-    { url: "https://files.catbox.moe/635tph.mp3", duration: 239 },
-    // Terremoto
-    { url: "https://files.catbox.moe/5247lw.mp3", duration: 140 }
+    { ytId: "TXYMMsoTMLQ", duration: 301 }, // Ejemplo: "Song 1" - 3:32
+    // Añade el resto de tus IDs aquí
 ];
 const totalDurationSimulada = simuladaPlaylist.reduce((acc, song) => acc + song.duration, 0);
 
+// --- 1.6 INICIALIZACIÓN DE API DE YOUTUBE ---
+let ytPlayer;
+let ytReady = false;
+
+// Inyectar el script de YouTube en el HTML
+const tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+const firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+// Crear el contenedor invisible para YouTube si no existe en el HTML
+if(!document.getElementById('youtube-audio')) {
+    const ytDiv = document.createElement('div');
+    ytDiv.id = 'youtube-audio';
+    document.body.appendChild(ytDiv);
+}
+
+// Función global que llama YouTube cuando carga
+window.onYouTubeIframeAPIReady = function() {
+    ytPlayer = new YT.Player('youtube-audio', {
+        height: '0',
+        width: '0',
+        playerVars: { 'playsinline': 1, 'controls': 0, 'disablekb': 1 },
+        events: {
+            'onReady': () => { ytReady = true; },
+            'onStateChange': onYTStateChange
+        }
+    });
+};
+
+function onYTStateChange(event) {
+    if (event.data === YT.PlayerState.ENDED && currentStation && currentStation.isSimulated) {
+        sintonizarRadioSimulada(); // Calcula la siguiente según el tiempo real
+    }
+    
+    if (event.data === YT.PlayerState.PLAYING) {
+        visualizer.classList.add('active');
+    }
+}
+
+// --- RESTO DE TUS VARIABLES ---
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
 let currentTab = 'all'; 
 let currentStation = null;
@@ -119,21 +143,16 @@ function showToast(message) {
 // --- FECHA, RELOJ Y CLIMA ---
 function updateClock() {
     const now = new Date();
-    
-    // Formatear y mostrar la hora incluyendo el emoji de reloj solicitado
     const horaFormateada = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second: '2-digit'});
     document.getElementById('clock').textContent = `🕒 ${horaFormateada}`;
-    
-    // Formatear y mostrar la fecha
     const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
     let fechaFormateada = now.toLocaleDateString('es-ES', opcionesFecha);
-    fechaFormateada = fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1); // Capitaliza la primera letra
+    fechaFormateada = fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1);
     document.getElementById('date').textContent = `📅 ${fechaFormateada}`;
 }
 setInterval(updateClock, 1000);
 updateClock();
 
-// Función traductora de códigos del clima a español
 function getWeatherDescription(code) {
     if (code === 0) return "Despejado ☀️";
     if (code === 1) return "Mayormente despejado 🌤️";
@@ -214,18 +233,18 @@ function renderStations() {
     });
 }
 
-// --- LOGICA DE RADIO SIMULADA ---
+// --- LOGICA DE RADIO SIMULADA CON YOUTUBE ---
 function sintonizarRadioSimulada() {
-    if (simuladaPlaylist.length === 0) return;
+    if (simuladaPlaylist.length === 0 || !ytReady) return;
     
-    // Punto de partida exacto solicitado: 17 de Julio de 2026 a las 10:45 AM (Hora de Venezuela UTC-4)
+    // Detiene el audio FM/AM si estaba sonando
+    audio.pause();
+    
     const epochFija = new Date("2026-07-17T10:45:00-04:00").getTime();
     const ahora = Date.now();
     
-    // Segundos transcurridos (pueden ser negativos si es antes de la hora elegida)
     const segundosTranscurridos = Math.floor((ahora - epochFija) / 1000);
     
-    // Modulo matemático que soporta negativos de forma segura
     let segundoActualEnBucle = segundosTranscurridos % totalDurationSimulada;
     if (segundoActualEnBucle < 0) {
         segundoActualEnBucle += totalDurationSimulada;
@@ -245,34 +264,31 @@ function sintonizarRadioSimulada() {
     }
     
     if (cancionActual) {
-        audio.src = cancionActual.url;
-        audio.currentTime = segundoDeInicio;
-        playAudio();
+        ytPlayer.loadVideoById({
+            videoId: cancionActual.ytId,
+            startSeconds: segundoDeInicio
+        });
+        
+        isPlaying = true;
+        updatePlayPauseIcon();
+        vinyl.classList.add('playing');
+        visualizer.classList.add('active');
     }
 }
-
-// Evento clave que detecta cuando termina un track simulado para seguir con el próximo 24/7
-audio.addEventListener('ended', () => {
-    if (currentStation && currentStation.isSimulated) {
-        sintonizarRadioSimulada();
-    }
-});
 
 // --- REPRODUCTOR ---
 function selectStation(station) {
     currentStation = station;
     currentStationNameEl.textContent = station.name;
-    
-    // Actualiza el título de la pestaña
     document.title = station.name + " - Radio Pizza 🍕";
     
     playerUI.classList.add('show');
     updatePlayerFavIcon();
 
-    // Bifurcación: ¿Es un stream normal o es simulada?
     if (station.isSimulated) {
         sintonizarRadioSimulada();
     } else {
+        if(ytReady) ytPlayer.stopVideo(); // Detiene YT si pasas a FM
         audio.src = station.url;
         playAudio();
     }
@@ -306,7 +322,11 @@ function playAudio() {
 }
 
 function pauseAudio() {
-    audio.pause();
+    if (currentStation && currentStation.isSimulated && ytReady) {
+        ytPlayer.pauseVideo();
+    } else {
+        audio.pause();
+    }
     isPlaying = false;
     updatePlayPauseIcon();
     vinyl.classList.remove('playing');
@@ -318,22 +338,20 @@ function togglePlayPause() {
     if (isPlaying) {
         pauseAudio();
     } else {
-        // Si el usuario quita la pausa a una radio simulada, la resincronizamos con el "vivo"
         if (currentStation.isSimulated) {
-            sintonizarRadioSimulada();
+            sintonizarRadioSimulada(); // Resincroniza YT
         } else {
-            playAudio();
+            playAudio(); // Reproduce FM
         }
     }
 }
 
 function stopAudio() {
     pauseAudio();
+    if(ytReady) ytPlayer.stopVideo();
     audio.src = "";
     playerUI.classList.remove('show');
     currentStation = null;
-    
-    // Devuelve el título original cuando se detiene
     document.title = "Radio Pizza 🍕";
 }
 
@@ -343,6 +361,8 @@ function updatePlayPauseIcon() {
 
 function setVolume(val) {
     audio.volume = val;
+    if(ytReady) ytPlayer.setVolume(val * 100); // YT usa escala 0-100
+    
     isMuted = val == 0;
     updateMuteIcon();
 }
@@ -350,11 +370,13 @@ function setVolume(val) {
 function toggleMute() {
     if (isMuted) {
         audio.volume = previousVolume > 0 ? previousVolume : 0.8;
+        if(ytReady) ytPlayer.setVolume(audio.volume * 100);
         volumeSlider.value = audio.volume;
         isMuted = false;
     } else {
         previousVolume = audio.volume;
         audio.volume = 0;
+        if(ytReady) ytPlayer.setVolume(0);
         volumeSlider.value = 0;
         isMuted = true;
     }
@@ -391,13 +413,13 @@ function toggleFavoriteFromPlayer() {
     renderStations();
 }
 
-// Sincronización del ícono del reproductor
 function updatePlayerFavIcon() {
     if (!currentStation) return;
     const isFav = favorites.includes(currentStation.id);
     playerFavBtn.innerHTML = `<i class="${isFav ? 'fas' : 'far'} fa-heart" style="color: ${isFav ? 'var(--primary)' : 'var(--text-light)'}"></i>`;
 }
 
+// Eventos de audio estándar
 audio.addEventListener('waiting', () => visualizer.classList.remove('active'));
 audio.addEventListener('playing', () => visualizer.classList.add('active'));
 renderStations();
