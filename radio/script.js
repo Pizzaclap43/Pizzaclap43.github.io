@@ -64,7 +64,8 @@ const stationsData = [
 const simuladaPlaylist = [
     { ytId: "U7zuGB_ZuWM", duration: 157 }, // Voltario - ElmichiYT
     { ytId: "VZzSBv6tXMw", duration: 233 }, // Minero - ElrubiusOMG
-    { ytId: "wAMZ6KpMGQI", duration: 214 } // Creeper vs. Zombie - ZarcortGame
+    { ytId: "wAMZ6KpMGQI", duration: 214 }, // Creeper vs. Zombie - ZarcortGame
+    { ytId: "0k8pxGfKIM8", duration: 193 } // The smiler of darkness - Cat_smiler
 ];
 const totalDurationSimulada = simuladaPlaylist.reduce((acc, song) => acc + song.duration, 0);
 
