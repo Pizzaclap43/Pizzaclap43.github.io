@@ -62,8 +62,8 @@ const stationsData = [
 // --- 1.5 DATOS DE LA RADIO SIMULADA (AHORA CON IDs DE YOUTUBE) ---
 // Extraje algunos IDs basándome en los nombres que tenías, puedes cambiarlos a gusto
 const simuladaPlaylist = [
-    { ytId: "TXYMMsoTMLQ", duration: 301 }, // Ejemplo: "Song 1" - 3:32
-    // Añade el resto de tus IDs aquí
+    { ytId: "U7zuGB_ZuWM", duration: 157 }, // Voltario - ElmichiYT
+    { ytid: "VZzSBv6tXMw", duration: 233 }, // Minero - ElrubiusOMG
 ];
 const totalDurationSimulada = simuladaPlaylist.reduce((acc, song) => acc + song.duration, 0);
 
