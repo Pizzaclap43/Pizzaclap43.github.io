@@ -68,7 +68,7 @@ const simuladaPlaylist = [
     // Radio Pizza 24/7
     { url: "https://files.catbox.moe/9rtcpa.wav", duration: 15 },
     // Creeper vs. Zombie - ZarcortGame
-    { url: "https://files.catbox.moe/3rdm9i.mp3", duration: 214 },
+    { url: "https://files.catbox.moe/3rdm9i.mp3", duration: 215 },
     // Covers de CatMeow98
     { url: "https://files.catbox.moe/hh6jav.mp3", duration: 392 },
     { url: "https://files.catbox.moe/fnzmzp.mp3", duration: 317 },
@@ -76,7 +76,7 @@ const simuladaPlaylist = [
     { url: "https://files.catbox.moe/ufd60z.mp3", duration: 194 },
     { url: "https://files.catbox.moe/dmwjye.mp3", duration: 257 },
     // Estamos con Venezuela
-    { url: "https://files.catbox.moe/660gvx.mp3", duration: 2 },
+    { url: "https://files.catbox.moe/660gvx.mp3", duration: 3 },
     // Recuerdos - Porfi Baloa y sus Adolescentes
     { url: "https://files.catbox.moe/635tph.mp3", duration: 239 },
     // Terremoto
