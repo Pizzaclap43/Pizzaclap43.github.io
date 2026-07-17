@@ -63,9 +63,13 @@ const stationsData = [
 // Integrada canción de prueba: Voltario.mp3 (2:37 = 157 segundos)
 const simuladaPlaylist = [
     { url: "https://elmichiyt.github.io/cdn/music/voltario.mp3", duration: 157 },
+    // Minero - ElrubiusOMG
     { url: "https://files.catbox.moe/22xkip.mp3", duration: 233 },
+    // Radio Pizza 24/7
     { url: "https://files.catbox.moe/9rtcpa.wav", duration: 15 },
+    // Creeper vs. Zombie - ZarcortGame
     { url: "https://files.catbox.moe/3rdm9i.mp3", duration: 214 },
+    // Covers de CatMeow98
     { url: "https://files.catbox.moe/hh6jav.mp3", duration: 392 },
     { url: "https://files.catbox.moe/fnzmzp.mp3", duration: 317 },
     { url: "https://files.catbox.moe/czzfa4.mp3", duration: 223 },
