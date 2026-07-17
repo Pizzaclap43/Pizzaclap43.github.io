@@ -15,8 +15,7 @@ const channels = [
     { id: 'mtv', name: 'Meridiano TV', url: 'https://live.eu-north-1a.cf.dmcdn.net/sec2(N9ZhMiQgDuJWEkjiBuWCrDFnb8jz1jqh2XR4Hs_DA9mCGr-S8xXAioyPpwfk1NctRIxPym5wEkkYbIVvAMpurW2RRQClpvbsEN6-S9IbV8drFJsphdqfI_c2iJmNIKKc)/dm/3/x9sxu9y/s/live-720.m3u8#cell=lcf-eu-north-1a' },
     { id: 'tlt', name: 'La Tele Tuya', url: 'https://live2.eu-north-1a.cf.dmcdn.net/sec2(UWxBy0Oqus5VmgZnw97hh9PnFK1Nc72mcdY5Z2Sk_al6s1-EUG423x_8q5KWvBBpyHAIvu6IvQ6Xl4snfr8EBpYDl9hmdVHEoASyQdCqGFpjZoGLEb3a1dnAe8oXUibJ)/cloud/3/x8z1lwk/s/live-1080@60.m3u8#cell=lcf2-eu-north-1a' },
     { id: 'globovision', name: 'Globovision', url: 'https://live.eu-north-1b.cf.dmcdn.net/sec2(yBpetJ140O2VbBBsz_J968QjJ6jDDO_ablvDVRRevhvFM3UPxKSJDkfO3sAhPgPJmRPNRETG3lTPyqqS44Ar3zvUkXMfb8BSN_pGzdEamewvo4LAvD1mq1Ckyk3NQRtx)/dm/3/xio7e2/s/live-1080@60.m3u8?startdate=2026-06-30T03%3A15%3A46%2B0000#cell=lcf-eu-north-1b' },
-    { id: 'telesur', name: 'TeleSur', url: 'https://mblesmain01.telesur.ultrabase.net/mbliveMain/480p/chunklist.m3u8' },
-    { id: 'canal', name: 'Canal de Prueba', url: 'http://45.173.198.59:8080/hls/nginx3.m3u8' }
+    { id: 'telesur', name: 'TeleSur', url: 'https://mblesmain01.telesur.ultrabase.net/mbliveMain/480p/chunklist.m3u8' }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('pizzatv_favs')) || [];
