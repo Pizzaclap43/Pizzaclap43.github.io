@@ -70,7 +70,8 @@ const simuladaPlaylist = [
     { url: "https://files.catbox.moe/fnzmzp.mp3", duration: 317 },
     { url: "https://files.catbox.moe/czzfa4.mp3", duration: 223 },
     { url: "https://files.catbox.moe/ufd60z.mp3", duration: 194 },
-    { url: "https://files.catbox.moe/dmwjye.mp3", duration: 257 }
+    { url: "https://files.catbox.moe/dmwjye.mp3", duration: 257 },
+    { url: "https://files.catbox.moe/hfsngs.mp3", duration: 978 }
 ];
 const totalDurationSimulada = simuladaPlaylist.reduce((acc, song) => acc + song.duration, 0);
 
