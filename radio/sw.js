@@ -1,5 +1,5 @@
 // Cambiado a v3 para forzar la actualización definitiva
-const CACHE_NAME = 'radio-pizza-v15'; 
+const CACHE_NAME = 'radio-pizza-v16'; 
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
