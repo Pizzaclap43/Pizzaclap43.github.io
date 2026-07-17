@@ -74,7 +74,13 @@ const simuladaPlaylist = [
     { url: "https://files.catbox.moe/fnzmzp.mp3", duration: 317 },
     { url: "https://files.catbox.moe/czzfa4.mp3", duration: 223 },
     { url: "https://files.catbox.moe/ufd60z.mp3", duration: 194 },
-    { url: "https://files.catbox.moe/dmwjye.mp3", duration: 257 }
+    { url: "https://files.catbox.moe/dmwjye.mp3", duration: 257 },
+    // Estamos con Venezuela
+    { url: "https://files.catbox.moe/660gvx.mp3", duration: 2 },
+    // Recuerdos - Porfi Baloa y sus Adolescentes
+    { url: "https://files.catbox.moe/635tph.mp3", duration: 239 },
+    // Terremoto
+    { url: "https://files.catbox.moe/5247lw.mp3", duration: 140 }
 ];
 const totalDurationSimulada = simuladaPlaylist.reduce((acc, song) => acc + song.duration, 0);
 
