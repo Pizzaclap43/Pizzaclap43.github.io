@@ -63,7 +63,8 @@ const stationsData = [
 // Extraje algunos IDs basándome en los nombres que tenías, puedes cambiarlos a gusto
 const simuladaPlaylist = [
     { ytId: "U7zuGB_ZuWM", duration: 157 }, // Voltario - ElmichiYT
-    { ytid: "VZzSBv6tXMw", duration: 233 } // Minero - ElrubiusOMG
+    { ytId: "VZzSBv6tXMw", duration: 233 }, // Minero - ElrubiusOMG
+    { ytId: "wAMZ6KpMGQI", duration: 214 } // Creeper vs. Zombie - ZarcortGame
 ];
 const totalDurationSimulada = simuladaPlaylist.reduce((acc, song) => acc + song.duration, 0);
 
