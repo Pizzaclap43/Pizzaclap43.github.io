@@ -62,6 +62,7 @@ const stationsData = [
 // --- 1.5 DATOS DE LA RADIO SIMULADA (AHORA CON IDs DE YOUTUBE) ---
 // Extraje algunos IDs basándome en los nombres que tenías, puedes cambiarlos a gusto
 const simuladaPlaylist = [
+    { ytId: "usyDbeY-2_w", duration: 266 }, // Himno Nacional de la República Bolivariana de Venezuela
     { ytId: "U7zuGB_ZuWM", duration: 157 }, // Voltario - ElmichiYT
     { ytId: "VZzSBv6tXMw", duration: 233 }, // Minero - ElrubiusOMG
     { ytId: "wAMZ6KpMGQI", duration: 214 }, // Creeper vs. Zombie - ZarcortGame
