@@ -1,5 +1,8 @@
 // --- 1. DATOS DE LAS EMISORAS ---
 const stationsData = [
+    // --- NUESTRA RADIO SIMULADA ---
+    { id: 999, name: "Radio Pizza 24/7 (AutoDJ)", url: "#", isSimulated: true },
+    // --- RESTO DE LAS EMISORAS ---
     { id: 1, name: "Aragueña 99.5 FM", url: "https://cloudstream2036.conectarhosting.com/8060/stream" },
     { id: 2, name: "Positiva 92.7 FM", url: "https://stream-176.zeno.fm/zptsvda6fd0uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ6cHRzdmRhNmZkMHV2IiwiaG9zdCI6InN0cmVhbS0xNzYuemVuby5mbSIsInJ0dGwiOjUsImp0aSI6IjVXdTRybEhVVDBXUktVYnlhY3Z2bUEiLCJpYXQiOjE3ODA4NTQ0NzIsImV4cCI6MTactive8NTUzMn0.9JdBaAuZxxvhE57kpjST6WH_hHdy2-Wl_Q2Gg3vufnA&adtonosListenerId=01HG6CKJKK2N4PESGSQR728VHT&aw_0_req_lsid=a73b93b4a361b1b74689f98df91c7c0c&acu-uid=856841341346&an-uid=9072685044421090607&mm-uid=657a6563-879f-4a00-8364-1f46175de940&dot-uid=09d8220400ff6773733290ac&amb-uid=2654924301368664169&dbm-uid=CAESENpW9w2DvDhRMIuRcx8yRQA&cto-uid=2e3d537f-d45f-4fa1-8c77-abe908bae5f0-6563879e-5645&bsw-uid=e4c56c24-32be-47a2-8015-909eed2c0adb&dyn-uid=2940798897331886011&ttd-uid=f23e4a03-2239-4e97-95f9-9ff58a23724c&triton-uid=cookie%3A25a0b549-c8b9-4b1c-8a70-95e9dfab29ef&adt-uid=cuid_9d23eb64-8c85-11ee-94b0-121a6d1d7927&1779752060716" },
     { id: 3, name: "La Mega 107.3 FM", url: "https://acp4.lorini.net:2050/stream" },
@@ -19,7 +22,7 @@ const stationsData = [
     { id: 17, name: "Hot 94.1 FM", url: "https://acp2.lorini.net:58300/stream" },
     { id: 18, name: "Rumbera Network (Barquisimeto) 106.7 FM", url: "https://stream-178.surfernetwork.com/9sakldmmzc7vv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiI5c2FrbGRtbXpjN3Z2IiwiaG9zdCI6InN0cmVhbS0xNzguc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJyOUozWFZlSVJJT3BJNzA3bmNsN2xRIiwiaWF0IjoxNzgxNTY3NjE2LCJleHAiOjE3ODE1Njc2NzZ9.74y8wNdJ5GUCqEcEGzCLk8HOB1pG-Udtic0YqTRcnQM" },
     { id: 19, name: "Rumbera Network (Barcelona) 94.5 FM", url: "https://server6.globalhostla.com:8012/stream" },
-    { id: 20, name: "Rumbera Network (Maturin) 89.5 FM", url: "https://streaming.rumberamaturin.com/;"},
+    { id: 20, name: "Rumbera Network (Maturin) 89.5 FM", url: "https://streaming.rumberamaturin.com/;" },
     { id: 21, name: "Rumbera Network (Maracaibo) 98.7 FM", url: "https://stream-286.surfernetwork.com/85y72q4wzdfuv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiI4NXk3MnE0d3pkZnV2IiwiaG9zdCI6InN0cmVhbS0yODYuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiIzbk9LY3NzYVFrLTRMZ0xLaGQtblhRIiwiaWF0IjoxNzgxNTcwOTAzLCJleHAiOjE3ODE1NzA5NjN9.ZyOnZL5TtLNdNHJPeqWkEqFLgdCk80XGBUTU9AwSd3w" },
     { id: 22, name: "La Mega (Barcelona) 100.9 FM", url: "https://acp4.lorini.net:10008/stream" },
     { id: 23, name: "Exitos (Barcelona) 95.3 FM", url: "https://acp4.lorini.net:10004/stream" },
@@ -55,6 +58,21 @@ const stationsData = [
     { id: 53, name: "ShowVen Radio 92.9 FM", url: "https://acp2.lorini.net:29004/stream" },
     { id: 54, name: "Radio Miraflores 95.9", url: "https://stream-283.surfernetwork.com/prcs4h7d9k8uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJwcmNzNGg3ZDlrOHV2IiwiaG9zdCI6InN0cmVhbS0yODMuc3VyZmVybmV0d29yay5jb20iLCJ0bSI6ZmFsc2UsInJ0dGwiOjUsImp0aSI6Ims5LTJKOF9tUXJPalNXQWZwMXZJQ3ciLCJpYXQiOjE3ODQyNDgyMjUsImV4cCI6MTc4NDI0ODI4NX0.6l8Z7utvwZCniSAg0dNIR0a7B4JhZ1ZHKR2qGHn350c" }
 ];
+
+// --- 1.5 DATOS DE LA RADIO SIMULADA ---
+// Integrada canción de prueba: Voltario.mp3 (2:37 = 157 segundos)
+const simuladaPlaylist = [
+    { url: "https://elmichiyt.github.io/cdn/music/voltario.mp3", duration: 157 },
+    { url: "https://files.catbox.moe/22xkip.mp3", duration: 233 },
+    { url: "https://files.catbox.moe/9rtcpa.wav", duration: 15 },
+    { url: "https://files.catbox.moe/3rdm9i.mp3", duration: 214 },
+    { url: "https://files.catbox.moe/hh6jav.mp3", duration: 392 },
+    { url: "https://files.catbox.moe/fnzmzp.mp3", duration: 317 },
+    { url: "https://files.catbox.moe/czzfa4.mp3", duration: 223 },
+    { url: "https://files.catbox.moe/ufd60z.mp3", duration: 194 },
+    { url: "https://files.catbox.moe/dmwjye.mp3", duration: 257 }
+];
+const totalDurationSimulada = simuladaPlaylist.reduce((acc, song) => acc + song.duration, 0);
 
 let favorites = JSON.parse(localStorage.getItem('radioPizzaFavs')) || [];
 let currentTab = 'all'; 
@@ -180,24 +198,74 @@ function renderStations() {
             </button>
             <div class="station-icon"><i class="fas fa-broadcast-tower"></i></div>
             <div class="station-name">${station.name}</div>
-            <div style="color: var(--text-muted); font-size: 0.9rem;">${station.name.includes('AM') ? 'AM Radio' : 'FM Radio'}</div>
+            <div style="color: var(--text-muted); font-size: 0.9rem;">${station.name.includes('AM') ? 'AM Radio' : (station.isSimulated ? '24/7 Web Radio' : 'FM Radio')}</div>
         `;
         stationListEl.appendChild(card);
     });
 }
+
+// --- LOGICA DE RADIO SIMULADA ---
+function sintonizarRadioSimulada() {
+    if (simuladaPlaylist.length === 0) return;
+    
+    // Punto de partida exacto solicitado: 17 de Julio de 2026 a las 10:45 AM (Hora de Venezuela UTC-4)
+    const epochFija = new Date("2026-07-17T10:45:00-04:00").getTime();
+    const ahora = Date.now();
+    
+    // Segundos transcurridos (pueden ser negativos si es antes de la hora elegida)
+    const segundosTranscurridos = Math.floor((ahora - epochFija) / 1000);
+    
+    // Modulo matemático que soporta negativos de forma segura
+    let segundoActualEnBucle = segundosTranscurridos % totalDurationSimulada;
+    if (segundoActualEnBucle < 0) {
+        segundoActualEnBucle += totalDurationSimulada;
+    }
+    
+    let tiempoAcumulado = 0;
+    let cancionActual = null;
+    let segundoDeInicio = 0;
+    
+    for (let cancion of simuladaPlaylist) {
+        if (segundoActualEnBucle >= tiempoAcumulado && segundoActualEnBucle < (tiempoAcumulado + cancion.duration)) {
+            cancionActual = cancion;
+            segundoDeInicio = segundoActualEnBucle - tiempoAcumulado;
+            break;
+        }
+        tiempoAcumulado += cancion.duration;
+    }
+    
+    if (cancionActual) {
+        audio.src = cancionActual.url;
+        audio.currentTime = segundoDeInicio;
+        playAudio();
+    }
+}
+
+// Evento clave que detecta cuando termina un track simulado para seguir con el próximo 24/7
+audio.addEventListener('ended', () => {
+    if (currentStation && currentStation.isSimulated) {
+        sintonizarRadioSimulada();
+    }
+});
 
 // --- REPRODUCTOR ---
 function selectStation(station) {
     currentStation = station;
     currentStationNameEl.textContent = station.name;
     
-    // --- NUEVO: Actualiza el título de la pestaña ---
+    // Actualiza el título de la pestaña
     document.title = station.name + " - Radio Pizza 🍕";
     
     playerUI.classList.add('show');
     updatePlayerFavIcon();
-    audio.src = station.url;
-    playAudio();
+
+    // Bifurcación: ¿Es un stream normal o es simulada?
+    if (station.isSimulated) {
+        sintonizarRadioSimulada();
+    } else {
+        audio.src = station.url;
+        playAudio();
+    }
 }
 
 function nextStation() {
@@ -207,7 +275,6 @@ function nextStation() {
     selectStation(currentPlaylist[nextIndex]);
 }
 
-// Corregido bug menor de indexación inversa
 function prevStation() {
     if (!currentStation || currentPlaylist.length === 0) return;
     let currentIndex = currentPlaylist.findIndex(s => s.id === currentStation.id);
@@ -238,7 +305,16 @@ function pauseAudio() {
 
 function togglePlayPause() {
     if (!currentStation) return;
-    isPlaying ? pauseAudio() : playAudio();
+    if (isPlaying) {
+        pauseAudio();
+    } else {
+        // Si el usuario quita la pausa a una radio simulada, la resincronizamos con el "vivo"
+        if (currentStation.isSimulated) {
+            sintonizarRadioSimulada();
+        } else {
+            playAudio();
+        }
+    }
 }
 
 function stopAudio() {
@@ -247,7 +323,7 @@ function stopAudio() {
     playerUI.classList.remove('show');
     currentStation = null;
     
-    // --- NUEVO: Devuelve el título original cuando se detiene ---
+    // Devuelve el título original cuando se detiene
     document.title = "Radio Pizza 🍕";
 }
 
