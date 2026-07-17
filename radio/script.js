@@ -65,7 +65,11 @@ const simuladaPlaylist = [
     { ytId: "U7zuGB_ZuWM", duration: 157 }, // Voltario - ElmichiYT
     { ytId: "VZzSBv6tXMw", duration: 233 }, // Minero - ElrubiusOMG
     { ytId: "wAMZ6KpMGQI", duration: 214 }, // Creeper vs. Zombie - ZarcortGame
-    { ytId: "0k8pxGfKIM8", duration: 193 } // The smiler of darkness - Cat_smiler
+    { ytId: "0k8pxGfKIM8", duration: 193 }, // The smiler of darkness - Cat_smiler
+    { ytId: "9hijZCTu4xk", duration: 257 }, // Undertale AU CatTale: Scratches and destruction - Cat_smiler
+    { ytId: "-EsDu3_Pi20", duration: 222 }, // CatTale: The Dark Test Theme - Cat_smiler
+    { ytId: "4fqrFm-TZxc", duration: 392 }, // Baldi's Basics Plus 0.3.9 [OST MIX] - Cat_smiler
+    { ytId: "qIMPCtLNhis", duration: 316 } // CatTale The Death Of The Hacker [suffering and torment]-[phase 2]
 ];
 const totalDurationSimulada = simuladaPlaylist.reduce((acc, song) => acc + song.duration, 0);
 
