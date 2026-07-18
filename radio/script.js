@@ -69,7 +69,8 @@ const simuladaPlaylist = [
     { ytId: "9hijZCTu4xk", duration: 257 }, // Undertale AU CatTale: Scratches and destruction - Cat_smiler
     { ytId: "-EsDu3_Pi20", duration: 222 }, // CatTale: The Dark Test Theme - Cat_smiler
     { ytId: "4fqrFm-TZxc", duration: 392 }, // Baldi's Basics Plus 0.3.9 [OST MIX] - Cat_smiler
-    { ytId: "qIMPCtLNhis", duration: 316 } // CatTale The Death Of The Hacker [suffering and torment]-[phase 2]
+    { ytId: "qIMPCtLNhis", duration: 316 }, // CatTale The Death Of The Hacker [suffering and torment]-[phase 2]
+    { ytId: "r0olhXjiohw", duration: 341 }, //  TERREMOTO Lo que el gobierno no te dice de Venezuela y la tragedia 💔🇻🇪  - energiapersonal
 ];
 const totalDurationSimulada = simuladaPlaylist.reduce((acc, song) => acc + song.duration, 0);
 
