@@ -57,7 +57,7 @@ const stationsData = [
     { id: 52, name: "Costa de Oro 90.7 FM", url: "https://stream-177.surfernetwork.com/a07x8r77cm8uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJhMDd4OHI3N2NtOHV2IiwiaG9zdCI6InN0cmVhbS0xNzcuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJnQkVmbmlWaFJ3S2JRWmFielR3X0ZnIiwiaWF0IjoxNzg0MDgzNjMyLCJleHAiOjE3ODQwODM2OTJ9.8WS5cj29IAg_Qwtv5w_b28FiHru83LR7Vz5oS7zj6hY" },
     { id: 53, name: "ShowVen Radio 92.9 FM", url: "https://acp2.lorini.net:29004/stream" },
     { id: 54, name: "Radio Miraflores 95.9", url: "https://stream-283.surfernetwork.com/prcs4h7d9k8uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJwcmNzNGg3ZDlrOHV2IiwiaG9zdCI6InN0cmVhbS0yODMuc3VyZmVybmV0d29yay5jb20iLCJ0bSI6ZmFsc2UsInJ0dGwiOjUsImp0aSI6Ims5LTJKOF9tUXJPalNXQWZwMXZJQ3ciLCJpYXQiOjE3ODQyNDgyMjUsImV4cCI6MTc4NDI0ODI4NX0.6l8Z7utvwZCniSAg0dNIR0a7B4JhZ1ZHKR2qGHn350c" },
-    { id: 55, name: "Radio Pizza Acer Aspire One", url: "https://sapircast.caster.fm:11841/n7v8d?token=80155e24ca938196160feadfbc40dcd4" }
+    { id: 55, name: "Radio Pizza Acer Aspire One", url: "https://sapircast.caster.fm:11841/n7v8d?token=3088316f8a363c95dea104b361038d2c" }
 ];
 
 // --- 1.5 DATOS DE LA RADIO SIMULADA (AHORA CON IDs DE YOUTUBE) ---
