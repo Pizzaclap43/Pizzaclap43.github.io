@@ -24,7 +24,9 @@ const channels = [
     { id: 'sportsmaxnews', name: 'Sportsmax News', url: 'https://cdnlive.klicgo.net/sportsmaxnews/live/chunklist_w419857861_DVR.m3u8' },
     { id: 'hrmax', name: 'HR Max', url: 'https://cdnlive.klicgo.net/hrmax/live/chunklist_w713107667.m3u8' },
     { id: 'esportsmax', name: 'Esports Max', url: 'https://cdnlive.klicgo.net/esportsmax/live/chunklist_w1598557418_DVR.m3u8' },
-    { id: 'maxanime', name: 'Max Anime', url: 'https://cdnlive.klicgo.net/maxanime/live/chunklist_w1287894767_DVR.m3u8' }
+    { id: 'maxanime', name: 'Max Anime', url: 'https://cdnlive.klicgo.net/maxanime/live/chunklist_w1287894767_DVR.m3u8' },
+    { id: 'rcnnovelas', name: 'RCN Novelas', url: 'https://cdnlive.klicgo.net/rcnnovelas/live/chunklist_w1582423562.m3u8' },
+    { id: 'mmc', name: 'Mix Music Channel', url: 'https://cdamix.streaming.ws/mixmusic/live/chunklist_w2048390545.m3u8' }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('pizzatv_favs')) || [];
