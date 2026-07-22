@@ -20,7 +20,11 @@ const channels = [
     { id: 'tvo', name: 'Televisora del Oriente', url: 'https://cloud.fastchannel.es/manifiest/hls/prog9/tvo.m3u8' },
     { id: 'ctv', name: 'Catatumbo TV', url: 'https://cloud.fastchannel.es/manifiest/hls/prog9/catatumbotv.m3u8' },
     { id: 'bta', name: 'BTA TV', url: 'https://cloud.fastchannel.es/manifiest/hls/prog9/btatv.m3u8' },
-    { id: 'vepacotv', name: 'Vepaco TV', url: 'https://cloud.fastchannel.es/manifiest/hls/prog9/vepacotv.m3u8' }
+    { id: 'vepacotv', name: 'Vepaco TV', url: 'https://cloud.fastchannel.es/manifiest/hls/prog9/vepacotv.m3u8' },
+    { id: 'sportsmaxnews', name: 'Sportsmax News', url: 'https://cdnlive.klicgo.net/sportsmaxnews/live/chunklist_w419857861_DVR.m3u8' },
+    { id: 'hrmax', name: 'HR Max', url: 'https://cdnlive.klicgo.net/hrmax/live/chunklist_w713107667.m3u8' },
+    { id: 'esportsmax', name: 'Esports Max', url: 'https://cdnlive.klicgo.net/esportsmax/live/chunklist_w1598557418_DVR.m3u8' },
+    { id: 'maxanime', name: 'Max Anime', url: 'https://cdnlive.klicgo.net/maxanime/live/chunklist_w1287894767_DVR.m3u8' }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('pizzatv_favs')) || [];
