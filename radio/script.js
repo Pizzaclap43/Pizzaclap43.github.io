@@ -3,7 +3,7 @@ const stationsData = [
     // --- NUESTRA RADIO SIMULADA ---
     { id: 999, name: "Radio Pizza 24/7 (AutoDJ)", url: "#", isSimulated: true },
     // --- RESTO DE LAS EMISORAS (Intactas) ---
-    { id: 55, name: "Radio Pizza Acer Aspire One", url: "https://pizza-proxy.adibabouakar.workers.dev/http://s49.myradiostream.com:8150/" },
+    { id: 55, name: "Radio Pizza Acer Aspire One", url: "https://pizza-proxy.adibabouakar.workers.dev/http://46.250.240.250:8150/;?UmqNYgBPnIofYv2znc9QcRPNlZJjHIusRjR6qeHAhkz6aJcI" },
     { id: 1, name: "Aragueña 99.5 FM", url: "https://cloudstream2036.conectarhosting.com/8060/stream" },
     { id: 2, name: "Positiva 92.7 FM", url: "https://stream-176.zeno.fm/zptsvda6fd0uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ6cHRzdmRhNmZkMHV2IiwiaG9zdCI6InN0cmVhbS0xNzYuemVuby5mbSIsInJ0dGwiOjUsImp0aSI6IjVXdTRybEhVVDBXUktVYnlhY3Z2bUEiLCJpYXQiOjE3ODA4NTQ0NzIsImV4cCI6MTactive8NTUzMn0.9JdBaAuZxxvhE57kpjST6WH_hHdy2-Wl_Q2Gg3vufnA&adtonosListenerId=01HG6CKJKK2N4PESGSQR728VHT&aw_0_req_lsid=a73b93b4a361b1b74689f98df91c7c0c&acu-uid=856841341346&an-uid=9072685044421090607&mm-uid=657a6563-879f-4a00-8364-1f46175de940&dot-uid=09d8220400ff6773733290ac&amb-uid=2654924301368664169&dbm-uid=CAESENpW9w2DvDhRMIuRcx8yRQA&cto-uid=2e3d537f-d45f-4fa1-8c77-abe908bae5f0-6563879e-5645&bsw-uid=e4c56c24-32be-47a2-8015-909eed2c0adb&dyn-uid=2940798897331886011&ttd-uid=f23e4a03-2239-4e97-95f9-9ff58a23724c&triton-uid=cookie%3A25a0b549-c8b9-4b1c-8a70-95e9dfab29ef&adt-uid=cuid_9d23eb64-8c85-11ee-94b0-121a6d1d7927&1779752060716" },
     { id: 3, name: "La Mega 107.3 FM", url: "https://acp4.lorini.net:2050/stream" },
