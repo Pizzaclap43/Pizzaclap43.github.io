@@ -3,6 +3,7 @@ const stationsData = [
     // --- NUESTRA RADIO SIMULADA ---
     { id: 999, name: "Radio Pizza 24/7 (AutoDJ)", url: "#", isSimulated: true },
     // --- RESTO DE LAS EMISORAS (Intactas) ---
+    { id: 55, name: "Radio Pizza Acer Aspire One", url: "https://pizza-proxy.adibabouakar.workers.dev/http://s49.myradiostream.com:8150/" },
     { id: 1, name: "Aragueña 99.5 FM", url: "https://cloudstream2036.conectarhosting.com/8060/stream" },
     { id: 2, name: "Positiva 92.7 FM", url: "https://stream-176.zeno.fm/zptsvda6fd0uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ6cHRzdmRhNmZkMHV2IiwiaG9zdCI6InN0cmVhbS0xNzYuemVuby5mbSIsInJ0dGwiOjUsImp0aSI6IjVXdTRybEhVVDBXUktVYnlhY3Z2bUEiLCJpYXQiOjE3ODA4NTQ0NzIsImV4cCI6MTactive8NTUzMn0.9JdBaAuZxxvhE57kpjST6WH_hHdy2-Wl_Q2Gg3vufnA&adtonosListenerId=01HG6CKJKK2N4PESGSQR728VHT&aw_0_req_lsid=a73b93b4a361b1b74689f98df91c7c0c&acu-uid=856841341346&an-uid=9072685044421090607&mm-uid=657a6563-879f-4a00-8364-1f46175de940&dot-uid=09d8220400ff6773733290ac&amb-uid=2654924301368664169&dbm-uid=CAESENpW9w2DvDhRMIuRcx8yRQA&cto-uid=2e3d537f-d45f-4fa1-8c77-abe908bae5f0-6563879e-5645&bsw-uid=e4c56c24-32be-47a2-8015-909eed2c0adb&dyn-uid=2940798897331886011&ttd-uid=f23e4a03-2239-4e97-95f9-9ff58a23724c&triton-uid=cookie%3A25a0b549-c8b9-4b1c-8a70-95e9dfab29ef&adt-uid=cuid_9d23eb64-8c85-11ee-94b0-121a6d1d7927&1779752060716" },
     { id: 3, name: "La Mega 107.3 FM", url: "https://acp4.lorini.net:2050/stream" },
@@ -56,8 +57,7 @@ const stationsData = [
     { id: 51, name: "Caliente 103.3 FM", url: "https://stream-179.surfernetwork.com/yc81fn5wgm8uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ5YzgxZm41d2dtOHV2IiwiaG9zdCI6InN0cmVhbS0xNzkuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJhUnJ6MUlwMlFXV2FwNnZ4Ni1MZnJRIiwiaWF0IjoxNzg0MDgzNTA1LCJleHAiOjE3ODQwODM1NjV9.qIor6GBMGJOtp0WptFDI85zdTxn-B6Xo_n1ogoYCAnI" },
     { id: 52, name: "Costa de Oro 90.7 FM", url: "https://stream-177.surfernetwork.com/a07x8r77cm8uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJhMDd4OHI3N2NtOHV2IiwiaG9zdCI6InN0cmVhbS0xNzcuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJnQkVmbmlWaFJ3S2JRWmFielR3X0ZnIiwiaWF0IjoxNzg0MDgzNjMyLCJleHAiOjE3ODQwODM2OTJ9.8WS5cj29IAg_Qwtv5w_b28FiHru83LR7Vz5oS7zj6hY" },
     { id: 53, name: "ShowVen Radio 92.9 FM", url: "https://acp2.lorini.net:29004/stream" },
-    { id: 54, name: "Radio Miraflores 95.9", url: "https://stream-283.surfernetwork.com/prcs4h7d9k8uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJwcmNzNGg3ZDlrOHV2IiwiaG9zdCI6InN0cmVhbS0yODMuc3VyZmVybmV0d29yay5jb20iLCJ0bSI6ZmFsc2UsInJ0dGwiOjUsImp0aSI6Ims5LTJKOF9tUXJPalNXQWZwMXZJQ3ciLCJpYXQiOjE3ODQyNDgyMjUsImV4cCI6MTc4NDI0ODI4NX0.6l8Z7utvwZCniSAg0dNIR0a7B4JhZ1ZHKR2qGHn350c" },
-    { id: 55, name: "Radio Pizza Acer Aspire One", url: "https://sapircast.caster.fm:11841/n7v8d?token=3088316f8a363c95dea104b361038d2c" }
+    { id: 54, name: "Radio Miraflores 95.9", url: "https://stream-283.surfernetwork.com/prcs4h7d9k8uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJwcmNzNGg3ZDlrOHV2IiwiaG9zdCI6InN0cmVhbS0yODMuc3VyZmVybmV0d29yay5jb20iLCJ0bSI6ZmFsc2UsInJ0dGwiOjUsImp0aSI6Ims5LTJKOF9tUXJPalNXQWZwMXZJQ3ciLCJpYXQiOjE3ODQyNDgyMjUsImV4cCI6MTc4NDI0ODI4NX0.6l8Z7utvwZCniSAg0dNIR0a7B4JhZ1ZHKR2qGHn350c" }
 ];
 
 // --- 1.5 DATOS DE LA RADIO SIMULADA (AHORA CON IDs DE YOUTUBE) ---
