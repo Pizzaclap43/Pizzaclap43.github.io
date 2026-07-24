@@ -5,7 +5,7 @@ const channels = [
     { id: 'venevision', name: 'Venevision', url: 'https://venevision-blocked-cdn.encoders.immergo.tv/3/streamPlaylist.m3u8' },
     { id: 'canali', name: 'Canal I', url: 'https://streaming.canal-i.com/canal-i/live/primary/1080.m3u8', audioUrl: 'https://streaming.canal-i.com/canal-i/live/primary/audio.m3u8' },
     { id: 'valetv', name: 'Vale TV', url: 'https://59d39900ebfb8.streamlock.net/valetv_480/valetv_480/chunklist_w73698158.m3u8' },
-    { id: 'un24', name: 'UN240', url: 'https://59d39900ebfb8.streamlock.net/untv-720/untv-720/chunklist_w285532314.m3u8' },
+    { id: 'un24', name: 'UN24', url: 'https://59d39900ebfb8.streamlock.net/untv-720/untv-720/chunklist_w285532314.m3u8' },
     { id: 'tvs', name: 'TVS Maracay', url: 'https://vcp10.myplaytv.com/tvs/tvs/chunklist_w188594279.m3u8' },
     { id: 'trv', name: 'TRV Maracay', url: 'https://streaming5.globalhostla.com/rtplive/trvnetve/chunklist_w1585023675.m3u8' },
     { id: 'latinanoticias', name: 'Latina Noticias', url: 'https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latinanoticias/latinanoticias.smil/playlist.m3u8?did=r1us539206592f9464dfc502f675a1611d0374450d96c&ndvc=0' },
