@@ -44,6 +44,7 @@ const searchBar = document.getElementById('search-bar');
 const tvPlayer = document.getElementById('tv-player');
 const nowPlaying = document.getElementById('now-playing');
 const backBtn = document.getElementById('back-btn');
+const qualitySelector = document.getElementById('quality-selector'); // Referencia al nuevo botón
 
 // --- MOTOR DE SINCRONIZACIÓN ULTRA-PRECISO ---
 tvPlayer.addEventListener('play', () => { if (hasSeparateAudio) tvAudio.play().catch(() => {}); });
@@ -129,7 +130,30 @@ window.playChannel = function(id) {
         hlsInstance = new Hls();
         hlsInstance.loadSource(finalUrl);
         hlsInstance.attachMedia(tvPlayer);
-        hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => tvPlayer.play());
+        
+        // Lógica de carga y extracción de calidades
+        hlsInstance.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+            tvPlayer.play();
+            
+            // Limpiar las opciones anteriores
+            qualitySelector.innerHTML = '<option value="-1">Automático</option>';
+            
+            const levels = data.levels;
+            
+            // Si hay más de una calidad disponible, armamos el menú
+            if (levels && levels.length > 1) {
+                levels.forEach((level, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.text = level.height + 'p'; 
+                    qualitySelector.appendChild(option);
+                });
+                qualitySelector.style.display = 'inline-block';
+            } else {
+                // Si solo hay una calidad, ocultamos el botón
+                qualitySelector.style.display = 'none';
+            }
+        });
 
         // Cargar Audio secundario si existe
         if (hasSeparateAudio) {
@@ -167,10 +191,18 @@ backBtn.onclick = () => {
     tvPlayer.pause();
     tvAudio.pause();
     hasSeparateAudio = false;
+    qualitySelector.style.display = 'none'; // Ocultar el selector al salir
     
     if (hlsInstance) hlsInstance.destroy();
     if (hlsAudioInstance) hlsAudioInstance.destroy();
 };
+
+// Evento para cambiar la calidad cuando el usuario selecciona una opción
+qualitySelector.addEventListener('change', (e) => {
+    if (hlsInstance) {
+        hlsInstance.currentLevel = parseInt(e.target.value);
+    }
+});
 
 searchBar.addEventListener('input', (e) => renderChannels(e.target.value));
 renderChannels();
