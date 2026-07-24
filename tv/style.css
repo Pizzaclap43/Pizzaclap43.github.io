@@ -135,3 +135,67 @@ video {
     max-height: 80vh;
     outline: none;
 }
+
+/* --- AJUSTES PARA DISPOSITIVOS MÓVILES --- */
+@media (max-width: 768px) {
+    header {
+        padding: 15px 10px;
+    }
+
+    main {
+        padding: 10px;
+    }
+
+    /* Redimensionar las tarjetas para que quepan mejor en pantallas angostas */
+    .channel-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 10px;
+    }
+
+    .channel-card {
+        padding: 15px 10px;
+        flex-direction: column; /* Apila el nombre y la estrella de favorito */
+        text-align: center;
+        gap: 10px;
+    }
+
+    .channel-name {
+        font-size: 16px;
+    }
+
+    /* Ajustes del reproductor para evitar que los controles se salgan de la pantalla */
+    #player-view {
+        padding: 10px;
+        height: 100%;
+        min-height: 100vh;
+    }
+
+    .player-header {
+        flex-direction: column; /* Apila el botón de regresar, título y selector de calidad */
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    #now-playing {
+        font-size: 18px;
+        text-align: center;
+        margin: 0;
+    }
+
+    #back-btn, #quality-selector {
+        width: 100%; /* Botones ocupan todo el ancho para ser fáciles de tocar */
+        margin: 0;
+        padding: 12px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+
+    .video-container {
+        border-radius: 5px;
+    }
+
+    video {
+        max-height: 60vh; /* Previene que el video empuje los controles fuera de la vista en modo vertical */
+        aspect-ratio: 16 / 9; /* Mantiene la proporción clásica de TV */
+    }
+}
