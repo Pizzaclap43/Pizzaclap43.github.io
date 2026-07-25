@@ -1,0 +1,20 @@
+{
+  "name": "Pizza TV",
+  "short_name": "Pizza TV",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#ff4757",
+  "icons": [
+    {
+      "src": "tv.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "tv.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
