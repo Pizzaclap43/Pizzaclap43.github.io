@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reproductor IPTV Web</title>
+    <!-- Importamos la librería HLS.js para poder reproducir enlaces .m3u8 -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --panel-bg: #1e1e1e;
+            --text-color: #ffffff;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .player-section {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            background-color: #000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: object-fit 0.2s;
+        }
+
+        /* Clases para Relación de Aspecto */
+        .ratio-contain { object-fit: contain; }
+        .ratio-fill { object-fit: fill; }
+        .ratio-cover { object-fit: cover; }
+        .ratio-16-9 { aspect-ratio: 16 / 9; object-fit: cover; }
+        .ratio-4-3 { aspect-ratio: 4 / 3; object-fit: contain; }
+
+        .controls-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            background-color: var(--panel-bg);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .control-group label {
+            font-size: 0.85em;
+            color: #aaa;
+        }
+
+        .playlist-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--panel-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background: #2a2a2a;
+            color: white;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            transition: background 0.2s;
+        }
+
+        .btn-add { background-color: var(--primary); }
+        .btn-add:hover { background-color: var(--primary-hover); }
+        
+        .channel-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .channel-item {
+            background: #2a2a2a;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .channel-info {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        
+        .channel-name { font-weight: bold; }
+        .channel-url { font-size: 0.8em; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .btn-play { background-color: var(--success); margin-right: 5px; padding: 8px 12px;}
+        .btn-del { background-color: var(--danger); padding: 8px 12px;}
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--panel-bg); }
+        ::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="player-section">
+        <h2 id="now-playing">Reproductor IPTV</h2>
+        <video id="video" class="ratio-contain" controls autoplay></video>
+        
+        <!-- Barra de Controles Extra (Calidad y Aspecto) -->
+        <div class="controls-bar">
+            <div class="control-group">
+                <label for="qualitySelect">Calidad de Video:</label>
+                <select id="qualitySelect" onchange="changeQuality(this.value)">
+                    <option value="-1">Automático</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="aspectSelect">Relación de Aspecto:</label>
+                <select id="aspectSelect" onchange="changeAspectRatio(this.value)">
+                    <option value="ratio-contain">Por defecto (Contain)</option>
+                    <option value="ratio-16-9">16:9 Forzado</option>
+                    <option value="ratio-4-3">4:3 Forzado</option>
+                    <option value="ratio-fill">Estirar (Fill)</option>
+                    <option value="ratio-cover">Recortar (Cover)</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="playlist-section">
+        <h3>Añadir Canal</h3>
+        <div class="form-group">
+            <input type="text" id="channelName" placeholder="Nombre del canal (Ej: TV Pública)">
+            <input type="text" id="channelUrl" placeholder="URL .m3u8 (Ej: http://...)">
+            <button class="btn-add" onclick="addChannel()">Guardar Canal</button>
+        </div>
+
+        <h3>Tus Canales</h3>
+        <ul class="channel-list" id="channelList">
+            <!-- Los canales se cargarán aquí -->
+        </ul>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const nowPlayingText = document.getElementById('now-playing');
+        const qualitySelect = document.getElementById('qualitySelect');
+        let hls = null;
+
+        // Función para reproducir un enlace .m3u8
+        function playStream(url, name) {
+            nowPlayingText.innerText = "Reproduciendo: " + name;
+
+            if (Hls.isSupported()) {
+                if (hls) {
+                    hls.destroy(); // Destruimos la instancia anterior si existe
+                }
+                hls = new Hls();
+                hls.loadSource(url);
+                hls.attachMedia(video);
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play();
+                    populateQualities();
+                });
+            } 
+            // Soporte nativo para Safari
+            else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = url;
+                video.addEventListener('loadedmetadata', function() {
+                    video.play();
+                });
+                qualitySelect.innerHTML = '<option value="-1">No soportado (Nativo)</option>';
+            } else {
+                alert("Tu navegador no soporta la reproducción de este formato.");
+            }
+        }
+
+        // Poblar el selector de calidades basadas en el manifiesto HLS
+        function populateQualities() {
+            qualitySelect.innerHTML = '<option value="-1">Automático</option>';
+            if (hls && hls.levels) {
+                hls.levels.forEach((level, index) => {
+                    let resolution = level.height ? `${level.height}p` : `Calidad ${index + 1}`;
+                    let bitrate = level.bitrate ? ` (${Math.round(level.bitrate / 1024)} kbps)` : '';
+                    let option = document.createElement('option');
+                    option.value = index;
+                    option.text = resolution + bitrate;
+                    qualitySelect.appendChild(option);
+                });
+            }
+        }
+
+        // Cambiar calidad de video
+        function changeQuality(levelIndex) {
+            if (hls) {
+                hls.currentLevel = parseInt(levelIndex);
+            }
+        }
+
+        // Cambiar relación de aspecto
+        function changeAspectRatio(className) {
+            video.className = className;
+        }
+
+        // Manejo de almacenamiento local (LocalStorage)
+        let channels = JSON.parse(localStorage.getItem('iptvChannels')) || [
+            { name: "Canal de Prueba (ESPORTS MAX)", url: "https://cdnlive.klicgo.net/esportsmax/live/chunklist_w1598557418_DVR.m3u8" },
+            { name: "Canal de Prueba (MAX ANIME)", url: "https://cdnlive.klicgo.net/maxanime/live/chunklist_w1287894767_DVR.m3u8" }
+        ];
+
+        function saveToStorage() {
+            localStorage.setItem('iptvChannels', JSON.stringify(channels));
+        }
+
+        function renderChannels() {
+            const list = document.getElementById('channelList');
+            list.innerHTML = ''; // Limpiar lista
+
+            channels.forEach((channel, index) => {
+                const li = document.createElement('li');
+                li.className = 'channel-item';
+                
+                li.innerHTML = `
+                    <div class="channel-info">
+                        <div class="channel-name">${channel.name}</div>
+                        <div class="channel-url">${channel.url}</div>
+                    </div>
+                    <div>
+                        <button class="btn-play" onclick="playStream('${channel.url}', '${channel.name}')">▶</button>
+                        <button class="btn-del" onclick="deleteChannel(${index})">🗑</button>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function addChannel() {
+            const name = document.getElementById('channelName').value;
+            const url = document.getElementById('channelUrl',).value;
+
+            if (name.trim() === '' || url.trim() === '') {
+                alert('Por favor, completa ambos campos.');
+                return;
+            }
+
+            channels.push({ name: name, url: url });
+            saveToStorage();
+            renderChannels();
+
+            document.getElementById('channelName').value = '';
+            document.getElementById('channelUrl').value = '';
+        }
+
+        function deleteChannel(index) {
+            if(confirm('¿Estás seguro de que deseas eliminar este canal?')) {
+                channels.splice(index, 1);
+                saveToStorage();
+                renderChannels();
+            }
+        }
+
+        // Cargar los canales al iniciar la página
+        renderChannels();
+    </script>
+</body>
+</html>
