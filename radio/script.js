@@ -58,7 +58,8 @@ const stationsData = [
     { id: 52, name: "Costa de Oro 90.7 FM", url: "https://stream-177.surfernetwork.com/a07x8r77cm8uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJhMDd4OHI3N2NtOHV2IiwiaG9zdCI6InN0cmVhbS0xNzcuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJnQkVmbmlWaFJ3S2JRWmFielR3X0ZnIiwiaWF0IjoxNzg0MDgzNjMyLCJleHAiOjE3ODQwODM2OTJ9.8WS5cj29IAg_Qwtv5w_b28FiHru83LR7Vz5oS7zj6hY" },
     { id: 53, name: "ShowVen Radio 92.9 FM", url: "https://acp2.lorini.net:29004/stream" },
     { id: 54, name: "Radio Miraflores 95.9", url: "https://stream-283.surfernetwork.com/prcs4h7d9k8uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJwcmNzNGg3ZDlrOHV2IiwiaG9zdCI6InN0cmVhbS0yODMuc3VyZmVybmV0d29yay5jb20iLCJ0bSI6ZmFsc2UsInJ0dGwiOjUsImp0aSI6Ims5LTJKOF9tUXJPalNXQWZwMXZJQ3ciLCJpYXQiOjE3ODQyNDgyMjUsImV4cCI6MTc4NDI0ODI4NX0.6l8Z7utvwZCniSAg0dNIR0a7B4JhZ1ZHKR2qGHn350c" },
-    { id: 56, name: "VPI Radio", url: "https://stream-177.surfernetwork.com/m7p2rebhs7zuv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJtN3AycmViaHM3enV2IiwiaG9zdCI6InN0cmVhbS0xNzcuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJTa1g0c3VYQVRyV05FamE5LW1paTVnIiwiaWF0IjoxNzg0OTI0NDA5LCJleHAiOjE3ODQ5MjQ0Njl9.25I5eWi6xfDmborVVNq1GpUDintSorK26Wa-gqoHklw" }
+    { id: 56, name: "VPI Radio", url: "https://stream-177.surfernetwork.com/m7p2rebhs7zuv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJtN3AycmViaHM3enV2IiwiaG9zdCI6InN0cmVhbS0xNzcuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJTa1g0c3VYQVRyV05FamE5LW1paTVnIiwiaWF0IjoxNzg0OTI0NDA5LCJleHAiOjE3ODQ5MjQ0Njl9.25I5eWi6xfDmborVVNq1GpUDintSorK26Wa-gqoHklw" },
+    { id: 57, name: "Altos 107.1 FM", url: "https://acp2.lorini.net:28010/stream" }
 ];
 
 // --- 1.5 DATOS DE LA RADIO SIMULADA (AHORA CON IDs DE YOUTUBE) ---
