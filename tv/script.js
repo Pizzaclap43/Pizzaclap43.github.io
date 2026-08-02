@@ -8,6 +8,7 @@ const channels = [
     { id: 'meridiano', name: 'Meridiano TV', url: 'https://geo.dailymotion.com/player.html?video=x9sxu9y', isIframe: true },
     { id: 'globovision', name: 'Globovision', url: 'https://geo.dailymotion.com/player.html?video=xio7e2', isIframe: true },
     { id: 'tlt', name: 'La Tele Tuya', url: 'https://geo.dailymotion.com/player.html?video=x8z1lwk', isIframe: true },
+    { id: 'tves', name: 'Tves', url: 'https://ok.ru/videoembed/14909080673812?nochat=1', isIframe: true },
     { id: 'valetv', name: 'Vale TV', url: 'https://59d39900ebfb8.streamlock.net/valetv_480/valetv_480/chunklist_w73698158.m3u8' },
     { id: 'un24', name: 'UN24', url: 'https://59d39900ebfb8.streamlock.net/untv-720/untv-720/chunklist_w285532314.m3u8' },
     { id: 'tvs', name: 'TVS Maracay', url: 'https://vcp10.myplaytv.com/tvs/tvs/chunklist_w188594279.m3u8' },
