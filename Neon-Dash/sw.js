@@ -6,7 +6,8 @@ const assets = [
   './favicon.png',
   './coin.wav', 
   './hit.wav',
-  './death.wav'
+  './death.wav',
+  './verisimilitude.mp3'
 ];
 
 self.addEventListener('install', event => {

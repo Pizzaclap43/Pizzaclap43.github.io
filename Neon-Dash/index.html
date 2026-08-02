@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -294,8 +293,6 @@
             let name = user ? user.displayName : (localStorage.getItem("neonDashPlayerName") || "Invitado");
             if (!name || name.trim() === "") { name = "Pizzaclap43_Player"; }
             const status = document.getElementById('status-msg');
-            // Para usuarios no autenticados, el ID es estable basado en nombre (no timestamp)
-            // para evitar duplicados en el leaderboard global.
             const userId = user ? user.uid : "guest_" + name.toLowerCase().replace(/\s+/g, '_');
             try {
                 status.innerText = "REVISANDO RÉCORD...";
@@ -333,11 +330,14 @@
         const coinSound = new Audio('./coin.wav');
         const hitSound = new Audio('./hit.wav');
         const deathSound = new Audio('./death.wav');
-        
+        const bgMusic = new Audio('./verisimilitude.mp3'); // MÚSICA DE FONDO (Reemplaza './music.mp3' con la ruta de tu archivo de música real)
+        bgMusic.loop = true;
+
         function applyAudioVolumes(val) { 
             coinSound.volume = val; 
             hitSound.volume = val; 
-            deathSound.volume = val; 
+            deathSound.volume = val;
+            bgMusic.volume = val * 0.5; // La música de fondo se ajusta proporcionalmente al volumen general del slider (50% de la configuración)
         }
         
         applyAudioVolumes(gameSettings.volume);
@@ -388,6 +388,10 @@
             
             coinSound.play().then(() => { coinSound.pause(); coinSound.currentTime = 0; });
             
+            // REPRODUCE LA MÚSICA DESDE EL PRINCIPIO A 50% DE VOLUMEN TOTAL (basado en el valor inicial o el slider)
+            bgMusic.currentTime = 0;
+            bgMusic.play().catch(err => console.log("Interacción de usuario requerida para reproducir audio", err));
+
             const allMenus = document.querySelectorAll('.menu-layer');
             allMenus.forEach(menu => {
                 menu.classList.remove('active');
@@ -491,6 +495,10 @@
         }
 
         function showGameOver() {
+            // DETIENE Y RESETEA LA MÚSICA CUANDO EL JUGADOR SE QUEDA SIN VIDAS
+            bgMusic.pause();
+            bgMusic.currentTime = 0;
+
             let record = parseInt(localStorage.getItem("neonDashHighScore")) || 0;
             if (score > record) localStorage.setItem("neonDashHighScore", score);
             document.getElementById("final-score-val").innerText = score;
@@ -531,8 +539,6 @@
                 t.classList.add('active'); 
                 t.style.display = 'flex'; 
             } else { 
-                // Al quitar un menú (como el de Game Over), ocultamos el wrapper del juego
-                // y mostramos el menú de inicio
                 gameActive = false;
                 if(animationId) cancelAnimationFrame(animationId);
                 gameWrapper.style.display = "none";
