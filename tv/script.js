@@ -4,6 +4,13 @@ const PROXY_URL = 'https://pizza-proxy.adibabouakar.workers.dev/?url=';
 const channels = [
     { id: 'venevision', name: 'Venevision', url: 'https://venevision-blocked-cdn.encoders.immergo.tv/3/streamPlaylist.m3u8' },
     { id: 'canali', name: 'Canal I', url: 'https://streaming.canal-i.com/canal-i/live/primary/1080.m3u8', audioUrl: 'https://streaming.canal-i.com/canal-i/live/primary/audio.m3u8' },
+    
+    // --- NUEVOS CANALES POR IFRAME ---
+    { id: 'vtv', name: 'VTV', url: 'https://geo.dailymotion.com/player.html?video=x930kre', isIframe: true },
+    { id: 'meridiano', name: 'Meridiano TV', url: 'https://geo.dailymotion.com/player.html?video=x9sxu9y', isIframe: true },
+    { id: 'globovision', name: 'Globovision', url: 'https://geo.dailymotion.com/player.html?video=xio7e2', isIframe: true },
+    // ---------------------------------
+
     { id: 'valetv', name: 'Vale TV', url: 'https://59d39900ebfb8.streamlock.net/valetv_480/valetv_480/chunklist_w73698158.m3u8' },
     { id: 'un24', name: 'UN24', url: 'https://59d39900ebfb8.streamlock.net/untv-720/untv-720/chunklist_w285532314.m3u8' },
     { id: 'tvs', name: 'TVS Maracay', url: 'https://vcp10.myplaytv.com/tvs/tvs/chunklist_w188594279.m3u8' },
@@ -44,7 +51,7 @@ const searchBar = document.getElementById('search-bar');
 const tvPlayer = document.getElementById('tv-player');
 const nowPlaying = document.getElementById('now-playing');
 const backBtn = document.getElementById('back-btn');
-const qualitySelector = document.getElementById('quality-selector'); // Referencia al nuevo botón
+const qualitySelector = document.getElementById('quality-selector'); 
 
 // --- MOTOR DE SINCRONIZACIÓN ULTRA-PRECISO ---
 tvPlayer.addEventListener('play', () => { if (hasSeparateAudio) tvAudio.play().catch(() => {}); });
@@ -112,15 +119,43 @@ window.playChannel = function(id) {
     playerView.style.display = 'flex';
     nowPlaying.innerText = `📺 ${channel.name}`;
 
-    // AHORA SÍ: Usamos el proxy para cualquier enlace HTTP y para servidores de Dailymotion (dmcdn.net)
-    const finalUrl = (channel.url.includes('dmcdn.net') || channel.url.startsWith('http://')) ? PROXY_URL + encodeURIComponent(channel.url) : channel.url;
-
-    // Resetear estados de audio anteriores
+    // Resetear estados de audio/video anteriores
+    tvPlayer.pause();
     tvAudio.pause();
     tvAudio.src = '';
+    if (hlsInstance) hlsInstance.destroy();
     if (hlsAudioInstance) hlsAudioInstance.destroy();
-    
-    // Activar o desactivar el motor de sincronización según el canal elegido
+
+    // 1. Limpiar cualquier iframe anterior
+    let oldIframe = document.getElementById('dm-iframe');
+    if (oldIframe) oldIframe.remove();
+
+    // 2. Lógica para canales insertados por Iframe (Dailymotion)
+    if (channel.isIframe) {
+        tvPlayer.style.display = 'none'; // Ocultamos el reproductor de video nativo
+        qualitySelector.style.display = 'none';
+        hasSeparateAudio = false;
+
+        // Inyectamos el iframe dinámicamente
+        const iframe = document.createElement('iframe');
+        iframe.id = 'dm-iframe';
+        iframe.src = channel.url;
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.setAttribute('allow', 'web-share');
+        
+        document.querySelector('.video-container').appendChild(iframe);
+        return; // Detenemos la ejecución aquí para no lanzar HLS.js
+    } else {
+        tvPlayer.style.display = ''; // Restauramos el reproductor nativo
+    }
+
+
+    // 3. Lógica original para canales HLS (M3U8)
+    // Usamos el proxy para cualquier enlace HTTP y para servidores de Dailymotion (dmcdn.net)
+    const finalUrl = (channel.url.includes('dmcdn.net') || channel.url.startsWith('http://')) ? PROXY_URL + encodeURIComponent(channel.url) : channel.url;
     hasSeparateAudio = !!channel.audioUrl;
 
     if (Hls.isSupported()) {
@@ -191,10 +226,17 @@ backBtn.onclick = () => {
     tvPlayer.pause();
     tvAudio.pause();
     hasSeparateAudio = false;
-    qualitySelector.style.display = 'none'; // Ocultar el selector al salir
+    qualitySelector.style.display = 'none'; 
     
     if (hlsInstance) hlsInstance.destroy();
     if (hlsAudioInstance) hlsAudioInstance.destroy();
+
+    // Limpiamos el iframe al salir del reproductor para evitar que el audio siga sonando
+    let oldIframe = document.getElementById('dm-iframe');
+    if (oldIframe) {
+        oldIframe.src = '';
+        oldIframe.remove();
+    }
 };
 
 // Evento para cambiar la calidad cuando el usuario selecciona una opción
