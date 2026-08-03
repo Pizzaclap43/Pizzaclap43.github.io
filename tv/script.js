@@ -2,6 +2,7 @@
 const PROXY_URL = 'https://pizza-proxy.adibabouakar.workers.dev/?url=';
 
 const channels = [
+    { id: 'pizzatv', name: '🍕 Pizza TV 24/7', url: 'https://www.youtube.com/embed/videoseries?list=PL-jhD1_bQZq3BevkaUfRd-U9HpQCf0Il2&autoplay=1&loop=1&rel=0', isIframe: true },
     { id: 'venevision', name: 'Venevision', url: 'https://venevision-blocked-cdn.encoders.immergo.tv/3/streamPlaylist.m3u8' },
     { id: 'canali', name: 'Canal I', url: 'https://streaming.canal-i.com/canal-i/live/primary/1080.m3u8', audioUrl: 'https://streaming.canal-i.com/canal-i/live/primary/audio.m3u8' },
     { id: 'vtv', name: 'VTV', url: 'https://geo.dailymotion.com/player.html?video=x930kre', isIframe: true },
@@ -128,7 +129,7 @@ window.playChannel = function(id) {
     let oldIframe = document.getElementById('dm-iframe');
     if (oldIframe) oldIframe.remove();
 
-    // 2. Lógica para canales insertados por Iframe (Dailymotion)
+    // 2. Lógica para canales insertados por Iframe (Dailymotion / YouTube)
     if (channel.isIframe) {
         tvPlayer.style.display = 'none'; // Ocultamos el reproductor de video nativo
         qualitySelector.style.display = 'none';
@@ -141,8 +142,10 @@ window.playChannel = function(id) {
         iframe.style.width = '100%';
         iframe.style.height = '100%';
         iframe.style.border = 'none';
-        iframe.setAttribute('allowfullscreen', '');
-        iframe.setAttribute('allow', 'web-share');
+        
+        // Atributos de permisos ajustados para soportar YouTube Autoplay
+        iframe.setAttribute('allowfullscreen', 'true');
+        iframe.setAttribute('allow', 'autoplay; encrypted-media; web-share; fullscreen; picture-in-picture');
         
         document.querySelector('.video-container').appendChild(iframe);
         return; // Detenemos la ejecución aquí para no lanzar HLS.js
