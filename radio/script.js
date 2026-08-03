@@ -74,7 +74,7 @@ const simuladaPlaylist = [
     { ytId: "-EsDu3_Pi20", duration: 222 }, // CatTale: The Dark Test Theme - Cat_smiler
     { ytId: "4fqrFm-TZxc", duration: 392 }, // Baldi's Basics Plus 0.3.9 [OST MIX] - Cat_smiler
     { ytId: "qIMPCtLNhis", duration: 316 }, // CatTale The Death Of The Hacker [suffering and torment]-[phase 2]
-    { ytId: "Nx2ZyKJX-Ww", duration: 444 }, // CatTale The Death Of The Hacker [suffering and torment]-[v3] 
+    { ytId: "Nx2ZyKJX-Ww", duration: 444 } // CatTale The Death Of The Hacker [suffering and torment]-[v3] 
 ];
 const totalDurationSimulada = simuladaPlaylist.reduce((acc, song) => acc + song.duration, 0);
 
