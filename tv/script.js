@@ -1,8 +1,20 @@
+// --- INYECCIÓN DE API DE YOUTUBE (Requerida para motor Pseudo-Live) ---
+const tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+const firstScriptTag = document.getElementsByTagName('script')[0];
+if (firstScriptTag) {
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+} else {
+    document.head.appendChild(tag);
+}
+
 // Lista de canales
 const PROXY_URL = 'https://pizza-proxy.adibabouakar.workers.dev/?url=';
 
 const channels = [
-    { id: 'pizzatv', name: '🍕 Pizza TV 24/7', url: 'https://www.youtube.com/embed/videoseries?list=PL-jhD1_bQZq3BevkaUfRd-U9HpQCf0Il2&autoplay=1&loop=1&rel=0', isIframe: true },
+    // Canal simulado con sincronización por reloj (isYtSync: true)
+    { id: 'pizzatv', name: '🍕 Pizza TV 24/7', ytPlaylist: 'PL-jhD1_bQZq3BevkaUfRd-U9HpQCf0Il2', isYtSync: true },
+    
     { id: 'venevision', name: 'Venevision', url: 'https://venevision-blocked-cdn.encoders.immergo.tv/3/streamPlaylist.m3u8' },
     { id: 'canali', name: 'Canal I', url: 'https://streaming.canal-i.com/canal-i/live/primary/1080.m3u8', audioUrl: 'https://streaming.canal-i.com/canal-i/live/primary/audio.m3u8' },
     { id: 'vtv', name: 'VTV', url: 'https://geo.dailymotion.com/player.html?video=x930kre', isIframe: true },
@@ -37,6 +49,7 @@ let favorites = JSON.parse(localStorage.getItem('pizzatv_favs')) || [];
 let hlsInstance;
 let hlsAudioInstance; 
 const tvAudio = new Audio(); 
+let ytPlayer = null; // Variable global para manejar el reproductor de YouTube
 
 // Bandera para saber si el canal actual requiere sincronización de audio
 let hasSeparateAudio = false;
@@ -79,7 +92,6 @@ tvPlayer.addEventListener('timeupdate', () => {
         }
     }
 });
-
 
 function renderChannels(filterText = '') {
     channelsGrid.innerHTML = '';
@@ -125,58 +137,115 @@ window.playChannel = function(id) {
     if (hlsInstance) hlsInstance.destroy();
     if (hlsAudioInstance) hlsAudioInstance.destroy();
 
-    // 1. Limpiar cualquier iframe anterior
+    // 1. Limpiar cualquier iframe y reproductor YT anterior
     let oldIframe = document.getElementById('dm-iframe');
     if (oldIframe) oldIframe.remove();
+    
+    if (ytPlayer) {
+        ytPlayer.destroy();
+        ytPlayer = null;
+    }
+    let oldYtContainer = document.getElementById('yt-sync-player');
+    if (oldYtContainer) oldYtContainer.remove();
 
-    // 2. Lógica para canales insertados por Iframe (Dailymotion / YouTube)
-    if (channel.isIframe) {
-        tvPlayer.style.display = 'none'; // Ocultamos el reproductor de video nativo
+    // 2. Lógica para Canal Simulado 24/7 (Sincronización Pseudo-Live Mundial UTC)
+    if (channel.isYtSync) {
+        tvPlayer.style.display = 'none'; 
         qualitySelector.style.display = 'none';
         hasSeparateAudio = false;
 
-        // Inyectamos el iframe dinámicamente
+        const ytContainer = document.createElement('div');
+        ytContainer.id = 'yt-sync-player';
+        ytContainer.style.width = '100%';
+        ytContainer.style.height = '100%';
+        document.querySelector('.video-container').appendChild(ytContainer);
+
+        const checkYTAndInit = () => {
+            if (typeof YT !== 'undefined' && YT.Player) {
+                let isSynced = false;
+                ytPlayer = new YT.Player('yt-sync-player', {
+                    playerVars: { 
+                        autoplay: 1, 
+                        controls: 1, 
+                        disablekb: 1, 
+                        rel: 0 
+                    },
+                    events: {
+                        'onReady': (event) => {
+                            event.target.loadPlaylist({ list: channel.ytPlaylist });
+                        },
+                        'onStateChange': (event) => {
+                            // Cuando comienza a reproducir (Estado 1)
+                            if (event.data === 1 && !isSynced) {
+                                isSynced = true;
+                                const playlist = event.target.getPlaylist();
+                                if (playlist && playlist.length > 0) {
+                                    const now = new Date();
+                                    
+                                    // Sincronización global usando UTC (Tiempo Universal Coordinado)
+                                    const totalMinutes = (now.getUTCHours() * 60) + now.getUTCMinutes();
+                                    
+                                    // Índice matemático: saltamos a un video específico basado en la hora mundial
+                                    const index = totalMinutes % playlist.length;
+                                    
+                                    // Sincronización de segundos basada en la hora mundial
+                                    const startSeconds = ((now.getUTCMinutes() % 10) * 60) + now.getUTCSeconds();
+                                    
+                                    event.target.playVideoAt(index);
+                                    event.target.seekTo(startSeconds, true);
+                                }
+                            }
+                        }
+                    }
+                });
+            } else {
+                // Si el internet es lento y la API de YouTube no ha cargado, lo reintenta
+                setTimeout(checkYTAndInit, 300);
+            }
+        };
+        checkYTAndInit();
+        return; 
+    }
+
+    // 3. Lógica para canales insertados por Iframe nativo (Dailymotion u otros)
+    else if (channel.isIframe) {
+        tvPlayer.style.display = 'none';
+        qualitySelector.style.display = 'none';
+        hasSeparateAudio = false;
+
         const iframe = document.createElement('iframe');
         iframe.id = 'dm-iframe';
         iframe.src = channel.url;
         iframe.style.width = '100%';
         iframe.style.height = '100%';
         iframe.style.border = 'none';
-        
-        // Atributos de permisos ajustados para soportar YouTube Autoplay
         iframe.setAttribute('allowfullscreen', 'true');
         iframe.setAttribute('allow', 'autoplay; encrypted-media; web-share; fullscreen; picture-in-picture');
         
         document.querySelector('.video-container').appendChild(iframe);
-        return; // Detenemos la ejecución aquí para no lanzar HLS.js
-    } else {
-        tvPlayer.style.display = ''; // Restauramos el reproductor nativo
+        return; 
+    } 
+    // Restauramos el reproductor nativo para los otros canales
+    else {
+        tvPlayer.style.display = ''; 
     }
 
-
-    // 3. Lógica original para canales HLS (M3U8)
-    // Usamos el proxy para cualquier enlace HTTP y para servidores de Dailymotion (dmcdn.net)
+    // 4. Lógica original para canales HLS (M3U8)
     const finalUrl = (channel.url.includes('dmcdn.net') || channel.url.startsWith('http://')) ? PROXY_URL + encodeURIComponent(channel.url) : channel.url;
     hasSeparateAudio = !!channel.audioUrl;
 
     if (Hls.isSupported()) {
         if (hlsInstance) hlsInstance.destroy();
         
-        // Cargar Video principal
         hlsInstance = new Hls();
         hlsInstance.loadSource(finalUrl);
         hlsInstance.attachMedia(tvPlayer);
         
-        // Lógica de carga y extracción de calidades
         hlsInstance.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
             tvPlayer.play();
-            
-            // Limpiar las opciones anteriores
             qualitySelector.innerHTML = '<option value="-1">Automático</option>';
-            
             const levels = data.levels;
             
-            // Si hay más de una calidad disponible, armamos el menú
             if (levels && levels.length > 1) {
                 levels.forEach((level, index) => {
                     const option = document.createElement('option');
@@ -186,18 +255,15 @@ window.playChannel = function(id) {
                 });
                 qualitySelector.style.display = 'inline-block';
             } else {
-                // Si solo hay una calidad, ocultamos el botón
                 qualitySelector.style.display = 'none';
             }
         });
 
-        // Cargar Audio secundario si existe
         if (hasSeparateAudio) {
             hlsAudioInstance = new Hls();
             hlsAudioInstance.loadSource(channel.audioUrl);
             hlsAudioInstance.attachMedia(tvAudio);
             hlsAudioInstance.on(Hls.Events.MANIFEST_PARSED, () => {
-                // Sincronizar volumen inicial y reproducir
                 tvAudio.volume = tvPlayer.volume;
                 tvAudio.muted = tvPlayer.muted;
                 tvAudio.play().catch(() => {});
@@ -205,7 +271,6 @@ window.playChannel = function(id) {
         }
 
     } else if (tvPlayer.canPlayType('application/vnd.apple.mpegurl')) {
-        // Soporte nativo (Safari / Móviles)
         tvPlayer.src = finalUrl;
         tvPlayer.addEventListener('loadedmetadata', () => tvPlayer.play());
         
@@ -232,15 +297,21 @@ backBtn.onclick = () => {
     if (hlsInstance) hlsInstance.destroy();
     if (hlsAudioInstance) hlsAudioInstance.destroy();
 
-    // Limpiamos el iframe al salir del reproductor para evitar que el audio siga sonando
     let oldIframe = document.getElementById('dm-iframe');
     if (oldIframe) {
         oldIframe.src = '';
         oldIframe.remove();
     }
+    
+    // Limpiamos también el reproductor de YouTube al salir
+    if (ytPlayer) {
+        ytPlayer.destroy();
+        ytPlayer = null;
+    }
+    let oldYtContainer = document.getElementById('yt-sync-player');
+    if (oldYtContainer) oldYtContainer.remove();
 };
 
-// Evento para cambiar la calidad cuando el usuario selecciona una opción
 qualitySelector.addEventListener('change', (e) => {
     if (hlsInstance) {
         hlsInstance.currentLevel = parseInt(e.target.value);
