@@ -42,7 +42,23 @@ const channels = [
     { id: 'esportsmax', name: 'Esports Max', url: 'https://cdnlive.klicgo.net/esportsmax/live/chunklist_w1598557418_DVR.m3u8' },
     { id: 'maxanime', name: 'Max Anime', url: 'https://cdnlive.klicgo.net/maxanime/live/chunklist_w1287894767_DVR.m3u8' },
     { id: 'rcnnovelas', name: 'RCN Novelas', url: 'https://cdnlive.klicgo.net/rcnnovelas/live/chunklist_w1582423562.m3u8' },
-    { id: 'mmc', name: 'Mix Music Channel', url: 'https://cdamix.streaming.ws/mixmusic/live/chunklist_w2048390545.m3u8' }
+    { id: 'mmc', name: 'Mix Music Channel', url: 'https://cdamix.streaming.ws/mixmusic/live/chunklist_w2048390545.m3u8' },
+    { id: 'trt', name: 'TRT', url: 'https://vcp12.myplaytv.com/trt/trt/chunklist_w648801039.m3u8' },
+    { id: 'aguacatetv', name: 'Aguacate TV', url: 'https://streamtv.intervenhosting.net:3040/live/aguacatetvbqtolive.m3u8' },
+    { id: 'canal21', name: 'Canal 21 del Tachira', url: 'https://stmv2.voxtvhd.com.br/canal21/canal21/playlist.m3u8?hls_ctx=5945901l' },
+    { id: 'canalc', name: 'Canal C del Zulia', url: 'https://calm-forest-3478.cristianbracho904.workers.dev/hls/index.m3u8' },
+    { id: 'cdiplomatico', name: 'Canal Diplomatico', url: 'https://master.myplaytv.com:2020/hls/canaldiplomatico/canaldiplomatico.m3u8' },
+    { id: 'grandetv', name: 'Grande TV', url: 'https://vs20.live.opencaster.com/grande41_0b593479/index.m3u8' },
+    { id: 'islatv', name: 'Isla TV', url: 'https://59d39900ebfb8.streamlock.net/islatv/islatv/chunklist_w951701356.m3u8' },
+    { id: 'latinatv', name: 'Latina TV', url: 'https://streamtv.latinamedios.com:3413/live/latinatvlive.m3u8' },
+    { id: 'maximatv', name: 'Maxima TV', url: 'https://maximatv.net/hls/stream.m3u8' },
+    { id: 'ploustv', name: 'Plous TV', url: 'https://vcp.myplaytv.com/glowtv/glowtv/chunklist_w1670091102.m3u8' },
+    { id: 'reformatv', name: 'Reforma TV', url: 'https://5bf8041cb3fed.streamlock.net/ReformaTV/ReformaTV/playlist.m3u8' },
+    { id: 'siembratv', name: 'Siembra TV', url: 'https://cloud2.streaminglivehd.com:1936/siembratv/siembratv/chunklist_w2003597858.m3u8' },
+    { id: 'somostv', name: 'Somos TV', url: 'https://vcp3.myplaytv.com/somostv/somostv/chunklist_w1296929545.m3u8' },
+    { id: 'tutv', name: 'Tu TV', url: 'https://astl-mainstr.qvixsolutions.com/asltvtu_ext/tracks-v1a1/mono.ts.m3u8' },
+    { id: 'tvm', name: 'TVM+', url: 'https://streamtv.intervenhosting.net:3529/live/tvmparatilive.m3u8' },
+    { id: 'watavision', name: 'Wata Vision', url: 'https://live20.bozztv.com/giatv/giatv-watavision/watavision/chunks.m3u8' }
 ];
 
 let favorites = JSON.parse(localStorage.getItem('pizzatv_favs')) || [];
