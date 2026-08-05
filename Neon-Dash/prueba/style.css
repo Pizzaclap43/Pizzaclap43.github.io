@@ -1,0 +1,157 @@
+body {
+    margin: 0;
+    background-color: #0d0221;
+    color: #ff00ff;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    transition: background-color 0.8s ease;
+    touch-action: none;
+}
+
+.neon-title {
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    position: relative;
+    color: #fff;
+    text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff;
+    margin-bottom: 15px;
+    letter-spacing: 4px;
+    text-align: center;
+    transition: all 0.5s ease;
+}
+
+.frutiger-title {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    text-transform: none !important;
+    font-weight: 600 !important;
+    letter-spacing: 0px !important;
+    text-shadow: 0px 2px 4px rgba(0,0,0,0.2) !important;
+    background: linear-gradient(to bottom, #ffffff 0%, #a1c4fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.menu-layer {
+    position: absolute;
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(13, 2, 33, 0.98);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: auto;
+}
+
+.menu-layer.active {
+    display: flex !important;
+    z-index: 200;
+}
+
+#menu-icon-container {
+    margin: 10px 0 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#menu-icon {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 15px #ff00ff);
+    border-radius: 24px;
+    transition: 0.2s;
+}
+
+#menu-icon:hover {
+    scale: 1.1;
+}
+
+.btn-neon {
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: #fff;
+    background: transparent;
+    border: 3px solid #ff00ff;
+    cursor: pointer;
+    box-shadow: 0 0 15px #ff00ff;
+    transition: 0.2s;
+    text-transform: uppercase;
+    margin-top: 12px;
+    width: 250px;
+    z-index: 210;
+    pointer-events: auto;
+    border-radius: 16px;
+    transition: 0.2s;
+}
+
+.btn-neon:hover {
+    scale: 1.1;
+}
+
+.btn-neon:active { transform: scale(0.95); background: rgba(255, 0, 255, 0.3); }
+
+.final-score { font-size: 1.8rem; color: #00ffff; margin: 5px 0; }
+.high-score { font-size: 1rem; color: #ffff00; margin-bottom: 10px; }
+
+.setting-item { margin: 15px 0; width: 280px; text-align: center; }
+.setting-label { font-size: 1.1rem; color: #fff; display: block; margin-bottom: 8px; }
+input[type=range] { width: 100%; cursor: pointer; }
+
+#game-wrapper { display: none; flex-direction: column; align-items: center; }
+#game-container {
+    position: relative;
+    border: 4px solid #fff;
+    box-shadow: 0 0 25px #ff00ff;
+    background: #000;
+}
+
+canvas { display: block; }
+.ui-panel {
+    display: flex;
+    justify-content: space-between;
+    width: 360px;
+    margin-top: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.auth-input {
+    padding: 10px;
+    margin: 5px 0;
+    font-family: 'Courier New';
+    background: #000;
+    border: 2px solid #00ffff;
+    color: #fff;
+    text-align: center;
+    width: 100%;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.leaderboard-row {
+    display: flex;
+    justify-content: space-between;
+    width: 280px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 1.1rem;
+}
+
+#status-msg, #auth-status {
+    font-size: 0.8rem;
+    margin-top: 5px;
+    color: #7cfc00;
+    height: 15px;
+}
