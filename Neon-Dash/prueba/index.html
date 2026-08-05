@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0d0221">
+    <title>Neon Dash - Global Edition</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="manifest" href="manifest.json">
+    <!-- Enlace al archivo CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="settings-menu" class="menu-layer">
+        <h1 class="neon-title">MI CUENTA</h1>
+        <div id="auth-forms" style="width: 280px;">
+            <input type="text" id="player-name-settings" class="auth-input" placeholder="NOMBRE DE USUARIO" maxlength="12">
+            <input type="email" id="player-email" class="auth-input" placeholder="CORREO" style="border-color: #ff00ff;">
+            <input type="password" id="player-password" class="auth-input" placeholder="CONTRASEÑA" style="border-color: #ffff00;">
+            <div style="display: flex; gap: 5px;">
+                <button class="btn-neon" onclick="handleAuth('login')" style="font-size: 0.8rem; width: 50%; border-color: #00ffff; box-shadow: 0 0 10px #00ffff;">ENTRAR</button>
+                <button class="btn-neon" onclick="handleAuth('register')" style="font-size: 0.8rem; width: 50%; border-color: #ff00ff; box-shadow: 0 0 10px #ff00ff;">CREAR</button>
+            </div>
+            <p id="auth-status"></p>
+        </div>
+        <div class="setting-item" style="border-top: 1px solid #333; padding-top: 15px;">
+            <span class="setting-label">VOLUMEN</span>
+            <input type="range" id="volume-control" min="0" max="1" step="0.1" value="0.5" oninput="updateVolume(this.value)">
+        </div>
+        <div class="setting-item">
+            <span class="setting-label">EFECTOS VISUALES</span>
+            <button id="effects-toggle" class="btn-neon" onclick="toggleEffects()">ACTIVADOS</button>
+        </div>
+        <button class="btn-neon" onclick="toggleMenu('settings-menu', false)" style="border-color: #ffff00; box-shadow: 0 0 15px #ffff00;">VOLVER</button>
+    </div>
+
+    <div id="themes-menu" class="menu-layer">
+        <h1 class="neon-title">TEMAS</h1>
+        <button class="btn-neon" onclick="setTheme('neon')" style="border-color: #ff00ff; box-shadow: 0 0 15px #ff00ff;">NEON NIGHT</button>
+        <button class="btn-neon" onclick="setTheme('frutiger')" style="border-color: #4facfe; box-shadow: 0 0 15px #4facfe;">FRUTIGER AERO</button>
+        <button class="btn-neon" onclick="toggleMenu('themes-menu', false)" style="border-color: #ffff00; box-shadow: 0 0 15px #ffff00; margin-top: 30px;">VOLVER</button>
+    </div>
+
+    <div id="ranking-menu" class="menu-layer">
+        <h1 class="neon-title">TOP GLOBAL</h1>
+        <div id="leaderboard-content" style="margin-bottom: 20px; color: #fff;">Cargando...</div>
+        <button class="btn-neon" onclick="toggleMenu('ranking-menu', false)" style="border-color: #ffff00; box-shadow: 0 0 15px #ffff00;">VOLVER</button>
+    </div>
+
+    <div id="game-over-menu" class="menu-layer">
+        <h1 class="neon-title" style="text-shadow: 2px 2px #ff0000;">¡FIN DEL JUEGO!</h1>
+        <p class="final-score">PUNTOS: <span id="final-score-val">0</span></p>
+        <p class="high-score">RECORD LOCAL: <span id="high-score-val">0</span></p>
+        <div id="status-msg"></div>
+        <button class="btn-neon" onclick="toggleMenu('game-over-menu', false)" style="border-color: #00ffff; box-shadow: 0 0 15px #00ffff; margin-top: 10px;">REINTENTAR</button>
+    </div>
+
+    <div id="start-menu" class="menu-layer active">
+        <h1 class="neon-title" id="main-title">NEON DASH</h1>
+        <div id="menu-icon-container">
+            <img src="https://pizzaclap43.github.io/Neon-Dash/favicon.png" alt="Icono" id="menu-icon">
+        </div>
+        <button class="btn-neon" onclick="startGame()">JUGAR</button>
+        <button class="btn-neon" onclick="toggleMenu('ranking-menu', true); loadScores();" style="border-color: #00ffff; box-shadow: 0 0 10px #00ffff;">RANKING</button>
+        <button class="btn-neon" onclick="toggleMenu('themes-menu', true)" style="border-color: #7cfc00; box-shadow: 0 0 10px #7cfc00;">TEMAS</button>
+        <button class="btn-neon" onclick="toggleMenu('settings-menu', true)" style="border-color: #ffff00; box-shadow: 0 0 10px #ffff00;">AJUSTES</button>
+    </div>
+
+    <div id="game-wrapper">
+        <h1 class="neon-title" id="game-title">NEON DASH</h1>
+        <div id="game-container">
+            <canvas id="gameCanvas" width="360" height="500"></canvas>
+        </div>
+        <div class="ui-panel" id="ui-panel">
+            <div id="lives">❤️❤️❤️</div>
+            <div id="score-panel">PUNTOS: <span id="score-val">0</span></div>
+        </div>
+    </div>
+
+    <!-- Enlace al archivo JavaScript como módulo -->
+    <script type="module" src="main.js"></script>
+</body>
+</html>
