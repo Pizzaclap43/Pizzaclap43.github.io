@@ -2,6 +2,8 @@ const CACHE_NAME = 'neon-dash-v39';
 const assets = [
   './',
   './index.html',
+  './style.css',
+  './main.js',
   './manifest.json',
   './favicon.png',
   './coin.wav', 
