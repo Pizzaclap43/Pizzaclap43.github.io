@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPTV Web Player Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+    <style>
+        :root {
+            --bg-color: #0f111a;
+            --panel-bg: #1e2130;
+            --primary: #6c5ce7;
+            --primary-hover: #a29bfe;
+            --text: #f1f2f6;
+            --border: #2f354a;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .layout {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Reproductor y Controles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        .video-container {
+            width: 100%;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            aspect-ratio: 16/9;
+            max-height: 70vh;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            outline: none;
+        }
+
+        /* Relaciones de Aspecto */
+        .ar-normal { object-fit: contain; }
+        .ar-fill { object-fit: fill; }
+        .ar-cover { object-fit: cover; }
+        .ar-16-9 { aspect-ratio: 16/9; object-fit: fill; }
+        .ar-4-3 { aspect-ratio: 4/3; object-fit: fill; }
+
+        .controls-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            background: var(--panel-bg);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            align-items: center;
+        }
+
+        /* Controles de reproducción */
+        .playback-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 15px;
+            border-right: 1px solid var(--border);
+            padding-right: 15px;
+        }
+        .playback-controls button {
+            font-size: 16px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        select, button, input {
+            background: var(--bg-color);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        button {
+            background: var(--primary);
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            border: none;
+        }
+
+        button:hover { background: var(--primary-hover); }
+
+        /* Ecualizador */
+        .equalizer-panel {
+            display: none;
+            background: var(--panel-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            text-align: center;
+        }
+
+        .eq-band {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .eq-band input[type=range] {
+            writing-mode: bt-lr;
+            -webkit-appearance: slider-vertical;
+            width: 8px;
+            height: 100px;
+        }
+
+        .eq-band label { font-size: 12px; color: #aaa; }
+
+        /* Sidebar / Playlist */
+        .sidebar {
+            width: 380px;
+            background: var(--panel-bg);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-header h2 { margin-bottom: 15px; font-size: 18px; }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .input-group input[type="text"] { flex: 1; }
+        
+        /* Buscador avanzado */
+        .search-bar {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .file-upload { margin-top: 10px; }
+        .file-upload input { width: 100%; padding: 5px; }
+
+        .playlist {
+            flex: 1;
+            overflow-y: auto;
+            list-style: none;
+            padding: 10px;
+        }
+
+        .playlist li {
+            padding: 12px 15px;
+            background: var(--bg-color);
+            margin-bottom: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid transparent;
+        }
+
+        .playlist li:hover { border-color: var(--primary); }
+        .playlist li.active { background: var(--primary); }
+        
+        /* Estilos para el logo y la info */
+        .channel-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            background: #000;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        
+        .channel-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .channel-info strong { font-size: 14px; margin-bottom: 4px; }
+        .channel-info small { font-size: 11px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .playlist li.active .channel-info small { color: #ddd; }
+
+        .delete-btn {
+            background: #e74c3c;
+            padding: 2px 8px;
+            font-size: 12px;
+            margin-top: 8px;
+            align-self: flex-start;
+        }
+        .delete-btn:hover { background: #c0392b; }
+
+        @media (max-width: 768px) {
+            .layout { flex-direction: column; }
+            .sidebar { width: 100%; height: 50vh; border-left: none; border-top: 1px solid var(--border); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="layout">
+        <!-- Contenido Principal -->
+        <div class="main-content">
+            <div class="video-container" id="video-wrapper">
+                <video id="video" controls crossorigin="anonymous"></video>
+            </div>
+
+            <div class="controls-bar">
+                <div class="playback-controls">
+                    <button id="btn-prev" title="Canal Anterior">⏮</button>
+                    <button id="btn-play-pause" title="Reproducir/Pausar">⏯</button>
+                    <button id="btn-next" title="Canal Siguiente">⏭</button>
+                </div>
+
+                <div>
+                    <label for="quality-selector">Resolución: </label>
+                    <select id="quality-selector">
+                        <option value="-1">Auto</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="aspect-ratio">Aspecto: </label>
+                    <select id="aspect-ratio">
+                        <option value="ar-normal">Normal</option>
+                        <option value="ar-fill">Estirar (Fill)</option>
+                        <option value="ar-cover">Recortar (Cover)</option>
+                        <option value="ar-16-9">Forzar 16:9</option>
+                        <option value="ar-4-3">Forzar 4:3</option>
+                    </select>
+                </div>
+                <button id="toggle-eq">🎛️ Ecualizador</button>
+            </div>
+
+            <div class="equalizer-panel" id="equalizer-panel">
+                <!-- Se generan desde JS -->
+            </div>
+            
+            <p style="font-size: 12px; color: #888;">* Nota: El ecualizador puede no funcionar si el proxy o servidor de origen restringen CORS.</p>
+        </div>
+
+        <!-- Sidebar Playlist -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Mi Lista de Canales</h2>
+                
+                <!-- NUEVO: Interruptor del Puente Proxy -->
+                <label style="font-size: 13px; display: flex; align-items: center; gap: 8px; margin-bottom: 15px; cursor: pointer; color: #a29bfe;">
+                    <input type="checkbox" id="use-proxy" checked> 🌉 Usar Proxy (HTTP / IPs)
+                </label>
+
+                <input type="text" id="search-input" class="search-bar" placeholder="🔍 Buscar canal...">
+
+                <div class="input-group">
+                    <input type="text" id="url-input" placeholder="http://.../stream.m3u8">
+                    <button id="add-url-btn">Añadir</button>
+                </div>
+                <div class="file-upload">
+                    <label for="file-input" style="font-size:12px; color:#aaa;">O sube un archivo .m3u:</label>
+                    <input type="file" id="file-input" accept=".m3u,.m3u8">
+                </div>
+                <button id="clear-list-btn" style="width: 100%; margin-top: 10px; background: #e74c3c;">Borrar Lista</button>
+            </div>
+            <ul class="playlist" id="playlist">
+                <!-- Lista generada en JS -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Variables Globales ---
+        const video = document.getElementById('video');
+        const videoWrapper = document.getElementById('video-wrapper');
+        const qualitySelector = document.getElementById('quality-selector');
+        const aspectRatioSelector = document.getElementById('aspect-ratio');
+        const playlistEl = document.getElementById('playlist');
+        const useProxyCheckbox = document.getElementById('use-proxy');
+        
+        let hls;
+        let channels = JSON.parse(localStorage.getItem('iptv_channels')) || [];
+        let currentChannelIndex = -1; 
+        
+        // --- NUEVO: Función Analizadora de Proxy ---
+        function getProxyUrl(url) {
+            if (!url) return url;
+            const useProxy = useProxyCheckbox.checked;
+            
+            // Detecta si es HTTP puro o si contiene una estructura de IP (ej: http://192.168... o https://1.2...)
+            const isHttpOrIP = url.startsWith('http://') || /^https?:\/\/\d{1,3}(\.\d{1,3}){3}/.test(url);
+            
+            if (useProxy && isHttpOrIP) {
+                return "https://pizza-proxy.adibabouakar.workers.dev/" + url;
+            }
+            return url;
+        }
+
+        // Si el usuario activa/desactiva el proxy, recargamos la lista (para los logos) y el video actual
+        useProxyCheckbox.addEventListener('change', () => {
+            renderPlaylist(document.getElementById('search-input').value);
+            if (currentChannelIndex !== -1) {
+                playChannel(currentChannelIndex);
+            }
+        });
+
+        // --- 2. Reproductor HLS ---
+        function loadStream(url) {
+            const finalUrl = getProxyUrl(url); // Aplicamos el proxy si es necesario
+
+            if (Hls.isSupported()) {
+                if (hls) hls.destroy();
+                hls = new Hls();
+                hls.loadSource(finalUrl);
+                hls.attachMedia(video);
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                    video.play();
+                    initEqualizer();
+                    updateQualitySelector(data.levels);
+                });
+
+                hls.on(Hls.Events.ERROR, function (event, data) {
+                    if (data.fatal) {
+                        switch (data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                hls.destroy();
+                                break;
+                        }
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = finalUrl;
+                video.addEventListener('loadedmetadata', function() {
+                    video.play();
+                    initEqualizer();
+                });
+            } else {
+                video.src = finalUrl;
+                video.play();
+            }
+        }
+
+        // --- 3. Calidad (Resoluciones) ---
+        function updateQualitySelector(levels) {
+            qualitySelector.innerHTML = '<option value="-1">Auto</option>';
+            levels.forEach((level, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.text = `${level.height}p (${Math.round(level.bitrate / 1024)} kbps)`;
+                qualitySelector.appendChild(option);
+            });
+        }
+
+        qualitySelector.addEventListener('change', (e) => {
+            if (hls) hls.currentLevel = parseInt(e.target.value);
+        });
+
+        // --- 4. Relación de Aspecto ---
+        aspectRatioSelector.addEventListener('change', (e) => {
+            video.className = e.target.value;
+        });
+
+        // --- 5. Ecualizador (Web Audio API) ---
+        let audioCtx, source;
+        const eqBands = [60, 230, 910, 3600, 14000];
+        let filters = [];
+
+        function initEqualizer() {
+            if (audioCtx) return; 
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                source = audioCtx.createMediaElementSource(video);
+                let prevNode = source;
+                
+                eqBands.forEach(freq => {
+                    let filter = audioCtx.createBiquadFilter();
+                    filter.type = 'peaking';
+                    filter.frequency.value = freq;
+                    filter.Q.value = 1;
+                    filter.gain.value = 0;
+                    filters.push(filter);
+                    prevNode.connect(filter);
+                    prevNode = filter;
+                });
+                prevNode.connect(audioCtx.destination);
+                renderEqualizerUI();
+            } catch (e) {
+                console.warn("CORS impide el uso del ecualizador para este stream.");
+            }
+        }
+
+        function renderEqualizerUI() {
+            const panel = document.getElementById('equalizer-panel');
+            panel.innerHTML = '';
+            eqBands.forEach((freq, index) => {
+                const bandDiv = document.createElement('div');
+                bandDiv.className = 'eq-band';
+                const input = document.createElement('input');
+                input.type = 'range';
+                input.min = -12; input.max = 12; input.step = 0.1; input.value = 0;
+                input.addEventListener('input', (e) => { filters[index].gain.value = e.target.value; });
+                const label = document.createElement('label');
+                label.innerText = freq >= 1000 ? (freq/1000) + 'k' : freq + 'Hz';
+                bandDiv.appendChild(input);
+                bandDiv.appendChild(label);
+                panel.appendChild(bandDiv);
+            });
+        }
+
+        document.getElementById('toggle-eq').addEventListener('click', () => {
+            const panel = document.getElementById('equalizer-panel');
+            panel.style.display = panel.style.display === 'grid' ? 'none' : 'grid';
+            if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        });
+
+        // --- 6. Controles de Reproducción y Playlist ---
+        function playChannel(index) {
+            if(index < 0 || index >= channels.length) return;
+            currentChannelIndex = index;
+            loadStream(channels[index].url);
+            renderPlaylist(document.getElementById('search-input').value);
+        }
+
+        document.getElementById('btn-prev').addEventListener('click', () => playChannel(currentChannelIndex - 1));
+        document.getElementById('btn-next').addEventListener('click', () => playChannel(currentChannelIndex + 1));
+        document.getElementById('btn-play-pause').addEventListener('click', () => {
+            if (video.paused) video.play();
+            else video.pause();
+        });
+
+        function saveChannels() {
+            localStorage.setItem('iptv_channels', JSON.stringify(channels));
+            renderPlaylist(document.getElementById('search-input').value);
+        }
+
+        function renderPlaylist(searchTerm = '') {
+            playlistEl.innerHTML = '';
+            channels.forEach((ch, index) => {
+                if (searchTerm && !ch.name.toLowerCase().includes(searchTerm.toLowerCase())) return;
+
+                const li = document.createElement('li');
+                if (index === currentChannelIndex) li.classList.add('active');
+
+                // Pasamos el logo también por el proxy si es HTTP para evitar que Chrome lo bloquee
+                let finalLogoUrl = ch.logo ? getProxyUrl(ch.logo) : '';
+                let logoHtml = finalLogoUrl 
+                    ? `<img src="${finalLogoUrl}" class="channel-logo" alt="logo" onerror="this.style.display='none'">` 
+                    : `<div class="channel-logo" style="display:flex;align-items:center;justify-content:center;font-size:20px;">📺</div>`;
+
+                li.innerHTML = `
+                    ${logoHtml}
+                    <div class="channel-info">
+                        <strong>${ch.name}</strong>
+                        <small title="${ch.url}">${ch.url}</small>
+                        <button class="delete-btn" onclick="deleteChannel(event, ${index})">Eliminar</button>
+                    </div>
+                `;
+                li.onclick = () => playChannel(index);
+                playlistEl.appendChild(li);
+            });
+        }
+
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            renderPlaylist(e.target.value);
+        });
+
+        window.deleteChannel = function(event, index) {
+            event.stopPropagation();
+            channels.splice(index, 1);
+            if (currentChannelIndex === index) {
+                video.pause();
+                video.src = "";
+                currentChannelIndex = -1;
+            } else if (currentChannelIndex > index) {
+                currentChannelIndex--; 
+            }
+            saveChannels();
+        };
+
+        document.getElementById('add-url-btn').addEventListener('click', () => {
+            const url = document.getElementById('url-input').value.trim();
+            if (url) {
+                channels.push({ name: 'Canal Manual', url: url, logo: '' });
+                saveChannels();
+                document.getElementById('url-input').value = '';
+            }
+        });
+
+        document.getElementById('clear-list-btn').addEventListener('click', () => {
+            if(confirm("¿Seguro que quieres borrar toda la lista?")) {
+                channels = [];
+                currentChannelIndex = -1;
+                video.pause();
+                video.src = "";
+                saveChannels();
+            }
+        });
+
+        // --- 7. Parser de Archivos .m3u ---
+        document.getElementById('file-input').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const content = event.target.result;
+                const lines = content.split('\n');
+                let currentName = 'Desconocido';
+                let currentLogo = ''; 
+                
+                lines.forEach(line => {
+                    line = line.trim();
+                    if (line.startsWith('#EXTINF:')) {
+                        const logoMatch = line.match(/tvg-logo="([^"]+)"/);
+                        if(logoMatch) currentLogo = logoMatch[1];
+                        else currentLogo = '';
+
+                        const parts = line.split(',');
+                        currentName = parts.length > 1 ? parts[parts.length - 1] : 'Canal';
+                    } else if (line && !line.startsWith('#')) {
+                        channels.push({ name: currentName, url: line, logo: currentLogo });
+                        currentName = 'Desconocido';
+                        currentLogo = '';
+                    }
+                });
+                saveChannels();
+                alert("Lista cargada con éxito!");
+            };
+            reader.readAsText(file);
+        });
+
+        // Inicialización
+        renderPlaylist();
+
+    </script>
+</body>
+</html>
