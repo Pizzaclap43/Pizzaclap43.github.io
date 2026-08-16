@@ -323,12 +323,18 @@
         function getProxyUrl(url) {
             if (!url) return url;
             const useProxy = useProxyCheckbox.checked;
+            const proxyBase = "https://pizza-proxy.adibabouakar.workers.dev/";
+
+            // Evitar que se duplique el proxy si la URL ya lo tiene puesto
+            if (url.startsWith(proxyBase)) {
+                return url;
+            }
             
             // Detecta si es HTTP puro o si contiene una estructura de IP (ej: http://192.168... o https://1.2...)
             const isHttpOrIP = url.startsWith('http://') || /^https?:\/\/\d{1,3}(\.\d{1,3}){3}/.test(url);
             
             if (useProxy && isHttpOrIP) {
-                return "https://pizza-proxy.adibabouakar.workers.dev/" + url;
+                return proxyBase + url;
             }
             return url;
         }
@@ -343,12 +349,20 @@
 
         // --- 2. Reproductor HLS ---
         function loadStream(url) {
-            const finalUrl = getProxyUrl(url); // Aplicamos el proxy si es necesario
+            const finalUrl = getProxyUrl(url); // Aplicamos el proxy si es necesario para Safari nativo
 
             if (Hls.isSupported()) {
                 if (hls) hls.destroy();
-                hls = new Hls();
-                hls.loadSource(finalUrl);
+                
+                // AQUÍ ESTÁ LA MAGIA: Obligamos a HLS.js a usar el proxy en todas sus peticiones (.m3u8 y .ts)
+                hls = new Hls({
+                    xhrSetup: function(xhr, urlToFetch) {
+                        xhr.open('GET', getProxyUrl(urlToFetch), true);
+                    }
+                });
+                
+                // Pasamos la URL original para que calcule bien las rutas relativas internamente
+                hls.loadSource(url);
                 hls.attachMedia(video);
                 
                 hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
@@ -373,6 +387,7 @@
                     }
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Fallback para Safari nativo
                 video.src = finalUrl;
                 video.addEventListener('loadedmetadata', function() {
                     video.play();
