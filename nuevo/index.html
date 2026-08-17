@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal de Noticias | El Tubazo Digital 🗞️</title>
+  
+  <!-- Estilos CSS Modernos -->
+  <style>
+    :root {
+      --primary: #e63946;
+      --dark: #1d3557;
+      --light: #f8f9fa;
+      --gray: #6c757d;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 15px rgba(0,0,0,0.08);
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    /* Header y Navegación */
+    header {
+      background-color: var(--dark);
+      color: white;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    header span {
+      color: var(--primary);
+    }
+
+    nav {
+      background-color: #112233;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 0.8rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: var(--primary);
+    }
+
+    /* Contenedor Principal */
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 2.5fr 1fr;
+      gap: 2rem;
+    }
+
+    /* Banner / Titular */
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-left: 5px solid var(--primary);
+      padding-left: 10px;
+    }
+
+    /* Grid de Noticias */
+    .noticias-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Tarjeta de Noticia */
+    .card-noticia {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card-noticia:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .card-img-wrapper {
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      background-color: #eee;
+    }
+
+    .card-noticia img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .card-noticia:hover img {
+      transform: scale(1.05);
+    }
+
+    .card-body {
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .card-fecha {
+      font-size: 0.8rem;
+      color: var(--gray);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .card-titulo {
+      font-size: 1.15rem;
+      line-height: 1.4;
+      margin-bottom: 0.8rem;
+      color: var(--dark);
+      font-weight: 700;
+    }
+
+    .card-resumen {
+      font-size: 0.9rem;
+      color: #4a5568;
+      margin-bottom: 1.2rem;
+      flex-grow: 1;
+    }
+
+    .btn-leer {
+      align-self: flex-start;
+      background-color: var(--primary);
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: background 0.2s;
+    }
+
+    .btn-leer:hover {
+      background-color: #c92a37;
+    }
+
+    /* Sidebar / Lateral */
+    aside {
+      background: white;
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      height: fit-content;
+    }
+
+    .widget-title {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid var(--light);
+      padding-bottom: 5px;
+    }
+
+    /* Indicador de carga */
+    .loader {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3rem;
+      font-size: 1.2rem;
+      color: var(--gray);
+    }
+
+    /* Responsivo para celulares */
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Encabezado -->
+  <header>
+    <h1>EL TUBAZO <span>DIGITAL</span> 📰</h1>
+  </header>
+
+  <nav>
+    <a href="#">Inicio</a>
+    <a href="#">Sucesos</a>
+    <a href="#">Deportes</a>
+    <a href="#">Tecnología</a>
+  </nav>
+
+  <!-- Contenido Principal -->
+  <div class="container">
+    <main>
+      <h2 class="section-title">Últimas Noticias 🔥</h2>
+      
+      <!-- Aquí JavaScript cargará las publicaciones -->
+      <div id="noticias-container" class="noticias-grid">
+        <div class="loader">Cargando las últimas noticias... ⏳</div>
+      </div>
+    </main>
+
+    <!-- Barra Lateral -->
+    <aside>
+      <h3 class="widget-title">Sobre Nosotros ℹ️</h3>
+      <p style="font-size: 0.9rem; color: #555;">
+        Tu portal independiente de noticias al instante. Información real, rápida y directa a la jugada. 🇻🇪
+      </p>
+    </aside>
+  </div>
+
+  <!-- Lógica JavaScript para conectar con Blogger -->
+  <script>
+    // ⚠️ REEMPLAZA ESTA URL POR LA DE TU PROPIO BLOG DE BLOGGER
+    // Ejemplo: 'https://tubazodigital.blogspot.com'
+    const BLOG_URL = 'https://pizzaclap43net.blogspot.com/'; // Puedes probar con cualquier blog de Blogger público
+
+    // Función para obtener imagen del post o usar un placeholder
+    function obtenerImagen(post) {
+      if (post.media$thumbnail) {
+        // Truco para pedir la imagen en alta calidad (s1600 en vez de miniatura)
+        return post.media$thumbnail.url.replace('s72-c', 's1600');
+      }
+      // Si el post tiene imagen dentro del contenido HTML
+      const contenido = post.content ? post.content.$t : (post.summary ? post.summary.$t : '');
+      const imgMatch = contenido.match(/<img[^>]+src="([^">]+)"/);
+      if (imgMatch) return imgMatch[1];
+      
+      // Imagen por defecto si la noticia no tiene foto
+      return 'https://via.placeholder.com/600x400?text=Noticia+sin+imagen';
+    }
+
+    // Función para limpiar etiquetas HTML del resumen
+    function limpiarTexto(html, limite = 110) {
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      const texto = div.textContent || div.innerText || '';
+      return texto.length > limite ? texto.substring(0, limite) + '...' : texto;
+    }
+
+    // Cargar Feed de Blogger mediante JSON
+    async function cargarNoticiasBlogger(domain) {
+      const container = document.getElementById('noticias-container');
+      
+      try {
+        // Usamos la API pública de feeds de Blogger (sin apikey necesaria)
+        const feedUrl = `${domain}/feeds/posts/default?alt=json&max-results=10`;
+        const response = await fetch(feedUrl);
+
+        if (!response.ok) throw new Error('No se pudo conectar con el blog');
+
+        const data = await response.json();
+        const entradas = data.feed.entry;
+
+        if (!entradas || entradas.length === 0) {
+          container.innerHTML = '<p>No hay noticias publicadas todavía. 📭</p>';
+          return;
+        }
+
+        // Limpiar el loader
+        container.innerHTML = '';
+
+        // Recorrer las noticias e insertarlas en el HTML
+        entradas.forEach(post => {
+          const titulo = post.title.$t;
+          const fecha = new Date(post.published.$t).toLocaleDateString('es-ES', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+          });
+          
+          // Buscar el link oficial de la entrada
+          const linkObj = post.link.find(l => l.rel === 'alternate');
+          const urlNoticia = linkObj ? linkObj.href : '#';
+          
+          const imagen = obtenerImagen(post);
+          const resumenRaw = post.summary ? post.summary.$t : (post.content ? post.content.$t : '');
+          const resumen = limpiarTexto(resumenRaw);
+
+          // Crear la tarjeta HTML
+          const tarjeta = `
+            <article class="card-noticia">
+              <div class="card-img-wrapper">
+                <img src="${imagen}" alt="${titulo}" loading="lazy">
+              </div>
+              <div class="card-body">
+                <span class="fecha">📅 ${fecha}</span>
+                <h3 class="card-titulo">${titulo}</h3>
+                <p class="card-resumen">${resumen}</p>
+                <a href="${urlNoticia}" target="_blank" class="btn-leer">Leer Noticia ➡️</a>
+              </div>
+            </article>
+          `;
+
+          container.innerHTML += tarjeta;
+        });
+
+      } catch (error) {
+        console.error(error);
+        container.innerHTML = `
+          <div class="loader" style="color: var(--primary);">
+            ❌ Error al cargar noticias.<br>
+            Asegúrate de cambiar la variable <b>BLOG_URL</b> por la dirección real de tu Blogger.
+          </div>`;
+      }
+    }
+
+    // Ejecutar la carga al abrir la página
+    // 💡 NOTA: Reemplaza 'https://tu-blog.blogspot.com' cuando tengas tu blog listo
+    cargarNoticiasBlogger('https://pizzaclap43net.blogspot.com/');
+  </script>
+</body>
+</html>
