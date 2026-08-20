@@ -14,7 +14,7 @@ const PROXY_URL = 'https://pizza-proxy.adibabouakar.workers.dev/?url=';
 const channels = [
     // Canal simulado con sincronización por reloj (isYtSync: true)
     { id: 'pizzatv', name: '🍕 Pizza TV 24/7', ytPlaylist: 'PL-jhD1_bQZq3BevkaUfRd-U9HpQCf0Il2', isYtSync: true },
-    
+    { id: 'feirlygab', name: '+58 Tour', url: 'https://player.twitch.tv/?channel=feirlygab&parent=www.example.com', isIframe: true },
     { id: 'venevision', name: 'Venevision', url: 'https://venevision-blocked-cdn.encoders.immergo.tv/3/streamPlaylist.m3u8' },
     { id: 'canali', name: 'Canal I', url: 'https://streaming.canal-i.com/canal-i/live/primary/1080.m3u8', audioUrl: 'https://streaming.canal-i.com/canal-i/live/primary/audio.m3u8' },
     { id: 'vtv', name: 'VTV', url: 'https://geo.dailymotion.com/player.html?video=x930kre', isIframe: true },
