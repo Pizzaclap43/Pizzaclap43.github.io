@@ -3,26 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Página no encontrada | Pizzaclap43</title>
-    <link rel="icon" type="image/png" href="avatarHead.png">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>404 &mdash; No Encontrada | Pizzaclap43</title>
+    <link rel="icon" type="image/png" href="/perfil.png">
+    <!-- <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"> -->
     <style>
-        .error-section { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px; position: relative; }
-        .error-code { font-size: 6rem; font-weight: 800; background: linear-gradient(135deg, #fafafa 30%, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; margin-bottom: 16px; }
-        .error-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); text-decoration: none; font-weight: 500; margin-top: 24px; transition: background 0.2s; }
-        .error-btn:hover { background: var(--surface-hover); }
+        body {
+            background: #F1F1F1;
+            color: #1F1F1F
+        }
+
+        .muted { color: #777; text-decoration: none; font-size: 16px; }
+        .muted:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
-    <div class="error-section">
-        <div class="hero-glow hero-glow-1"></div>
-        <div class="error-content" style="z-index: 1;">
-            <div class="error-code">404</div>
-            <h2>¡Uy! Te perdiste</h2>
-            <p style="color: var(--text-muted); margin-top: 8px;">Esta página se perdió en el servidor o nunca existió.</p>
-            <a href="index.html" class="error-btn"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
-        </div>
-    </div>
+    <center>
+        <h1>404 No Encontrada</h1>
+        <hr color="#1f1f1f">
+        <p style="font-weight: bold;">La página o el archivo no existen o disponibles.<br>Inténtalo de nuevo más tarde.</p>
+        <br><br><br>
+
+        <a class="muted" href="/">Página principal</a>
+    </center>
 </body>
 </html>
