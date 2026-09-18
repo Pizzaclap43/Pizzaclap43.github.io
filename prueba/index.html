@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Modo Radio</title>
+  
+  <!-- FAVICON DE LA PÁGINA 🖼️ -->
+  <link rel="icon" href="logo.png" type="image/png">
+  
+  <style>
+    /* 1. PALETA DE COLORES EXTRAÍDA DEL LOGO DE MODO RADIO 🎨 */
+    :root {
+      --bg-body: #09090b;       /* Negro profundo de fondo */
+      --bg-card: #141417;       /* Gris oscuro elegante para tarjetas */
+      --bg-hover: #222228;      /* Color al pasar el ratón */
+      --text-main: #f8fafc;     /* Blanco para textos */
+      --text-sub: #a1a1aa;      /* Gris para subtítulos */
+      
+      /* Acentos neón basados en el botón de encendido */
+      --accent-orange: #ff5500;
+      --accent-magenta: #e60067;
+      --accent-purple: #8b00ff;
+      --accent-gradient: linear-gradient(135deg, #ff5500, #e60067, #8b00ff);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ESTRUCTURA DE STICKY FOOTER CON FLEXBOX 📌 */
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* 2. ENCABEZADO Y FILTROS 🔍 */
+    header {
+      padding: 20px;
+      text-align: center;
+      background: #111114;
+      border-bottom: 1px solid #27272a;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 18px;
+    }
+
+    .logo-link {
+      position: absolute;
+      left: 10px;
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      z-index: 5;
+    }
+
+    .header-logo {
+      height: 72px;
+      width: auto;
+      object-fit: contain;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      cursor: pointer;
+      will-change: transform;
+    }
+
+    .header-logo:hover {
+      transform: scale(1.08);
+      filter: drop-shadow(0 0 8px rgba(230, 0, 103, 0.5));
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: var(--accent-gradient);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0;
+      letter-spacing: 1px;
+      animation: gradientShift 6s ease infinite;
+    }
+
+    .subtitulo-contador {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      margin-top: 4px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .subtitulo-contador span {
+      color: var(--accent-orange);
+      font-weight: 800;
+      font-size: 1.05rem;
+    }
+
+    /* BARRA DE BÚSQUEDA 🔎 */
+    .buscador-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 18px;
+      padding: 0 15px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      align-items: center;
+    }
+
+    .icono-lupa {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      pointer-events: none;
+      user-select: none;
+      opacity: 0.75;
+      z-index: 2;
+    }
+
+    .input-busqueda {
+      width: 100%;
+      padding: 11px 42px 11px 44px;
+      border-radius: 25px;
+      border: 1px solid #3f3f46;
+      background: #18181b;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .input-busqueda:focus {
+      border-color: var(--accent-magenta);
+      box-shadow: 0 0 16px rgba(230, 0, 103, 0.4);
+      transform: scale(1.01);
+    }
+
+    .btn-limpiar {
+      position: absolute;
+      right: 14px;
+      background: #27272a;
+      border: none;
+      color: var(--text-sub);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      z-index: 2;
+    }
+
+    .btn-limpiar:hover {
+      background: var(--accent-magenta);
+      color: #fff;
+      transform: scale(1.15);
+    }
+
+    .filtros {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .btn-filtro {
+      background: #1f1f23;
+      color: var(--text-main);
+      border: 1px solid #3f3f46;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    .btn-filtro:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-orange);
+    }
+
+    .btn-filtro:active {
+      transform: scale(0.95);
+    }
+
+    .btn-filtro.activo {
+      background: var(--accent-gradient);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(230, 0, 103, 0.35);
+    }
+
+    .contenedor-categorias {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 15px;
+      padding: 10px 15px;
+      background: #0d0d0f;
+      border-radius: 12px;
+      border: 1px solid #27272a;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn-cat-chip {
+      background: #18181b;
+      color: var(--text-sub);
+      border: 1px solid #27272a;
+      padding: 6px 14px;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    .btn-cat-chip:hover {
+      background: #27272a;
+      color: #fff;
+      transform: scale(1.03);
+    }
+
+    .btn-cat-chip.activo {
+      background: var(--accent-magenta);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 0 10px rgba(230, 0, 103, 0.4);
+    }
+
+    /* 3. GRILLA DE EMISORAS 🎛️ (VISTA DESKTOP) */
+    .contenedor {
+      max-width: 1200px;
+      margin: 25px auto 0 auto;
+      padding: 0 15px 20px 15px;
+      flex: 1;
+      width: 100%;
+    }
+
+    .grid-emisoras {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 20px;
+    }
+
+    .contenedor-ver-mas {
+      text-align: center;
+      margin-top: 25px;
+      margin-bottom: 20px;
+    }
+
+    .btn-ver-mas {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid #3f3f46;
+      padding: 12px 30px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 700;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    .btn-ver-mas:hover {
+      background: #1f1f25;
+      border-color: var(--accent-magenta);
+      color: #fff;
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 8px 25px rgba(230, 0, 103, 0.35);
+    }
+
+    .btn-ver-mas:active {
+      transform: translateY(0) scale(0.96);
+    }
+
+    /* 4. TARJETAS DE EMISORA 📻 */
+    .card-emisora {
+      background-color: var(--bg-card);
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      opacity: 1;
+      will-change: transform;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    .card-emisora:hover {
+      background-color: var(--bg-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(230, 0, 103, 0.25);
+      border-color: var(--accent-magenta);
+    }
+
+    .card-emisora:active {
+      transform: translateY(-1px);
+    }
+
+    .card-emisora.sonando {
+      border-color: var(--accent-orange);
+      background: #1c1317;
+      box-shadow: 0 0 15px rgba(255, 85, 0, 0.35);
+    }
+
+    .card-emisora img {
+      width: 100%;
+      height: 110px;
+      object-fit: contain; 
+      padding: 8px;
+      background-color: #09090b;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #1f1f23;
+      transition: transform 0.2s ease;
+    }
+
+    .card-emisora:hover img {
+      transform: scale(1.03);
+    }
+
+    .card-emisora h3 {
+      font-size: 0.95rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+
+    .card-emisora p {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      margin-top: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+
+    .btn-fav {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: rgba(0, 0, 0, 0.65);
+      border: none;
+      color: #71717a;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 2;
+      touch-action: manipulation;
+    }
+
+    .btn-fav:hover {
+      transform: scale(1.15);
+      color: #ff4d6d;
+      background: rgba(0, 0, 0, 0.85);
+    }
+
+    .btn-fav.es-fav {
+      color: #e60067;
+    }
+
+    /* FOOTER ESTÁTICO DE LA PÁGINA 📜📌 */
+    .site-footer {
+      margin-top: auto;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 30px;
+      border-top: 1px solid #27272a;
+      background-color: #0d0d0f;
+      color: var(--text-sub);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .footer-left, .footer-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .footer-left {
+      justify-content: flex-start;
+    }
+
+    .footer-right {
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .footer-center {
+      text-align: center;
+      flex: 2;
+    }
+
+    .site-footer a {
+      color: var(--text-sub);
+      text-decoration: none;
+      transition: color 0.25s ease;
+      font-size: 0.82rem;
+    }
+
+    .site-footer a:hover {
+      color: var(--accent-magenta);
+      text-decoration: underline;
+    }
+
+    .site-footer p {
+      margin: 0;
+    }
+
+    .footer-separator {
+      margin: 0 4px;
+      color: #3f3f46;
+    }
+
+    .btn-contacto {
+      background: #18181b;
+      color: var(--text-main);
+      border: 1px solid #3f3f46;
+      padding: 7px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      touch-action: manipulation;
+    }
+
+    .btn-contacto:hover {
+      background: var(--bg-hover);
+      border-color: var(--accent-magenta);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(230, 0, 103, 0.3);
+    }
+
+    /* MODAL DE CONTACTO / REPORTE 📩 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 15px;
+    }
+
+    .modal-overlay.activo {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-container {
+      background: var(--bg-card);
+      border: 1px solid #27272a;
+      border-radius: 16px;
+      max-width: 540px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 24px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(230, 0, 103, 0.2);
+      transform: translateY(20px) scale(0.95);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      will-change: transform;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .modal-overlay.activo .modal-container {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #27272a;
+    }
+
+    .modal-header h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-cerrar-modal {
+      background: #27272a;
+      border: none;
+      color: var(--text-sub);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      touch-action: manipulation;
+    }
+
+    .btn-cerrar-modal:hover {
+      background: var(--accent-magenta);
+      color: #fff;
+      transform: scale(1.1);
+    }
+
+    .modal-body {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .contacto-item {
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .contacto-icono {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .contacto-texto h4 {
+      font-size: 0.95rem;
+      color: #fff;
+      margin-bottom: 3px;
+    }
+
+    .contacto-texto p {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+    }
+
+    .contacto-texto ul {
+      margin-top: 6px;
+      margin-left: 18px;
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .contacto-texto ul li {
+      line-height: 1.4;
+    }
+
+    .contacto-correo-box {
+      margin-top: 8px;
+      background: linear-gradient(135deg, rgba(255, 85, 0, 0.1), rgba(230, 0, 103, 0.1));
+      border: 1px solid var(--accent-magenta);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .contacto-correo-box p {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+
+    .correo-enlace {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--accent-orange);
+      text-decoration: none;
+      transition: color 0.2s ease;
+      word-break: break-all;
+    }
+
+    .correo-enlace:hover {
+      color: var(--accent-magenta);
+      text-decoration: underline;
+    }
+
+    /* 5. REPRODUCTOR PERSONALIZADO MODERNO 🎧 */
+    .player-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 90px;
+      background-color: rgba(17, 17, 20, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 2px solid var(--accent-orange);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 25px;
+      z-index: 1000;
+      box-shadow: 0 -5px 30px rgba(0,0,0,0.85);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform: translateY(0);
+      opacity: 1;
+      will-change: transform, opacity;
+    }
+
+    .player-bar.oculto {
+      transform: translateY(100%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .player-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      width: 25%;
+      min-width: 180px;
+    }
+
+    .player-info img {
+      width: 55px;
+      height: 55px;
+      border-radius: 8px;
+      object-fit: contain;
+      background: #000;
+      border: 1px solid #27272a;
+    }
+
+    .player-info div h4 {
+      font-size: 0.95rem;
+      color: #fff;
+    }
+
+    .player-info div p {
+      font-size: 0.75rem;
+      color: var(--accent-orange);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .dot-vivo {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background-color: #ff3b30;
+      border-radius: 50%;
+      animation: livePulse 1.5s infinite;
+      will-change: box-shadow;
+    }
+
+    .player-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 45%;
+    }
+
+    .btn-ctrl {
+      background: #1f1f23;
+      border: 1px solid #3f3f46;
+      color: #fff;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      touch-action: manipulation;
+    }
+
+    .btn-ctrl:hover {
+      background: #3f3f46;
+      transform: scale(1.1);
+    }
+
+    .btn-ctrl:active {
+      transform: scale(0.92);
+    }
+
+    .btn-ctrl.btn-play {
+      background: var(--accent-gradient);
+      border: none;
+      width: 52px;
+      height: 52px;
+      font-size: 1.3rem;
+      box-shadow: 0 4px 15px rgba(255, 85, 0, 0.3);
+    }
+
+    .btn-ctrl.btn-play:hover {
+      transform: scale(1.12);
+      box-shadow: 0 0 20px rgba(255, 85, 0, 0.6);
+    }
+
+    .btn-ctrl.btn-player-fav.es-fav {
+      color: #e60067;
+      border-color: #e60067;
+    }
+
+    .player-volume {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      width: 30%;
+      min-width: 190px;
+      position: relative;
+    }
+
+    .player-volume input[type="range"] {
+      accent-color: var(--accent-orange);
+      cursor: pointer;
+      width: 100px;
+      height: 5px;
+      border-radius: 5px;
+      background: #27272a;
+      transition: opacity 0.2s;
+      touch-action: manipulation;
+    }
+
+    .no-favs {
+      text-align: center;
+      grid-column: 1 / -1;
+      padding: 40px;
+      color: var(--text-sub);
+    }
+
+    /* 6. SISTEMA DE MENSAJES EMERGENTES (TOASTS) 🔔 */
+    #toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .toast {
+      pointer-events: auto;
+      min-width: 280px;
+      max-width: 380px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      background: #18181b;
+      color: #fff;
+      border: 1px solid #3f3f46;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .toast-icono {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .toast-error {
+      border-left: 4px solid #ff3b30;
+      background: #221213;
+    }
+
+    .toast-success {
+      border-left: 4px solid #34c759;
+      background: #102216;
+    }
+
+    .toast-info {
+      border-left: 4px solid #ff9500;
+      background: #221b10;
+    }
+
+    /* 7. ANIMACIONES KEYFRAMES BÁSICAS 🎬 */
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes livePulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7); }
+      70% { box-shadow: 0 0 0 8px rgba(255, 59, 48, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
+    }
+
+    /* =========================================================
+       8. ADAPTACIÓN RESPONSIVA TOTAL PARA DISPOSITIVOS MÓVILES 📱
+       ========================================================= */
+
+    @media (max-width: 768px) {
+      header {
+        padding: 15px 10px;
+      }
+
+      .header-top {
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .logo-link {
+        position: static;
+      }
+
+      .header-logo {
+        height: 55px;
+      }
+
+      header h1 {
+        font-size: 1.7rem;
+      }
+
+      .subtitulo-contador {
+        font-size: 0.85rem;
+      }
+
+      .filtros {
+        gap: 6px;
+      }
+
+      .btn-filtro {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+
+      /* REPRODUCTOR ADAPTADO PARA TABLETS / TELÉFONOS */
+      .player-bar {
+        height: 75px;
+        padding: 0 12px;
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+
+      .player-info {
+        width: 40%;
+        min-width: 0;
+        gap: 8px;
+      }
+
+      .player-info img {
+        width: 42px;
+        height: 42px;
+      }
+
+      .player-info div h4 {
+        font-size: 0.8rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 110px;
+      }
+
+      .player-controls {
+        width: 55%;
+        gap: 6px;
+      }
+
+      .btn-ctrl {
+        width: 34px;
+        height: 34px;
+        font-size: 0.85rem;
+      }
+
+      .btn-ctrl.btn-play {
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+      }
+
+      .player-volume {
+        display: none;
+      }
+    }
+
+    /* 📱 DISPOSITIVOS MÓVILES (VISTA PERFECTA DE 2 COLUMNAS) */
+    @media (max-width: 600px) {
+      .contenedor {
+        padding: 0 12px 15px 12px !important;
+        margin: 15px auto 0 auto !important;
+      }
+
+      /* GRILLA DE 2 EMISORAS POR FILA PARA EXCELENTE LEGIBILIDAD 📻 */
+      .grid-emisoras {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+      }
+
+      .card-emisora {
+        padding: 10px 8px !important;
+        border-radius: 10px !important;
+      }
+
+      .card-emisora img {
+        height: 75px !important;
+        padding: 6px !important;
+        margin-bottom: 8px !important;
+        border-radius: 8px !important;
+      }
+
+      .card-emisora h3 {
+        font-size: 0.82rem !important;
+        line-height: 1.2 !important;
+        font-weight: 700 !important;
+      }
+
+      .card-emisora p {
+        font-size: 0.72rem !important;
+        margin-top: 3px !important;
+      }
+
+      .btn-fav {
+        top: 8px !important;
+        right: 8px !important;
+        width: 26px !important;
+        height: 26px !important;
+        font-size: 0.85rem !important;
+      }
+
+      .buscador-container {
+        padding: 0 5px;
+        margin-bottom: 12px;
+      }
+
+      .input-busqueda {
+        padding: 9px 36px 9px 36px;
+        font-size: 0.85rem;
+      }
+
+      .icono-lupa {
+        left: 12px;
+        font-size: 0.85rem;
+      }
+
+      .btn-limpiar {
+        right: 10px;
+        width: 18px;
+        height: 18px;
+        font-size: 0.65rem;
+      }
+
+      .contenedor-categorias {
+        padding: 8px;
+        gap: 5px;
+      }
+
+      .btn-cat-chip {
+        padding: 5px 11px;
+        font-size: 0.78rem;
+        border-radius: 12px;
+      }
+
+      .contenedor-ver-mas {
+        margin-top: 20px !important;
+        margin-bottom: 15px !important;
+      }
+
+      .btn-ver-mas {
+        padding: 10px 22px;
+        font-size: 0.85rem;
+      }
+
+      .site-footer {
+        flex-direction: column;
+        gap: 12px;
+        padding: 20px 15px !important;
+        padding-bottom: calc(20px + env(safe-area-inset-bottom)) !important;
+        font-size: 0.78rem;
+      }
+
+      .footer-left, .footer-right, .footer-center {
+        justify-content: center;
+        text-align: center;
+      }
+
+      #toast-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+      }
+
+      .toast {
+        min-width: auto;
+        max-width: 100%;
+        padding: 10px 14px;
+        font-size: 0.8rem;
+      }
+    }
+
+    /* PANTALLAS MUY PEQUEÑAS */
+    @media (max-width: 380px) {
+      .grid-emisoras {
+        gap: 8px !important;
+      }
+
+      .card-emisora img {
+        height: 65px !important;
+      }
+
+      .card-emisora h3 {
+        font-size: 0.78rem !important;
+      }
+
+      .card-emisora p {
+        font-size: 0.68rem !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CONTENEDOR DE NOTIFICACIONES EMERGENTES 🔔 -->
+  <div id="toast-container"></div>
+
+  <header>
+    <div class="header-top">
+      <a href="./" class="logo-link" title="Ir al inicio">
+        <img src="logo.png" alt="Modo Radio Logo" class="header-logo">
+      </a>
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <h1>MODO RADIO</h1>
+        <p class="subtitulo-contador">Escucha más de <span id="total-emisoras">0</span> de radio 📻</p>
+      </div>
+    </div>
+
+    <!-- BARRA DE BÚSQUEDA 🔍 -->
+    <div class="buscador-container">
+      <div class="input-wrapper">
+        <span class="icono-lupa">🔍</span>
+        <input type="text" id="input-busqueda" class="input-busqueda" placeholder="Buscar emisora por nombre..." oninput="manejarInputBusqueda(this.value)">
+        <button id="btn-limpiar-busqueda" class="btn-limpiar" onclick="limpiarBusqueda()" title="Borrar búsqueda" style="display: none;">✕</button>
+      </div>
+    </div>
+    
+    <div class="filtros">
+      <button class="btn-filtro activo" id="btn-todas" onclick="filtrar('todas')">Todas 📻</button>
+      <button class="btn-filtro" id="btn-favs" onclick="filtrar('favoritas')">Mis Favoritas ❤️</button>
+      <button class="btn-filtro" id="btn-cats" onclick="filtrar('categorias')">Categorías 🏷️</button>
+      <button class="btn-filtro" id="btn-regiones" onclick="filtrar('regiones')">Regiones 🗺️</button>
+    </div>
+
+    <div id="contenedor-categorias" class="contenedor-categorias" style="display: none;"></div>
+    <div id="contenedor-regiones" class="contenedor-categorias" style="display: none;"></div>
+  </header>
+
+  <main class="contenedor">
+    <div id="grid-emisoras" class="grid-emisoras"></div>
+
+    <div id="contenedor-ver-mas" class="contenedor-ver-mas" style="display: none;">
+      <button id="btn-ver-mas" class="btn-ver-mas" onclick="verMasEmisoras()">Ver más emisoras 📻</button>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-left">
+      <button class="btn-contacto" onclick="abrirModalContacto()">✉️ Contacto / Reporte</button>
+    </div>
+    <div class="footer-center">
+      <p>Derechos Reservados de la Página - Modo Radio 2026 📻</p>
+    </div>
+    <div class="footer-right">
+      <a href="#terminos" onclick="mostrarToast('Términos de uso: Plataforma pública para la reproducción de emisoras radiales sin fines de lucro.', 'info', '📜'); return false;">Términos de uso</a>
+      <span class="footer-separator">|</span>
+      <a href="#privacidad" onclick="mostrarToast('Política de privacidad: Modo Radio no recopila ni almacena datos personales de los usuarios.', 'info', '🔒'); return false;">Política de privacidad</a>
+    </div>
+  </footer>
+
+  <!-- MODAL DE CONTACTO / REPORTE 📩 -->
+  <div id="modal-contacto" class="modal-overlay" onclick="cerrarModalContactoFuera(event)">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2>📩 Contacto / Reporte</h2>
+        <button class="btn-cerrar-modal" onclick="cerrarModalContacto()" title="Cerrar">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--text-sub); margin-bottom: 4px;">
+          ¿Tienes alguna inquietud o sugerencia sobre Modo Radio? Puedes comunicarte directamente por correo electrónico para las siguientes solicitudes:
+        </p>
+
+        <div class="contacto-item">
+          <span class="contacto-icono">📻</span>
+          <div class="contacto-texto">
+            <h4>Añadir una emisora</h4>
+            <p>Si eres dueño o representante de una emisora de radio y deseas incluirla en la plataforma, envíanos la información y el enlace de emisión (stream).</p>
+          </div>
+        </div>
+
+        <div class="contacto-item">
+          <span class="contacto-icono">⚠️</span>
+          <div class="contacto-texto">
+            <h4>Reportar emisora caída</h4>
+            <p>Si notas que una emisora no está reproduciendo audio o su enlace ha quedado fuera de servicio, infórmanos para corregirlo rápidamente.</p>
+          </div>
+        </div>
+
+        <div class="contacto-item">
+          <span class="contacto-icono">🚫</span>
+          <div class="contacto-texto">
+            <h4>Solicitar retiro de emisora</h4>
+            <p>Si eres propietario o representante legal de una estación de radio y no deseas que figure en nuestra plataforma, escríbenos y la retiraremos de inmediato.</p>
+          </div>
+        </div>
+
+        <div class="contacto-item">
+          <span class="contacto-icono">ℹ️</span>
+          <div class="contacto-texto">
+            <h4>Aviso de responsabilidad y caídas de señal</h4>
+            <p><strong>Nosotros no nos hacemos responsables de que una emisora de radio deje de escucharse.</strong> Modo Radio indexa transmisiones de audio públicas de terceros y no opera los servidores ni la infraestructura de las emisoras.</p>
+            
+            <p style="margin-top: 8px; font-weight: 700; color: #fff;">
+              ¿Por qué una emisora puede dejar de escucharse?
+            </p>
+            <ul>
+              <li>• <strong>Caída del servidor propio:</strong> Problemas técnicos o apagones en el servidor o proveedor de streaming de la radio.</li>
+              <li>• <strong>Cortes de electricidad o internet:</strong> Fallas en el suministro eléctrico o en la conexión de internet de la emisora.</li>
+              <li>• <strong>Cambio de URL de streaming:</strong> La administración de la radio cambia su dirección o puerto de transmisión sin previo aviso.</li>
+              <li>• <strong>Saturación de oyentes:</strong> El servidor de la estación alcanza su límite máximo de conexiones simultáneas.</li>
+              <li>• <strong>Mantenimiento técnico:</strong> La emisora se encuentra ajustando equipos o realizando mantenimiento en cabina.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="contacto-correo-box">
+          <p>Escríbenos directamente a nuestro correo de contacto:</p>
+          <a href="mailto:pizzaclapyt@gmail.com" class="correo-enlace">pizzaclapyt@gmail.com</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPRODUCTOR PERSONALIZADO -->
+  <footer class="player-bar oculto" id="player-bar">
+    <div class="player-info">
+      <img id="player-logo" src="logo.png" alt="Logo">
+      <div>
+        <h4 id="player-nombre">Selecciona una emisora</h4>
+        <p id="player-categoria"><span class="dot-vivo"></span> Modo Radio 🔴</p>
+      </div>
+    </div>
+
+    <div class="player-controls">
+      <button class="btn-ctrl" onclick="detenerAudio()" title="Detener y cerrar reproductor">⏹</button>
+      <button class="btn-ctrl" onclick="anteriorEmisora()" title="Anterior">⏮</button>
+      <button class="btn-ctrl btn-play" id="btn-play-pause" onclick="togglePlayPause()" title="Reproducir/Pausar">▶</button>
+      <button class="btn-ctrl" onclick="siguienteEmisora()" title="Siguiente">⏭</button>
+      <button class="btn-ctrl btn-player-fav" id="btn-player-fav" onclick="toggleFavoritoActual()" title="Añadir a Favoritos">♥</button>
+    </div>
+
+    <div class="player-volume">
+      <button class="btn-ctrl" id="btn-mute" onclick="toggleMute()" title="Silenciar/Activar Sonido">🔊</button>
+      <input type="range" id="volumen-slider" min="0" max="1" step="0.01" value="1" oninput="cambiarVolumen(this.value)">
+    </div>
+
+    <audio id="audio-player"></audio>
+  </footer>
+
+  <!-- SCRIPT DE FIREBASE Y LÓGICA DE LA APP ⚡️ -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Configuración Firebase 🔥
+    const firebaseConfig = {
+      apiKey: "AIzaSyCoAANgsvIKyQv9biIJJgzmL0AfZjroCmU",
+      authDomain: "modo-radio.firebaseapp.com",
+      projectId: "modo-radio",
+      storageBucket: "modo-radio.firebasestorage.app",
+      messagingSenderId: "105112515850",
+      appId: "1:105112515850:web:0169b7c66623d36892f6f3"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const CLOUDFLARE_PROXY = "https://pizza-proxy.adibabouakar.workers.dev/?url="; 
+
+    const ESTADOS_VENEZUELA = [
+      "Distrito Capital (Caracas)", "Amazonas", "Anzoátegui", "Apure", "Aragua",
+      "Barinas", "Bolívar", "Carabobo", "Cojedes", "Delta Amacuro", "Falcón",
+      "Guárico", "Lara", "Mérida", "Miranda", "Monagas", "Nueva Esparta",
+      "Portuguesa", "Sucre", "Táchira", "Trujillo", "La Guaira", "Yaracuy", "Zulia"
+    ];
+
+    // Elementos DOM
+    const gridContainer = document.getElementById('grid-emisoras');
+    const contenedorVerMas = document.getElementById('contenedor-ver-mas');
+    const playerBar = document.getElementById('player-bar');
+    const audioPlayer = document.getElementById('audio-player');
+    const playerLogo = document.getElementById('player-logo');
+    const playerNombre = document.getElementById('player-nombre');
+    const playerCategoria = document.getElementById('player-categoria');
+    const btnPlayPause = document.getElementById('btn-play-pause');
+    const btnPlayerFav = document.getElementById('btn-player-fav');
+    const btnMute = document.getElementById('btn-mute');
+    const volumenSlider = document.getElementById('volumen-slider');
+    const contenedorCategorias = document.getElementById('contenedor-categorias');
+    const contenedorRegiones = document.getElementById('contenedor-regiones');
+    const toastContainer = document.getElementById('toast-container');
+
+    // Variables de Estado
+    let listaEmisoras = [];
+    let emisorasFiltradas = [];
+    let listaCategorias = [];
+    let listaRegiones = [];
+    let indiceActual = -1;
+    let emisoraActualId = null;
+    let favoritos = JSON.parse(localStorage.getItem('modo_radio_favs')) || [];
+    let filtroActual = 'todas';
+    let categoriaSeleccionada = 'todas';
+    let regionSeleccionada = 'todas';
+    let textoBusqueda = '';
+    let volumenPrevio = 1;
+
+    // PAGINACIÓN DE EMISORAS (12 POR PÁGINA)
+    const EMISORAS_POR_PAGINA = 12;
+    let paginaActual = 1;
+
+    // NOTIFICACIONES TOASTS 🔔
+    window.mostrarToast = (mensaje, tipo = 'info', icono = '📻') => {
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${tipo}`;
+      toast.innerHTML = `
+        <span class="toast-icono">${icono}</span>
+        <span>${mensaje}</span>
+      `;
+
+      toastContainer.appendChild(toast);
+
+      setTimeout(() => {
+        toast.remove();
+      }, 3500);
+    };
+
+    // MODAL DE CONTACTO / REPORTE 📩
+    window.abrirModalContacto = () => {
+      const modal = document.getElementById('modal-contacto');
+      if (modal) modal.classList.add('activo');
+    };
+
+    window.cerrarModalContacto = () => {
+      const modal = document.getElementById('modal-contacto');
+      if (modal) modal.classList.remove('activo');
+    };
+
+    window.cerrarModalContactoFuera = (e) => {
+      if (e.target.classList.contains('modal-overlay')) {
+        window.cerrarModalContacto();
+      }
+    };
+
+    function normalizarTexto(str) {
+      return (str || '')
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    // 1. CARGAR EMISORAS DE FIRESTORE 📥
+    async function cargarEmisoras() {
+      try {
+        const q = query(collection(db, "canales"), where("activo", "==", true));
+        const querySnapshot = await getDocs(q);
+
+        listaEmisoras = [];
+        querySnapshot.forEach((doc) => {
+          const radio = doc.data();
+          radio.id = doc.id;
+          listaEmisoras.push(radio);
+        });
+
+        const totalEmisorasEl = document.getElementById('total-emisoras');
+        if (totalEmisorasEl) {
+          totalEmisorasEl.textContent = listaEmisoras.length;
+        }
+
+        extraerCategorias();
+        extraerRegiones();
+        renderizarEmisoras(true);
+      } catch (error) {
+        console.error("Error cargando las emisoras:", error);
+        mostrarToast("Error al conectar con la base de datos", "error", "❌");
+      }
+    }
+
+    // 2. EXTRAER CATEGORÍAS Y REGIONES 🏷️🗺️
+    function extraerCategorias() {
+      const categoriasSet = new Set();
+      listaEmisoras.forEach(r => {
+        const cats = Array.isArray(r.categorias)
+          ? r.categorias
+          : (r.categoria ? [r.categoria] : []);
+
+        if (cats.length > 0) {
+          cats.forEach(c => {
+            if (c && c.trim() !== '') {
+              categoriasSet.add(c.trim());
+            }
+          });
+        } else {
+          categoriasSet.add('Variado');
+        }
+      });
+
+      listaCategorias = Array.from(categoriasSet).sort();
+      renderizarBotonesCategorias();
+    }
+
+    function renderizarBotonesCategorias() {
+      contenedorCategorias.innerHTML = '';
+
+      const btnTodasCat = document.createElement('button');
+      btnTodasCat.className = `btn-cat-chip ${categoriaSeleccionada === 'todas' ? 'activo' : ''}`;
+      btnTodasCat.textContent = 'Todas las Categorías';
+      btnTodasCat.onclick = () => seleccionarCategoria('todas');
+      contenedorCategorias.appendChild(btnTodasCat);
+
+      listaCategorias.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = `btn-cat-chip ${categoriaSeleccionada === cat ? 'activo' : ''}`;
+        btn.textContent = cat;
+        btn.onclick = () => seleccionarCategoria(cat);
+        contenedorCategorias.appendChild(btn);
+      });
+    }
+
+    window.seleccionarCategoria = (cat) => {
+      categoriaSeleccionada = cat;
+      renderizarBotonesCategorias();
+      renderizarEmisoras(true);
+    };
+
+    function extraerRegiones() {
+      const regionesSet = new Set(ESTADOS_VENEZUELA);
+      listaEmisoras.forEach(r => {
+        let est = (r.region || r.estado || r.ubicacion || '').trim();
+        if (est) {
+          if (est.toLowerCase() === 'caracas') {
+            est = 'Distrito Capital (Caracas)';
+          }
+          regionesSet.add(est);
+        }
+      });
+
+      regionesSet.delete('Caracas');
+      listaRegiones = Array.from(regionesSet).sort((a, b) => a.localeCompare(b, 'es'));
+      renderizarBotonesRegiones();
+    }
+
+    function renderizarBotonesRegiones() {
+      contenedorRegiones.innerHTML = '';
+
+      const btnTodasReg = document.createElement('button');
+      btnTodasReg.className = `btn-cat-chip ${regionSeleccionada === 'todas' ? 'activo' : ''}`;
+      btnTodasReg.textContent = 'Todas las Regiones 🗺️';
+      btnTodasReg.onclick = () => seleccionarRegion('todas');
+      contenedorRegiones.appendChild(btnTodasReg);
+
+      listaRegiones.forEach(reg => {
+        const btn = document.createElement('button');
+        btn.className = `btn-cat-chip ${regionSeleccionada === reg ? 'activo' : ''}`;
+        btn.textContent = reg;
+        btn.onclick = () => seleccionarRegion(reg);
+        contenedorRegiones.appendChild(btn);
+      });
+    }
+
+    window.seleccionarRegion = (reg) => {
+      regionSeleccionada = reg;
+      renderizarBotonesRegiones();
+      renderizarEmisoras(true);
+    };
+
+    window.manejarInputBusqueda = (valor) => {
+      textoBusqueda = valor;
+      const btnLimpiar = document.getElementById('btn-limpiar-busqueda');
+      if (btnLimpiar) {
+        btnLimpiar.style.display = valor.trim().length > 0 ? 'flex' : 'none';
+      }
+      renderizarEmisoras(true);
+    };
+
+    window.limpiarBusqueda = () => {
+      const input = document.getElementById('input-busqueda');
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+      window.manejarInputBusqueda('');
+    };
+
+    // 3. RENDERIZAR EMISORAS 🛠️
+    function renderizarEmisoras(resetPagina = true) {
+      if (resetPagina) {
+        paginaActual = 1;
+      }
+
+      gridContainer.innerHTML = "";
+
+      let resultado = [...listaEmisoras];
+
+      if (filtroActual === 'favoritas') {
+        resultado = resultado.filter(r => favoritos.includes(r.id));
+      } else if (filtroActual === 'categorias' && categoriaSeleccionada !== 'todas') {
+        resultado = resultado.filter(r => {
+          const cats = Array.isArray(r.categorias)
+            ? r.categorias
+            : [r.categoria || 'Variado'];
+          return cats.some(c => (c || '').trim() === categoriaSeleccionada);
+        });
+      } else if (filtroActual === 'regiones' && regionSeleccionada !== 'todas') {
+        const regionTarget = normalizarTexto(regionSeleccionada);
+        resultado = resultado.filter(r => {
+          const est = normalizarTexto(r.region || r.estado || r.ubicacion || '');
+          if (!est) return false;
+          return est === regionTarget || est.includes(regionTarget) || regionTarget.includes(est);
+        });
+      }
+
+      if (textoBusqueda.trim() !== '') {
+        const busquedaNorm = normalizarTexto(textoBusqueda);
+        resultado = resultado.filter(r => {
+          const nombreNorm = normalizarTexto(r.nombre);
+          const cats = Array.isArray(r.categorias)
+            ? r.categorias
+            : [r.categoria || ''];
+          const catNorm = cats.map(c => normalizarTexto(c)).join(' ');
+          return nombreNorm.includes(busquedaNorm) || catNorm.includes(busquedaNorm);
+        });
+      }
+
+      emisorasFiltradas = resultado;
+
+      if (emisoraActualId) {
+        indiceActual = emisorasFiltradas.findIndex(r => r.id === emisoraActualId);
+      } else {
+        indiceActual = -1;
+      }
+
+      if (emisorasFiltradas.length === 0) {
+        gridContainer.innerHTML = `<p class="no-favs">No se encontraron emisoras en esta sección 📻</p>`;
+        contenedorVerMas.style.display = 'none';
+        return;
+      }
+
+      const totalAMostrar = paginaActual * EMISORAS_POR_PAGINA;
+      const emisorasAMostrar = emisorasFiltradas.slice(0, totalAMostrar);
+
+      emisorasAMostrar.forEach((radio) => {
+        const esFav = favoritos.includes(radio.id);
+        const estaSonando = emisoraActualId === radio.id;
+
+        const catsTexto = Array.isArray(radio.categorias) && radio.categorias.length > 0
+          ? radio.categorias.join(', ')
+          : (radio.categoria || 'Variado');
+
+        const card = document.createElement('div');
+        card.className = `card-emisora ${estaSonando ? 'sonando' : ''}`;
+        card.onclick = () => reproducirEmisora(radio.id);
+
+        card.innerHTML = `
+          <button class="btn-fav ${esFav ? 'es-fav' : ''}" onclick="event.stopPropagation(); toggleFavorito('${radio.id}')" title="Favorito">
+            ${esFav ? '❤️' : '🤍'}
+          </button>
+          <img src="${radio.logo || 'logo.png'}" alt="${radio.nombre}" onerror="this.src='logo.png'">
+          <h3>${radio.nombre}</h3>
+          <p>${catsTexto}</p>
+        `;
+
+        gridContainer.appendChild(card);
+      });
+
+      if (totalAMostrar < emisorasFiltradas.length) {
+        contenedorVerMas.style.display = 'block';
+      } else {
+        contenedorVerMas.style.display = 'none';
+      }
+    }
+
+    window.verMasEmisoras = () => {
+      paginaActual++;
+      renderizarEmisoras(false);
+    };
+
+    // 4. FILTRADO PRINCIPAL 📻
+    window.filtrar = (tipo) => {
+      filtroActual = tipo;
+
+      document.querySelectorAll('.btn-filtro').forEach(btn => btn.classList.remove('activo'));
+
+      const btnMap = {
+        'todas': 'btn-todas',
+        'favoritas': 'btn-favs',
+        'categorias': 'btn-cats',
+        'regiones': 'btn-regiones'
+      };
+
+      if (btnMap[tipo]) {
+        document.getElementById(btnMap[tipo]).classList.add('activo');
+      }
+
+      contenedorCategorias.style.display = (tipo === 'categorias') ? 'flex' : 'none';
+      contenedorRegiones.style.display = (tipo === 'regiones') ? 'flex' : 'none';
+
+      renderizarEmisoras(true);
+    };
+
+    // 5. CONTROL DE REPRODUCTOR 🎧
+    window.reproducirEmisora = (id) => {
+      const radio = listaEmisoras.find(r => r.id === id);
+      if (!radio) return;
+
+      emisoraActualId = id;
+      indiceActual = emisorasFiltradas.findIndex(r => r.id === id);
+
+      const catsTexto = Array.isArray(radio.categorias) && radio.categorias.length > 0
+        ? radio.categorias.join(', ')
+        : (radio.categoria || 'En Vivo');
+
+      playerLogo.src = radio.logo || 'logo.png';
+      playerNombre.textContent = radio.nombre;
+      playerCategoria.innerHTML = `<span class="dot-vivo"></span> ${catsTexto}`;
+
+      let urlFinal = radio.url;
+      if (radio.usarProxy) {
+        urlFinal = CLOUDFLARE_PROXY + encodeURIComponent(radio.url);
+      }
+
+      audioPlayer.src = urlFinal;
+      audioPlayer.play()
+        .then(() => {
+          btnPlayPause.textContent = '⏸';
+          mostrarToast(`Sonando: ${radio.nombre}`, 'success', '📻');
+        })
+        .catch(err => {
+          console.error("Error al reproducir stream:", err);
+          btnPlayPause.textContent = '▶';
+          mostrarToast(`Falla al conectar con ${radio.nombre}`, 'error', '⚠️');
+        });
+
+      playerBar.classList.remove('oculto');
+      document.body.style.paddingBottom = '90px'; // Evita que el reproductor tape el footer cuando está abierto
+      actualizarBotonFavPlayer();
+      renderizarEmisoras(false);
+    };
+
+    window.togglePlayPause = () => {
+      if (!audioPlayer.src) return;
+
+      if (audioPlayer.paused) {
+        audioPlayer.play();
+        btnPlayPause.textContent = '⏸';
+      } else {
+        audioPlayer.pause();
+        btnPlayPause.textContent = '▶';
+      }
+    };
+
+    window.detenerAudio = () => {
+      audioPlayer.pause();
+      audioPlayer.src = '';
+      emisoraActualId = null;
+      indiceActual = -1;
+      playerBar.classList.add('oculto');
+      document.body.style.paddingBottom = '0';
+      renderizarEmisoras(false);
+    };
+
+    window.siguienteEmisora = () => {
+      if (emisorasFiltradas.length === 0) return;
+      indiceActual = (indiceActual + 1) % emisorasFiltradas.length;
+      reproducirEmisora(emisorasFiltradas[indiceActual].id);
+    };
+
+    window.anteriorEmisora = () => {
+      if (emisorasFiltradas.length === 0) return;
+      indiceActual = (indiceActual - 1 + emisorasFiltradas.length) % emisorasFiltradas.length;
+      reproducirEmisora(emisorasFiltradas[indiceActual].id);
+    };
+
+    // 6. GESTIÓN DE FAVORITOS ❤️
+    window.toggleFavorito = (id) => {
+      if (favoritos.includes(id)) {
+        favoritos = favoritos.filter(favId => favId !== id);
+        mostrarToast("Removido de favoritos", "info", "🤍");
+      } else {
+        favoritos.push(id);
+        mostrarToast("Añadido a favoritos", "success", "❤️");
+      }
+
+      localStorage.setItem('modo_radio_favs', JSON.stringify(favoritos));
+      actualizarBotonFavPlayer();
+      renderizarEmisoras(false);
+    };
+
+    window.toggleFavoritoActual = () => {
+      if (emisoraActualId) {
+        window.toggleFavorito(emisoraActualId);
+      }
+    };
+
+    function actualizarBotonFavPlayer() {
+      if (!emisoraActualId) return;
+      const esFav = favoritos.includes(emisoraActualId);
+      if (btnPlayerFav) {
+        btnPlayerFav.innerHTML = esFav ? '❤️' : '♥';
+        btnPlayerFav.classList.toggle('es-fav', esFav);
+      }
+    }
+
+    // 7. VOLUMEN Y SILENCIO 🔊
+    window.cambiarVolumen = (val) => {
+      audioPlayer.volume = val;
+      if (val == 0) {
+        btnMute.textContent = '🔇';
+      } else {
+        btnMute.textContent = '🔊';
+      }
+    };
+
+    window.toggleMute = () => {
+      if (audioPlayer.volume > 0) {
+        volumenPrevio = audioPlayer.volume;
+        audioPlayer.volume = 0;
+        volumenSlider.value = 0;
+        btnMute.textContent = '🔇';
+      } else {
+        audioPlayer.volume = volumenPrevio || 1;
+        volumenSlider.value = audioPlayer.volume;
+        btnMute.textContent = '🔊';
+      }
+    };
+
+    // INICIALIZACIÓN DE LA APLICACIÓN 🚀
+    document.addEventListener('DOMContentLoaded', () => {
+      cargarEmisoras();
+    });
+  </script>
+</body>
+</html>
