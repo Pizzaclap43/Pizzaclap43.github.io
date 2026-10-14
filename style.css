@@ -1,0 +1,13 @@
+/*
+  Código CSS creado por mí (ElmichiYT) para mi gran amigo Pizzaclap43.
+
+  Te ayudaré con cositas pequeñas para que tu página no quede casi HTML puro :D
+*/
+
+@import url(https://elmichiyt.github.io/cdn/font/file.css);
+body {
+    font-family: "Inter";
+}
+
+h1, h2, h3, h4, h5, h6 { font-weight: normal; }
+.footer-red { border: 1px solid black; padding: 4px 4px; border-radius: 4px; color: black}
